@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "depaysement-lab"
+version = "1.0.0"
+description = "Experimental depaysement steering and observation: controlled semantic displacement without coherence collapse."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Ryō + GPT" }]
+dependencies = []
+
+[project.optional-dependencies]
+hf = ["torch", "transformers"]
+embed = ["sentence-transformers"]
+mlx = ["mlx-lm"]
+vllm = ["vllm"]
+openai = ["openai"]
+dev = ["pytest", "ruff"]
+all = ["torch", "transformers", "sentence-transformers", "mlx-lm", "vllm", "openai", "pytest", "ruff"]
+
+[project.scripts]
+depaysement-lab = "depaysement_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110

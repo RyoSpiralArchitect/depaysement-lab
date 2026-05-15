@@ -1,0 +1,32 @@
+{
+  "positive_depaysement": [
+    "In the hospital corridor, the sea sleeps under a white sheet.",
+    "The refrigerator coughs my grandmother's shadow into a glass.",
+    "A ticket grows a tongue and stamps the moon at the station gate.",
+    "The chair prays like a bird while the room opens its small heart.",
+    "Inside the window, sand holds a clock and waits for the shoe's name.",
+    "Beneath the bridge, a mirror breathes the city with the lungs of a fish.",
+    "Snow signs the envelope while the desk grows a second bone.",
+    "The umbrella becomes a small theater; rain's teeth sit in every seat.",
+    "A passport lies under the bed, wearing the face of a sleeping river.",
+    "At the office counter, a spoon receives a number and begins to rain."
+  ],
+  "negative_realist_repair": [
+    "The hospital corridor is quiet, and patients wait for their turn.",
+    "Food is kept in the refrigerator at a low temperature.",
+    "I showed my ticket at the gate and boarded the train.",
+    "He sat in the chair and thought about his schedule for the day.",
+    "This symbolizes loneliness and explains the protagonist's inner state.",
+    "In other words, the scene means that memory is painful.",
+    "Finally, he understood everything and returned to reality.",
+    "The image represents childhood trauma and gives the story closure."
+  ],
+  "negative_weird_noise": [
+    "Purple purpled the purple because purple was purple.",
+    "Umbrella, moon, bone, ticket, fish, window, stamp, tongue, sea, sea, sea.",
+    "Meaning explodes without relation: chair salt invoice eyelid volcano.",
+    "It was that because that was it and therefore it became that.",
+    "po po po po po, shadow shadow shadow, ::::::, the end.",
+    "A cloud of document of rib of moon of shoe of silence of bird."
+  ]
+}

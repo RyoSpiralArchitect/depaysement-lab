@@ -1443,7 +1443,7 @@ def extract_prompt_motifs(prompt: str) -> List[str]:
 # Steering engine
 # -----------------------------------------------------------------------------
 
-SELECT_OBJECTIVES: Tuple[str, ...] = ("depaysement", "frontier", "hybrid", "pareto")
+SELECT_OBJECTIVES: Tuple[str, ...] = ("depaysement", "frontier", "banded-frontier", "hybrid", "pareto")
 
 
 @dataclass
@@ -1699,6 +1699,20 @@ class DepaysementEngine:
         )
         readability_deficit = max(0.0, cfg.readability_min - readability)
         frontier_quality_deficit = max(0.0, cfg.frontier_quality_min - quality)
+        ontology_below = max(0.0, cfg.ontology_min - ontology)
+        ontology_above = max(0.0, ontology - cfg.ontology_max)
+        repair_excess = max(0.0, repair - cfg.repair_max)
+        unfinished_excess = max(0.0, unfinished - cfg.unfinished_max)
+        band_violation = (
+            1.50 * ontology_below
+            + 1.10 * ontology_above
+            + 0.90 * readability_deficit
+            + 0.70 * frontier_quality_deficit
+            + cfg.repair_weight * repair_excess
+            + cfg.unfinished_weight * unfinished_excess
+            + 0.30 * repetition
+            + 0.30 * sprawl
+        )
         hybrid_score = (
             float(candidate.score.total)
             + cfg.frontier_weight * frontier
@@ -1715,27 +1729,46 @@ class DepaysementEngine:
             and repair <= cfg.repair_max
             and unfinished <= cfg.unfinished_max
         )
+        banded_frontier_score = (
+            (1.0 if eligible else 0.0)
+            + cfg.frontier_weight * frontier
+            + 0.15 * ontology_band_score
+            - band_violation
+        )
 
-        selector_score = frontier if cfg.objective == "frontier" else hybrid_score
+        if cfg.objective == "frontier":
+            selector_score = frontier
+        elif cfg.objective == "banded-frontier":
+            selector_score = banded_frontier_score
+        else:
+            selector_score = hybrid_score
         candidate.selector_score = float(selector_score)
         candidate.selector_metrics = {
             "objective": cfg.objective,
             "selector_score": float(selector_score),
+            "banded_frontier_score": float(banded_frontier_score),
             "hybrid_score": float(hybrid_score),
             "depaysement_score": float(candidate.score.total),
             "readable_ontology_frontier": float(frontier),
             "frontier_quality": float(quality),
             "ontology_collapse_density": ontology,
+            "ontology_below_band": float(ontology_below),
+            "ontology_above_band": float(ontology_above),
             "ontology_bandpass": float(ontology_band),
             "ontology_band_score": float(ontology_band_score),
             "syntax_readability_proxy": readability,
+            "readability_deficit": float(readability_deficit),
+            "frontier_quality_deficit": float(frontier_quality_deficit),
             "graph_integration": float(metrics.graph_integration),
             "graph_fragmentation": float(metrics.graph_fragmentation),
             "repair_pressure": repair,
+            "repair_excess": float(repair_excess),
             "unfinished": unfinished,
+            "unfinished_excess": float(unfinished_excess),
             "repetition_pressure": float(repetition),
             "sprawl_pressure": float(sprawl),
             "selector_penalty": float(penalty),
+            "band_violation": float(band_violation),
             "selector_eligible": bool(eligible),
             "identity_melt_score": float(metrics.identity_melt_score),
             "affordance_corruption_score": float(metrics.affordance_corruption_score),

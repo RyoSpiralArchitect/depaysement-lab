@@ -528,6 +528,157 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
                 )
 
 
+RATING_SHEET_FIELDS: Tuple[str, ...] = (
+    "id",
+    "kind",
+    "run_name",
+    "condition",
+    "path",
+    "step",
+    "candidate_index",
+    "picked",
+    "readable_ontology_frontier",
+    "frontier_quality",
+    "ontology_collapse_density",
+    "identity_melt_score",
+    "affordance_corruption_score",
+    "category_bleeding_score",
+    "syntax_readability_proxy",
+    "graph_integration",
+    "repair_pressure",
+    "unfinished",
+    "meta_leak",
+    "score_total",
+    "human_score",
+    "human_notes",
+    "text",
+)
+
+
+def rating_sheet_rows(
+    report: FrontierAuditReport,
+    *,
+    top_k: int = 3,
+    include_picked: bool = True,
+    include_top_frontier: bool = True,
+) -> List[Dict[str, Any]]:
+    """Return compact rows for human taste scoring.
+
+    The sheet is intentionally redundant with machine metrics: the blank human
+    columns are where the loop leaves heuristic discovery and returns to taste.
+    """
+
+    rows: List[Dict[str, Any]] = []
+    seen: Dict[Tuple[str, str, int, int, str], int] = {}
+
+    def add(row: FrontierCandidateRow, kind: str) -> None:
+        key = (row.path, row.run_name, row.step, row.candidate_index, row.text)
+        existing = seen.get(key)
+        if existing is not None:
+            kinds = set(str(rows[existing]["kind"]).split("+"))
+            kinds.add(kind)
+            rows[existing]["kind"] = "+".join(sorted(kinds))
+            return
+        m = row.metrics
+        out = {
+            "id": _rating_row_id(row, len(rows) + 1),
+            "kind": kind,
+            "run_name": row.run_name,
+            "condition": row.condition,
+            "path": row.path,
+            "step": row.step,
+            "candidate_index": row.candidate_index,
+            "picked": int(row.picked),
+            "readable_ontology_frontier": row.readable_ontology_frontier,
+            "frontier_quality": row.frontier_quality,
+            "ontology_collapse_density": m.get("ontology_collapse_density", 0.0),
+            "identity_melt_score": m.get("identity_melt_score", 0.0),
+            "affordance_corruption_score": m.get("affordance_corruption_score", 0.0),
+            "category_bleeding_score": m.get("category_bleeding_score", 0.0),
+            "syntax_readability_proxy": m.get("syntax_readability_proxy", 0.0),
+            "graph_integration": m.get("graph_integration", 0.0),
+            "repair_pressure": m.get("repair_pressure", 0.0),
+            "unfinished": m.get("unfinished", 0.0),
+            "meta_leak": m.get("meta_leak", 0.0),
+            "score_total": row.score_total,
+            "human_score": "",
+            "human_notes": "",
+            "text": row.text,
+        }
+        seen[key] = len(rows)
+        rows.append(out)
+
+    for run in report.runs:
+        if include_picked:
+            for row in sorted((r for r in run.rows if r.picked), key=lambda r: (r.step, r.candidate_index)):
+                add(row, "picked")
+        if include_top_frontier and top_k > 0:
+            ranked = sorted(run.rows, key=lambda r: r.readable_ontology_frontier, reverse=True)
+            for row in ranked[:top_k]:
+                add(row, "top_frontier")
+    return rows
+
+
+def write_rating_sheet(rows: Sequence[Mapping[str, Any]], path: str) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if out.suffix.lower() == ".jsonl":
+        with out.open("w", encoding="utf-8") as f:
+            for row in rows:
+                f.write(json.dumps(dict(row), ensure_ascii=False) + "\n")
+        return
+    with out.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(RATING_SHEET_FIELDS), lineterminator="\n")
+        w.writeheader()
+        for row in rows:
+            w.writerow({field: row.get(field, "") for field in RATING_SHEET_FIELDS})
+
+
+def write_rating_markdown(rows: Sequence[Mapping[str, Any]], path: str) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# Human Rating Sheet",
+        "",
+        "Fill `human_score` and `human_notes` in the CSV/JSONL sheet. This Markdown view is for reading.",
+        "",
+    ]
+    for i, row in enumerate(rows, 1):
+        lines.extend(
+            [
+                f"## {i}. {row.get('id', '')}",
+                "",
+                (
+                    f"kind={row.get('kind', '')} | condition={row.get('condition', '')} | "
+                    f"step={row.get('step', '')} | candidate={row.get('candidate_index', '')} | "
+                    f"picked={row.get('picked', '')}"
+                ),
+                (
+                    f"frontier={float(row.get('readable_ontology_frontier') or 0.0):.3f} | "
+                    f"ont={float(row.get('ontology_collapse_density') or 0.0):.3f} | "
+                    f"read={float(row.get('syntax_readability_proxy') or 0.0):.3f} | "
+                    f"repair={float(row.get('repair_pressure') or 0.0):.3f} | "
+                    f"unfinished={float(row.get('unfinished') or 0.0):.3f}"
+                ),
+                "",
+                "```text",
+                str(row.get("text", "")),
+                "```",
+                "",
+                "human_score:",
+                "",
+                "human_notes:",
+                "",
+            ]
+        )
+    out.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
+def _rating_row_id(row: FrontierCandidateRow, seq: int) -> str:
+    base = f"{Path(row.path).stem or row.run_name}_s{row.step}_c{row.candidate_index}_{seq}"
+    return re.sub(r"[^A-Za-z0-9_.-]+", "_", base).strip("._") or f"rating_{seq}"
+
+
 def write_frontier_plot(report: FrontierAuditReport, path: str) -> None:
     """Write one scatter plot: ontology collapse vs frontier quality.
 

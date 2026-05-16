@@ -80,6 +80,10 @@ The follow-up post-hoc selector lab is saved in:
 - [post-hoc reading report](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_texts.md)
 - [post-hoc candidate CSV](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_candidates.csv)
 - [post-hoc research note](docs/research_notes/2026-05-16-posthoc-selector-lab.md)
+- [banded-frontier selector directory](experiments/posthoc_reselect_banded_frontier_lab/)
+- [human rating sheet](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.csv)
+- [human rating reading view](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.md)
+- [banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-rating-sheet.md)
 
 That lab performs no generation. It reuses the saved candidate pools from the
 focused sweep and asks which selector would have picked the readable frontier.
@@ -93,6 +97,20 @@ focused sweep and asks which selector would have picked the readable frontier.
 The main read: the old depaysement selector was not seeing the frontier. A pure
 frontier selector finds stronger candidates, especially at `alpha=0.60`, while
 the hybrid selector remains the more conservative readable default.
+
+The newer `banded-frontier` selector sits between those two poles: it still
+recovers frontier candidates, but penalizes candidates outside the ontology,
+readability, repair, and unfinished bands.
+
+| source alpha | hybrid | pure frontier | banded-frontier | banded ontology | banded readability | banded hit rate |
+|---|---:|---:|---:|---:|---:|---:|
+| `0.45` | 0.122 | 0.160 | 0.157 | 0.592 | 0.609 | 0.60 |
+| `0.60` | 0.123 | 0.194 | 0.156 | 0.493 | 0.650 | 0.80 |
+| `0.75` | 0.102 | 0.110 | 0.102 | 0.313 | 0.680 | 1.00 |
+
+The practical interpretation is that pure `frontier` is a good oracle for the
+upper envelope, while `banded-frontier` is the better candidate for the next real
+generation run.
 
 ## What Is Being Measured?
 
@@ -132,6 +150,7 @@ different objectives:
 ```bash
 --select-objective depaysement
 --select-objective frontier
+--select-objective banded-frontier
 --select-objective hybrid
 --select-objective pareto
 ```
@@ -152,6 +171,17 @@ hybrid_score =
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
 
+`banded-frontier` is the more explicit version of that idea:
+
+```text
+banded_frontier_score =
+  eligible_bonus
+  + frontier_weight * readable_ontology_frontier
+  + small ontology_band_score bonus
+  - ontology/readability/repair/unfinished band violations
+  - repetition/sprawl penalties
+```
+
 ## Post-hoc Selector Lab
 
 Saved candidate pools can be reselected without generating any new text:
@@ -161,13 +191,13 @@ python3 -m depaysement_lab.cli reselect \
   experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p45_c12_tok140.json \
   experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p6_c12_tok140.json \
   experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p75_c12_tok140.json \
-  --select-objectives depaysement,frontier,hybrid,pareto \
+  --select-objectives depaysement,frontier,banded-frontier,hybrid,pareto \
   --choose best \
   --include-original \
   --unfinished-weight 1.10 \
   --repetition-weight 0.45 \
   --sprawl-weight 0.30 \
-  --out-dir experiments/posthoc_reselect_focus_best_lab
+  --out-dir experiments/posthoc_reselect_banded_frontier_lab
 ```
 
 By default, `reselect` scores each saved step against the recorded context that
@@ -185,6 +215,20 @@ posthoc_reselect_texts.md        human-readable generated texts
 posthoc_reselect.png             scatter plot
 *_reselect_*.json                reselected run artifacts
 ```
+
+Export a human rating sheet from the original and reselected artifacts:
+
+```bash
+python3 -m depaysement_lab.cli export-rating-sheet \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_*.json \
+  experiments/posthoc_reselect_banded_frontier_lab/steer_alpha_*.json \
+  --top-k 2 \
+  --out experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.csv \
+  --markdown-out experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.md
+```
+
+The sheet includes picked candidates, top frontier candidates, machine metrics,
+and blank `human_score` / `human_notes` fields.
 
 ## Install
 
@@ -349,6 +393,9 @@ experiments/frontier_sweep_steered_hybrid_focus_best/
 
 experiments/posthoc_reselect_focus_best_lab/
   published no-generation selector comparison artifacts
+
+experiments/posthoc_reselect_banded_frontier_lab/
+  published banded-frontier comparison and human rating sheet
 ```
 
 ## Development

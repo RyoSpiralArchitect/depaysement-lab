@@ -24,6 +24,9 @@ from .ontology import audit_run_files, format_report
 from .frontier import (
     audit_frontier_pool,
     format_frontier_report,
+    rating_sheet_rows,
+    write_rating_markdown,
+    write_rating_sheet,
     write_frontier_csv,
     write_frontier_json,
     write_frontier_plot,
@@ -46,6 +49,7 @@ from .proto_v2 import (
     DummyGenerator,
     HFGenerator,
     PromptBank,
+    SELECT_OBJECTIVES,
     SelectorConfig,
     SteeringRuntimeConfig,
     collect_steering_vectors,
@@ -323,9 +327,9 @@ def add_common_generation_args(p: argparse.ArgumentParser) -> None:
 def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument(
         "--select-objective",
-        choices=["depaysement", "frontier", "hybrid", "pareto"],
+        choices=list(SELECT_OBJECTIVES),
         default="depaysement",
-        help="candidate-pick objective: legacy score, readable frontier, weighted hybrid, or Pareto front",
+        help="candidate-pick objective: legacy score, readable frontier, banded frontier, weighted hybrid, or Pareto front",
     )
     p.add_argument("--frontier-weight", type=float, default=1.0, help="hybrid selector weight for readable ontology frontier")
     p.add_argument("--ontology-weight", type=float, default=0.35, help="hybrid selector weight for ontology collapse inside the target band")
@@ -492,6 +496,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     ec = sub.add_parser("eval-correlate", help="compute Pearson/Spearman correlation between model_total and human_score in a JSONL eval file")
     ec.add_argument("ratings_jsonl")
+
+    hr = sub.add_parser("export-rating-sheet", help="export picked and top-frontier candidates for human taste scoring")
+    hr.add_argument("runs", nargs="+", help="saved run JSON/JSONL artifacts with candidates")
+    hr.add_argument("--out", required=True, help="write .csv or .jsonl rating sheet")
+    hr.add_argument("--markdown-out", default=None, help="optional Markdown reading view")
+    hr.add_argument("--top-k", type=int, default=3, help="top frontier candidates per run to include")
+    hr.add_argument("--no-picked", action="store_true", help="do not include picked candidates")
+    hr.add_argument("--no-top-frontier", action="store_true", help="do not include top frontier candidates")
+    hr.add_argument("--ontology-threshold", type=float, default=0.23)
+    hr.add_argument("--readability-threshold", type=float, default=0.58)
+    hr.add_argument("--repair-threshold", type=float, default=0.35)
+    add_scorer_args(hr)
 
 
     ob = sub.add_parser("observe", help="run baseline vs depaysement rerank vs steering+rerank and measure coherence-preserving displacement")
@@ -1069,7 +1085,7 @@ def parse_int_grid(raw: str) -> List[int]:
 
 
 def parse_objective_grid(raw: Optional[str], fallback: str) -> List[str]:
-    allowed = {"depaysement", "frontier", "hybrid", "pareto"}
+    allowed = set(SELECT_OBJECTIVES)
     vals: List[str] = []
     for part in str(raw or fallback or "").split(","):
         value = part.strip()
@@ -1118,6 +1134,30 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
         print(json.dumps(report.to_dict(include_rows=True), ensure_ascii=False, indent=2))
     elif not args.out:
         print(format_frontier_report(report, top_k=args.top_k))
+
+
+def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    report = audit_frontier_pool(
+        args.runs,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    rows = rating_sheet_rows(
+        report,
+        top_k=args.top_k,
+        include_picked=not args.no_picked,
+        include_top_frontier=not args.no_top_frontier,
+    )
+    write_rating_sheet(rows, args.out)
+    if args.markdown_out:
+        write_rating_markdown(rows, args.markdown_out)
+    print(f"Wrote rating sheet: {args.out} ({len(rows)} rows)")
+    if args.markdown_out:
+        print(f"Wrote rating reading view: {args.markdown_out}")
 
 
 def cmd_reselect(args: argparse.Namespace) -> None:
@@ -1365,6 +1405,8 @@ def main() -> None:
         cmd_export_eval_set(args)
     elif args.command == "eval-correlate":
         cmd_eval_correlate(args)
+    elif args.command == "export-rating-sheet":
+        cmd_export_rating_sheet(args)
     elif args.command == "observe":
         cmd_observe(args)
     elif args.command == "pool-audit":

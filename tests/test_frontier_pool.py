@@ -1,6 +1,14 @@
+import csv
 import json
 
-from depaysement_lab.frontier import audit_frontier_pool, readable_frontier_score, write_frontier_reading_report
+from depaysement_lab.frontier import (
+    audit_frontier_pool,
+    rating_sheet_rows,
+    readable_frontier_score,
+    write_frontier_reading_report,
+    write_rating_markdown,
+    write_rating_sheet,
+)
 from depaysement_lab.ontology import OntologyAuditor
 
 
@@ -77,3 +85,42 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     text = out.read_text(encoding="utf-8")
     assert "Picked Final Text" in text
     assert "The umbrella becomes a tiny station garden.<|eot_id|>" not in text
+
+
+def test_rating_sheet_exports_picked_and_top_frontier_rows(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "selector", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {"text": "The umbrella rests beside the platform clock.", "score": {"total": 2.0}},
+                "candidates": [
+                    {"text": "The umbrella rests beside the platform clock.", "score": {"total": 2.0}},
+                    {
+                        "text": "The umbrella, now a garden, wraps vines around the station clock.",
+                        "score": {"total": 1.0},
+                    },
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=2)
+    rows = rating_sheet_rows(report, top_k=1)
+    assert len(rows) == 2
+    assert {row["kind"] for row in rows} == {"picked", "top_frontier"}
+    assert all("human_score" in row for row in rows)
+
+    csv_out = tmp_path / "ratings.csv"
+    md_out = tmp_path / "ratings.md"
+    write_rating_sheet(rows, str(csv_out))
+    write_rating_markdown(rows, str(md_out))
+
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        exported = list(csv.DictReader(f))
+    assert len(exported) == 2
+    assert exported[0]["human_notes"] == ""
+    assert "Human Rating Sheet" in md_out.read_text(encoding="utf-8")

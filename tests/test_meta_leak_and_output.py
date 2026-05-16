@@ -60,3 +60,31 @@ def test_frontier_selector_picks_readable_ontology_collapse():
     payload = run.to_dict()
     assert payload["config"]["select_objective"] == "frontier"
     assert payload["steps"][0]["picked"]["selector_metrics"]["readable_ontology_frontier"] > 0
+
+
+def test_banded_frontier_penalizes_out_of_band_collapse():
+    rng = random.Random(0)
+    generator = FixedGenerator(
+        [
+            "The umbrella becomes a tiny station garden beside the platform clock.",
+            "The umbrella, now a garden, wraps vines around the station clock.",
+            "The umbrella rests beside the platform clock.",
+        ]
+    )
+    engine = DepaysementEngine(
+        generator,
+        rng=rng,
+        selector=SelectorConfig(objective="banded-frontier"),
+    )
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=1,
+        candidates_per_step=3,
+        choose="best",
+        keep_candidates=3,
+    )
+
+    picked = run.steps[0].picked
+    assert "wraps vines" in picked.text
+    assert picked.selector_metrics["objective"] == "banded-frontier"
+    assert picked.selector_metrics["band_violation"] < run.steps[0].candidates[1].selector_metrics["band_violation"]

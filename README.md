@@ -73,6 +73,27 @@ Interpretation:
 These metrics are not treated as final truth. They are instruments for finding
 samples worth human reading.
 
+The follow-up post-hoc selector lab is saved in:
+
+- [post-hoc selector directory](experiments/posthoc_reselect_focus_best_lab/)
+- [post-hoc frontier report](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_report.md)
+- [post-hoc reading report](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_texts.md)
+- [post-hoc candidate CSV](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_candidates.csv)
+- [post-hoc research note](docs/research_notes/2026-05-16-posthoc-selector-lab.md)
+
+That lab performs no generation. It reuses the saved candidate pools from the
+focused sweep and asks which selector would have picked the readable frontier.
+
+| source alpha | original hybrid picked frontier | depaysement reselect | frontier reselect | pareto reselect | frontier changed steps |
+|---|---:|---:|---:|---:|---:|
+| `0.45` | 0.122 | 0.015 | 0.160 | 0.155 | 2 / 5 |
+| `0.60` | 0.123 | 0.005 | 0.194 | 0.111 | 3 / 5 |
+| `0.75` | 0.102 | 0.061 | 0.110 | 0.102 | 2 / 5 |
+
+The main read: the old depaysement selector was not seeing the frontier. A pure
+frontier selector finds stronger candidates, especially at `alpha=0.60`, while
+the hybrid selector remains the more conservative readable default.
+
 ## What Is Being Measured?
 
 The central audit decomposes candidate pools rather than only final outputs.
@@ -130,6 +151,40 @@ hybrid_score =
 
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
+
+## Post-hoc Selector Lab
+
+Saved candidate pools can be reselected without generating any new text:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p45_c12_tok140.json \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p6_c12_tok140.json \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p75_c12_tok140.json \
+  --select-objectives depaysement,frontier,hybrid,pareto \
+  --choose best \
+  --include-original \
+  --unfinished-weight 1.10 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --out-dir experiments/posthoc_reselect_focus_best_lab
+```
+
+By default, `reselect` scores each saved step against the recorded context that
+produced that candidate pool. This makes it a selector diagnostic, not a
+counterfactual trajectory simulator: if the post-hoc pick changes at step 2, the
+step 3 pool is still the originally generated step 3 pool.
+
+The command writes:
+
+```text
+posthoc_reselect_report.md       run-level selector comparison
+posthoc_reselect_report.json     full run and candidate audit
+posthoc_reselect_candidates.csv  candidate-level table
+posthoc_reselect_texts.md        human-readable generated texts
+posthoc_reselect.png             scatter plot
+*_reselect_*.json                reselected run artifacts
+```
 
 ## Install
 
@@ -278,6 +333,7 @@ src/depaysement_lab/
   scorer_v07.py       structural depaysement scorer
   ontology.py         ontology-collapse decomposition
   frontier.py         candidate-pool frontier auditor and plots
+  reselect.py         post-hoc selector laboratory for saved candidate pools
   mlx_intervention.py MLX steering-vector collection/injection
   observation.py      coherence-preserving displacement observer
   backends.py         MLX, HF, Ollama, OpenAI-compatible adapters
@@ -290,6 +346,9 @@ docs/research_notes/
 
 experiments/frontier_sweep_steered_hybrid_focus_best/
   published focused sweep artifacts
+
+experiments/posthoc_reselect_focus_best_lab/
+  published no-generation selector comparison artifacts
 ```
 
 ## Development
@@ -311,6 +370,9 @@ setup. Those messages are not part of the project API.
 - `unfinished` is still a coarse detector; future work should split it into
   hard truncation, control-token leakage, comma chains, repetition loops, and
   malformed tails.
+- Post-hoc reselection reuses saved downstream candidate pools after changed
+  picks, so it diagnoses selector behavior rather than simulating new
+  trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
 

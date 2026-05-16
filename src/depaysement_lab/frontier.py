@@ -494,7 +494,7 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
         "text",
     ]
     with out.open("w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         for run in report.runs:
             for row in run.rows:
@@ -617,7 +617,7 @@ def write_frontier_plot(report: FrontierAuditReport, path: str) -> None:
         )
         fig.suptitle("Readable Ontology Collapse Frontier", fontsize=15)
         fig.legend(handles=handles, loc="outside lower center", ncol=min(len(handles), 6), frameon=False)
-        fig.savefig(out, dpi=170)
+        fig.savefig(out, dpi=170, bbox_inches="tight", pad_inches=0.22)
         plt.close(fig)
         return
 
@@ -638,7 +638,7 @@ def write_frontier_plot(report: FrontierAuditReport, path: str) -> None:
     ax.grid(True, color="#d8d8d8", linewidth=0.6, alpha=0.55)
     if any(run.rows for run in report.runs):
         ax.legend(fontsize=7, loc="center left", bbox_to_anchor=(1.02, 0.5))
-    fig.savefig(out, dpi=160)
+    fig.savefig(out, dpi=160, bbox_inches="tight", pad_inches=0.16)
     plt.close(fig)
 
 

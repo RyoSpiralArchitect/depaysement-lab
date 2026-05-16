@@ -52,6 +52,7 @@ from .proto_v2 import (
     parse_layer_list,
     print_intervention_sketch,
 )
+from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
 from .scorer_v07 import image_relation_graph, make_scorer_v07 as make_scorer
 
 
@@ -340,6 +341,20 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--selector-unfinished-max", type=float, default=0.50, help="frontier selector unfinished/truncation ceiling")
 
 
+def add_scorer_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--bank", default=None)
+    p.add_argument("--lexicon", default=None)
+    p.add_argument("--disable-lexicon", action="store_true")
+    p.add_argument("--enable-lexicon", action="store_true")
+    p.add_argument("--lexicon-prior-scale", type=float, default=None)
+    p.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    p.add_argument("--no-bank-score", action="store_true")
+    p.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    p.add_argument("--bank-weight", type=float, default=None)
+    p.add_argument("--embed-model", default=None)
+    p.add_argument("--device", default=None)
+
+
 def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
     return SelectorConfig(
         objective=getattr(args, "select_objective", "depaysement"),
@@ -523,6 +538,30 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--bank-weight", type=float, default=None)
     pa.add_argument("--embed-model", default=None)
     pa.add_argument("--device", default=None)
+
+    rs = sub.add_parser("reselect", help="post-hoc reselect saved candidate pools without new generation")
+    add_selector_args(rs)
+    add_scorer_args(rs)
+    rs.add_argument("runs", nargs="+", help="saved write/observe/sweep JSON or JSONL artifacts with candidates")
+    rs.add_argument("--out-dir", required=True)
+    rs.add_argument(
+        "--select-objectives",
+        default=None,
+        help="comma-separated selector objectives; overrides --select-objective, e.g. depaysement,frontier,hybrid,pareto",
+    )
+    rs.add_argument("--choose", choices=["best", "softmax", "random_top3"], default="best")
+    rs.add_argument(
+        "--context-policy",
+        choices=["recorded", "reselected"],
+        default="recorded",
+        help="score each saved pool against its recorded context, or against the post-hoc reselected running context",
+    )
+    rs.add_argument("--include-original", action="store_true", help="include source runs in the comparison report")
+    rs.add_argument("--random-seed", type=int, default=7)
+    rs.add_argument("--top-k", type=int, default=12)
+    rs.add_argument("--ontology-threshold", type=float, default=0.23)
+    rs.add_argument("--readability-threshold", type=float, default=0.58)
+    rs.add_argument("--repair-threshold", type=float, default=0.35)
 
     fs = sub.add_parser("frontier-sweep", help="run alpha/candidate/token sweeps and audit the readable ontology collapse frontier")
     add_common_generation_args(fs)
@@ -1029,6 +1068,20 @@ def parse_int_grid(raw: str) -> List[int]:
     return vals or [1]
 
 
+def parse_objective_grid(raw: Optional[str], fallback: str) -> List[str]:
+    allowed = {"depaysement", "frontier", "hybrid", "pareto"}
+    vals: List[str] = []
+    for part in str(raw or fallback or "").split(","):
+        value = part.strip()
+        if not value:
+            continue
+        if value not in allowed:
+            raise ValueError(f"unknown select objective: {value!r}")
+        if value not in vals:
+            vals.append(value)
+    return vals or [fallback]
+
+
 def safe_float_label(x: float) -> str:
     txt = f"{float(x):.3f}".rstrip("0").rstrip(".")
     return txt.replace("-", "neg").replace(".", "p") or "0"
@@ -1065,6 +1118,85 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
         print(json.dumps(report.to_dict(include_rows=True), ensure_ascii=False, indent=2))
     elif not args.out:
         print(format_frontier_report(report, top_k=args.top_k))
+
+
+def cmd_reselect(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    objectives = parse_objective_grid(args.select_objectives, args.select_objective)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    all_results = []
+    selector_configs: Dict[str, Any] = {}
+    for objective in objectives:
+        obj_args = copy.copy(args)
+        obj_args.select_objective = objective
+        selector = make_selector_config(obj_args)
+        selector_configs[objective] = selector.to_dict()
+        all_results.extend(
+            posthoc_reselect_files(
+                args.runs,
+                scorer=scorer,
+                selector=selector,
+                choose=args.choose,
+                random_seed=args.random_seed,
+                context_policy=args.context_policy,
+            )
+        )
+
+    batch = write_posthoc_reselect_batch(all_results, str(out_dir))
+    audit_paths = list(args.runs) if args.include_original else []
+    audit_paths.extend(batch.paths)
+    report = audit_frontier_pool(
+        audit_paths,
+        scorer=scorer,
+        top_k=args.top_k,
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+
+    md_path = out_dir / "posthoc_reselect_report.md"
+    json_path = out_dir / "posthoc_reselect_report.json"
+    csv_path = out_dir / "posthoc_reselect_candidates.csv"
+    plot_path = out_dir / "posthoc_reselect.png"
+    texts_path = out_dir / "posthoc_reselect_texts.md"
+    md_path.write_text(format_frontier_report(report, top_k=args.top_k), encoding="utf-8")
+    write_frontier_json(report, str(json_path), include_rows=True)
+    write_frontier_csv(report, str(csv_path))
+    write_frontier_reading_report(report, str(texts_path))
+    try:
+        write_frontier_plot(report, str(plot_path))
+    except RuntimeError as e:
+        print(f"[reselect] plot skipped: {e}", file=sys.stderr)
+
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "source_runs": list(args.runs),
+        "output_runs": batch.paths,
+        "objectives": objectives,
+        "choose": args.choose,
+        "context_policy": args.context_policy,
+        "include_original": bool(args.include_original),
+        "selector": selector_configs,
+        "report_md": str(md_path),
+        "report_json": str(json_path),
+        "candidate_csv": str(csv_path),
+        "plot": str(plot_path) if plot_path.exists() else None,
+        "texts": str(texts_path),
+        "notes": [
+            "Post-hoc reselection reuses saved candidate pools and performs no new generation.",
+            "With context-policy=recorded, each candidate is rescored against the context that produced its pool.",
+            "With context-policy=reselected, downstream candidate pools are still the originally saved pools.",
+            *batch.notes,
+        ],
+    }
+    (out_dir / "posthoc_reselect_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print(format_frontier_report(report, top_k=min(args.top_k, 8)))
+    print(f"\n[reselect] wrote {out_dir}", file=sys.stderr)
 
 
 def cmd_frontier_sweep(args: argparse.Namespace) -> None:
@@ -1237,6 +1369,8 @@ def main() -> None:
         cmd_observe(args)
     elif args.command == "pool-audit":
         cmd_pool_audit(args)
+    elif args.command == "reselect":
+        cmd_reselect(args)
     elif args.command == "frontier-sweep":
         cmd_frontier_sweep(args)
     elif args.command == "show-bank":

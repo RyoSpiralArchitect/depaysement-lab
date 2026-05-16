@@ -523,7 +523,7 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
                         "meta_leak": m.get("meta_leak", 0.0),
                         "identity_melt_count": m.get("identity_melt_count", 0),
                         "affordance_corruption_count": m.get("affordance_corruption_count", 0),
-                        "text": row.text,
+                        "text": _csv_text(row.text),
                     }
                 )
 
@@ -603,7 +603,7 @@ def rating_sheet_rows(
             "score_total": row.score_total,
             "human_score": "",
             "human_notes": "",
-            "text": row.text,
+            "text": _csv_text(row.text),
         }
         seen[key] = len(rows)
         rows.append(out)
@@ -677,6 +677,10 @@ def write_rating_markdown(rows: Sequence[Mapping[str, Any]], path: str) -> None:
 def _rating_row_id(row: FrontierCandidateRow, seq: int) -> str:
     base = f"{Path(row.path).stem or row.run_name}_s{row.step}_c{row.candidate_index}_{seq}"
     return re.sub(r"[^A-Za-z0-9_.-]+", "_", base).strip("._") or f"rating_{seq}"
+
+
+def _csv_text(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
 
 
 def write_frontier_plot(report: FrontierAuditReport, path: str) -> None:

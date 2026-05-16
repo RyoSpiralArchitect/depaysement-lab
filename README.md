@@ -84,6 +84,8 @@ The follow-up post-hoc selector lab is saved in:
 - [human rating sheet](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.csv)
 - [human rating reading view](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.md)
 - [banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-rating-sheet.md)
+- [actual banded-frontier generation sweep](experiments/frontier_sweep_banded_frontier_focus/)
+- [actual banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-generation.md)
 
 That lab performs no generation. It reuses the saved candidate pools from the
 focused sweep and asks which selector would have picked the readable frontier.
@@ -111,6 +113,30 @@ readability, repair, and unfinished bands.
 The practical interpretation is that pure `frontier` is a good oracle for the
 upper envelope, while `banded-frontier` is the better candidate for the next real
 generation run.
+
+That next real generation run has now been executed for `alpha=0.45` and
+`alpha=0.60`:
+
+| selector | alpha | pool frontier | picked frontier | lift | picked ontology | picked readability | picked unfinished | picked hit rate |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `hybrid` | `0.45` | 0.029 | 0.122 | +0.093 | 0.485 | 0.600 | 0.160 | 0.40 |
+| `hybrid` | `0.60` | 0.046 | 0.123 | +0.078 | 0.344 | 0.695 | 0.080 | 0.60 |
+| `banded-frontier` | `0.45` | 0.039 | 0.137 | +0.098 | 0.537 | 0.587 | 0.160 | 0.60 |
+| `banded-frontier` | `0.60` | 0.038 | 0.170 | +0.132 | 0.500 | 0.745 | 0.080 | 1.00 |
+
+The best current setting is therefore:
+
+```text
+alpha = 0.60
+candidates = 12
+max_new_tokens = 140
+selector = banded-frontier
+choose = best
+```
+
+The remaining problem is not whether the selector can find frontier material.
+It can. The remaining problem is tail control: late-step continuations can still
+end in malformed or unfinished fragments.
 
 ## What Is Being Measured?
 
@@ -396,6 +422,9 @@ experiments/posthoc_reselect_focus_best_lab/
 
 experiments/posthoc_reselect_banded_frontier_lab/
   published banded-frontier comparison and human rating sheet
+
+experiments/frontier_sweep_banded_frontier_focus/
+  published actual banded-frontier generation sweep
 ```
 
 ## Development

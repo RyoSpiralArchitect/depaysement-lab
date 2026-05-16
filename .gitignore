@@ -39,3 +39,5 @@ experiments/*
 !experiments/posthoc_reselect_focus_best_lab/**
 !experiments/posthoc_reselect_banded_frontier_lab/
 !experiments/posthoc_reselect_banded_frontier_lab/**
+!experiments/frontier_sweep_banded_frontier_focus/
+!experiments/frontier_sweep_banded_frontier_focus/**

@@ -138,6 +138,18 @@ The remaining problem is not whether the selector can find frontier material.
 It can. The remaining problem is tail control: late-step continuations can still
 end in malformed or unfinished fragments.
 
+The first human taste pass for that actual generation run is now saved in:
+
+- [human taste analysis](experiments/frontier_sweep_banded_frontier_focus/human_rating_analysis.md)
+- [human-rated sheet](experiments/frontier_sweep_banded_frontier_focus/human_rating_sheet.csv)
+- [human taste research note](docs/research_notes/2026-05-17-human-taste-pass.md)
+
+The strongest early signal is that human taste is not just the frontier metric.
+The highest-rated rows include unpicked top-frontier candidates, and the notes
+prefer oddness, daydream drift, and legible distortion over highly polished or
+predictable writing. This points toward a two-stage selector: use
+`banded-frontier` to stay readable, then rerank inside that band for human taste.
+
 ## What Is Being Measured?
 
 The central audit decomposes candidate pools rather than only final outputs.

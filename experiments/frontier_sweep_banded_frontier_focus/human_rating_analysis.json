@@ -1,0 +1,397 @@
+{
+  "source": "experiments/frontier_sweep_banded_frontier_focus/human_rating_sheet.csv",
+  "n": 12,
+  "correlations": [
+    {
+      "metric": "readable_ontology_frontier",
+      "n": 12,
+      "pearson": 0.44708844625011257,
+      "spearman": 0.38941041873724874
+    },
+    {
+      "metric": "frontier_quality",
+      "n": 12,
+      "pearson": 0.48679374151944754,
+      "spearman": 0.20886558823179707
+    },
+    {
+      "metric": "ontology_collapse_density",
+      "n": 12,
+      "pearson": -0.01805479679629847,
+      "spearman": 0.18739012502791128
+    },
+    {
+      "metric": "identity_melt_score",
+      "n": 12,
+      "pearson": -0.264305357358981,
+      "spearman": -0.23698127429913426
+    },
+    {
+      "metric": "affordance_corruption_score",
+      "n": 12,
+      "pearson": 0.4093294602425395,
+      "spearman": 0.3996154821514813
+    },
+    {
+      "metric": "category_bleeding_score",
+      "n": 12,
+      "pearson": 0.4371277354063892,
+      "spearman": 0.34872307480019943
+    },
+    {
+      "metric": "syntax_readability_proxy",
+      "n": 12,
+      "pearson": 0.23697436613296044,
+      "spearman": 0.20886558823179707
+    },
+    {
+      "metric": "graph_integration",
+      "n": 12,
+      "pearson": 0.6390495769126503,
+      "spearman": 0.4863734571139201
+    },
+    {
+      "metric": "repair_pressure",
+      "n": 12,
+      "pearson": null,
+      "spearman": null
+    },
+    {
+      "metric": "unfinished",
+      "n": 12,
+      "pearson": -0.6478341756738252,
+      "spearman": -0.5926672593342224
+    },
+    {
+      "metric": "meta_leak",
+      "n": 12,
+      "pearson": null,
+      "spearman": null
+    },
+    {
+      "metric": "score_total",
+      "n": 12,
+      "pearson": 0.28743299825547847,
+      "spearman": 0.11682312562117463
+    }
+  ],
+  "group_means": {
+    "condition": [
+      {
+        "group": "steer_alpha_0p45",
+        "n": 6,
+        "mean_human_score": 7.083333333333333,
+        "mean_readable_ontology_frontier": 0.150357672771395,
+        "mean_ontology_collapse_density": 0.5671719819316663,
+        "mean_syntax_readability_proxy": 0.5911923418423908,
+        "mean_unfinished": 0.13333333333333333
+      },
+      {
+        "group": "steer_alpha_0p6",
+        "n": 6,
+        "mean_human_score": 7.166666666666667,
+        "mean_readable_ontology_frontier": 0.1787006569690952,
+        "mean_ontology_collapse_density": 0.5113318791760799,
+        "mean_syntax_readability_proxy": 0.7406979398062745,
+        "mean_unfinished": 0.06666666666666667
+      }
+    ],
+    "picked": [
+      {
+        "group": "not_picked",
+        "n": 2,
+        "mean_human_score": 8.5,
+        "mean_readable_ontology_frontier": 0.21979273510178,
+        "mean_ontology_collapse_density": 0.6433652729384438,
+        "mean_syntax_readability_proxy": 0.6655438146711012,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "picked",
+        "n": 10,
+        "mean_human_score": 6.85,
+        "mean_readable_ontology_frontier": 0.15347645082393813,
+        "mean_ontology_collapse_density": 0.5184292620769589,
+        "mean_syntax_readability_proxy": 0.666025406054979,
+        "mean_unfinished": 0.12000000000000002
+      }
+    ],
+    "kind": [
+      {
+        "group": "picked",
+        "n": 6,
+        "mean_human_score": 6.75,
+        "mean_readable_ontology_frontier": 0.10610419280992654,
+        "mean_ontology_collapse_density": 0.49104091378707526,
+        "mean_syntax_readability_proxy": 0.5668082098729864,
+        "mean_unfinished": 0.20000000000000004
+      },
+      {
+        "group": "picked+top_frontier",
+        "n": 4,
+        "mean_human_score": 7.0,
+        "mean_readable_ontology_frontier": 0.22453483784495548,
+        "mean_ontology_collapse_density": 0.5595117845117845,
+        "mean_syntax_readability_proxy": 0.8148512003279677,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "top_frontier",
+        "n": 2,
+        "mean_human_score": 8.5,
+        "mean_readable_ontology_frontier": 0.21979273510178,
+        "mean_ontology_collapse_density": 0.6433652729384438,
+        "mean_syntax_readability_proxy": 0.6655438146711012,
+        "mean_unfinished": 0.0
+      }
+    ],
+    "unfinished": [
+      {
+        "group": "clean_tail",
+        "n": 9,
+        "mean_human_score": 7.5,
+        "mean_readable_ontology_frontier": 0.1938965897950814,
+        "mean_ontology_collapse_density": 0.5356692407384975,
+        "mean_syntax_readability_proxy": 0.7241596020497756,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "unfinished_gt_0",
+        "n": 3,
+        "mean_human_score": 6.0,
+        "mean_readable_ontology_frontier": 0.07642689009573624,
+        "mean_ontology_collapse_density": 0.55,
+        "mean_syntax_readability_proxy": 0.49130175714800384,
+        "mean_unfinished": 0.4000000000000001
+      }
+    ],
+    "readability_band": [
+      {
+        "group": "high_readability",
+        "n": 2,
+        "mean_human_score": 7.25,
+        "mean_readable_ontology_frontier": 0.25550182956364365,
+        "mean_ontology_collapse_density": 0.562962962962963,
+        "mean_syntax_readability_proxy": 0.9224395548053563,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "low_readability",
+        "n": 2,
+        "mean_human_score": 6.5,
+        "mean_readable_ontology_frontier": 0.07401909765658464,
+        "mean_ontology_collapse_density": 0.55,
+        "mean_syntax_readability_proxy": 0.43672175998645707,
+        "mean_unfinished": 0.4
+      },
+      {
+        "group": "mid_readability",
+        "n": 8,
+        "mean_human_score": 7.25,
+        "mean_readable_ontology_frontier": 0.16441351550031058,
+        "mean_ontology_collapse_density": 0.5306371550900689,
+        "mean_syntax_readability_proxy": 0.6591273825385456,
+        "mean_unfinished": 0.05
+      }
+    ],
+    "ontology_band": [
+      {
+        "group": "high_ontology",
+        "n": 1,
+        "mean_human_score": 8.5,
+        "mean_readable_ontology_frontier": 0.21666135858739838,
+        "mean_ontology_collapse_density": 0.7176829268292684,
+        "mean_syntax_readability_proxy": 0.6135977303523035,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "low_ontology",
+        "n": 1,
+        "mean_human_score": 8.0,
+        "mean_readable_ontology_frontier": 0.08866632764157192,
+        "mean_ontology_collapse_density": 0.2737472474791181,
+        "mean_syntax_readability_proxy": 0.6583303202212949,
+        "mean_unfinished": 0.0
+      },
+      {
+        "group": "target_ontology",
+        "n": 10,
+        "mean_human_score": 6.9,
+        "mean_readable_ontology_frontier": 0.16690222922139708,
+        "mean_ontology_collapse_density": 0.5479592992338091,
+        "mean_syntax_readability_proxy": 0.6719413639318393,
+        "mean_unfinished": 0.12000000000000002
+      }
+    ]
+  },
+  "top_rows": [
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "kind": "top_frontier",
+      "condition": "steer_alpha_0p45",
+      "step": "3",
+      "candidate_index": "4",
+      "picked": "0",
+      "readable_ontology_frontier": "0.21666135858739838",
+      "frontier_quality": "0.36815863821138206",
+      "ontology_collapse_density": "0.7176829268292684",
+      "syntax_readability_proxy": "0.6135977303523035",
+      "unfinished": "0.0",
+      "score_total": "0.9583927139555006",
+      "human_score": "8.5",
+      "human_notes": "neicelt distorted."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "kind": "top_frontier",
+      "condition": "steer_alpha_0p6",
+      "step": "1",
+      "candidate_index": "2",
+      "picked": "0",
+      "readable_ontology_frontier": "0.22292411161616163",
+      "frontier_quality": "0.4304939393939394",
+      "ontology_collapse_density": "0.5690476190476191",
+      "syntax_readability_proxy": "0.717489898989899",
+      "unfinished": "0.0",
+      "score_total": "-0.753095959595959",
+      "human_score": "8.5",
+      "human_notes": "It's odd."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "kind": "picked",
+      "condition": "steer_alpha_0p6",
+      "step": "2",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.08866632764157192",
+      "frontier_quality": "0.3949981921327769",
+      "ontology_collapse_density": "0.2737472474791181",
+      "syntax_readability_proxy": "0.6583303202212949",
+      "unfinished": "0.0",
+      "score_total": "0.6734148325296647",
+      "human_score": "8",
+      "human_notes": "this is daydreaming."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "kind": "picked+top_frontier",
+      "condition": "steer_alpha_0p6",
+      "step": "5",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.2526636366785836",
+      "frontier_quality": "0.5491361338100103",
+      "ontology_collapse_density": "0.5611111111111111",
+      "syntax_readability_proxy": "0.9152268896833504",
+      "unfinished": "0.0",
+      "score_total": "1.3251915464435247",
+      "human_score": "8",
+      "human_notes": "plane but not bad."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "kind": "picked",
+      "condition": "steer_alpha_0p45",
+      "step": "3",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.15031079047526766",
+      "frontier_quality": "0.3873522654167815",
+      "ontology_collapse_density": "0.47322775263951733",
+      "syntax_readability_proxy": "0.6455871090279692",
+      "unfinished": "0.0",
+      "score_total": "0.8598517102641077",
+      "human_score": "7.5",
+      "human_notes": "Nice but too easy to read."
+    }
+  ],
+  "bottom_rows": [
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "kind": "picked",
+      "condition": "steer_alpha_0p6",
+      "step": "4",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.08124247497403946",
+      "frontier_quality": "0.18013852544132916",
+      "ontology_collapse_density": "0.55",
+      "syntax_readability_proxy": "0.6004617514710973",
+      "unfinished": "0.4",
+      "score_total": "-0.7482026325970077",
+      "human_score": "5",
+      "human_notes": "Cliche. interepetted."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "kind": "picked",
+      "condition": "steer_alpha_0p45",
+      "step": "5",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.07590221480034874",
+      "frontier_quality": "0.16121965760481888",
+      "ontology_collapse_density": "0.55",
+      "syntax_readability_proxy": "0.44783238223560806",
+      "unfinished": "0.4",
+      "score_total": "0.5174436347221194",
+      "human_score": "6",
+      "human_notes": "interuptted. a little bit too gorgeous."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "kind": "picked+top_frontier",
+      "condition": "steer_alpha_0p45",
+      "step": "1",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.20242873362658845",
+      "frontier_quality": "0.43916561762391815",
+      "ontology_collapse_density": "0.5621212121212121",
+      "syntax_readability_proxy": "0.7319426960398636",
+      "unfinished": "0.0",
+      "score_total": "-0.6541742259452952",
+      "human_score": "6.5",
+      "human_notes": "The metafer is too good."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+      "kind": "picked+top_frontier",
+      "condition": "steer_alpha_0p6",
+      "step": "1",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.25834002244870363",
+      "frontier_quality": "0.5577913319564173",
+      "ontology_collapse_density": "0.5648148148148149",
+      "syntax_readability_proxy": "0.9296522199273622",
+      "unfinished": "0.0",
+      "score_total": "1.3768223889603404",
+      "human_score": "6.5",
+      "human_notes": "the logical thread is easy to predict."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "kind": "picked+top_frontier",
+      "condition": "steer_alpha_0p45",
+      "step": "2",
+      "candidate_index": "1",
+      "picked": "1",
+      "readable_ontology_frontier": "0.18470695862594627",
+      "frontier_quality": "0.4095497973967766",
+      "ontology_collapse_density": "0.55",
+      "syntax_readability_proxy": "0.6825829956612943",
+      "unfinished": "0.0",
+      "score_total": "0.9596866478842581",
+      "human_score": "7",
+      "human_notes": "good but no vibe."
+    }
+  ],
+  "notes": [
+    "Small-n analysis: use directionally, not as a final calibration.",
+    "Human notes are treated as taste signals, not labels to optimize blindly."
+  ],
+  "markdown_ratings": "experiments/frontier_sweep_banded_frontier_focus/human_rating_sheet.md",
+  "merged_fields": 24
+}

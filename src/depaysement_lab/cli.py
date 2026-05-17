@@ -57,6 +57,14 @@ from .proto_v2 import (
     print_intervention_sketch,
 )
 from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
+from .ratings import (
+    DEFAULT_RATING_METRICS,
+    analyze_rating_rows,
+    format_rating_analysis,
+    load_rating_rows,
+    merge_markdown_ratings,
+    write_rating_rows,
+)
 from .scorer_v07 import image_relation_graph, make_scorer_v07 as make_scorer
 
 
@@ -509,6 +517,17 @@ def build_parser() -> argparse.ArgumentParser:
     hr.add_argument("--repair-threshold", type=float, default=0.35)
     add_scorer_args(hr)
 
+    ra = sub.add_parser("rating-analyze", help="analyze human_score correlations in a rating sheet")
+    ra.add_argument("rating_sheet", help="CSV or JSONL rating sheet with human_score values")
+    ra.add_argument("--markdown-ratings", default=None, help="merge scores/notes from a Markdown reading view")
+    ra.add_argument("--update-sheet", action="store_true", help="write merged Markdown ratings back to rating_sheet")
+    ra.add_argument("--out", default=None, help="write Markdown analysis report")
+    ra.add_argument("--json-out", default=None, help="write JSON analysis report")
+    ra.add_argument(
+        "--metrics",
+        default=",".join(DEFAULT_RATING_METRICS),
+        help="comma-separated numeric metric columns to correlate with human_score",
+    )
 
     ob = sub.add_parser("observe", help="run baseline vs depaysement rerank vs steering+rerank and measure coherence-preserving displacement")
     add_common_generation_args(ob)
@@ -1160,6 +1179,33 @@ def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
         print(f"Wrote rating reading view: {args.markdown_out}")
 
 
+def cmd_rating_analyze(args: argparse.Namespace) -> None:
+    rows, fieldnames = load_rating_rows(args.rating_sheet)
+    merged_fields = 0
+    if args.markdown_ratings:
+        merged_fields = merge_markdown_ratings(rows, args.markdown_ratings)
+        if args.update_sheet:
+            write_rating_rows(args.rating_sheet, rows, fieldnames)
+            print(f"Updated rating sheet: {args.rating_sheet} ({merged_fields} merged fields)")
+    metrics = [m.strip() for m in str(args.metrics or "").split(",") if m.strip()]
+    analysis = analyze_rating_rows(rows, metrics=metrics, source=args.rating_sheet)
+    analysis["markdown_ratings"] = args.markdown_ratings
+    analysis["merged_fields"] = merged_fields
+    markdown = format_rating_analysis(analysis)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(markdown, encoding="utf-8")
+        print(f"Wrote rating analysis: {out}")
+    if args.json_out:
+        out = Path(args.json_out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(analysis, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote rating analysis JSON: {out}")
+    if not args.out and not args.json_out:
+        print(markdown)
+
+
 def cmd_reselect(args: argparse.Namespace) -> None:
     scorer = make_scorer(args)
     objectives = parse_objective_grid(args.select_objectives, args.select_objective)
@@ -1407,6 +1453,8 @@ def main() -> None:
         cmd_eval_correlate(args)
     elif args.command == "export-rating-sheet":
         cmd_export_rating_sheet(args)
+    elif args.command == "rating-analyze":
+        cmd_rating_analyze(args)
     elif args.command == "observe":
         cmd_observe(args)
     elif args.command == "pool-audit":

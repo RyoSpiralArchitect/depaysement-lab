@@ -60,6 +60,7 @@ def test_frontier_selector_picks_readable_ontology_collapse():
     payload = run.to_dict()
     assert payload["config"]["select_objective"] == "frontier"
     assert payload["steps"][0]["picked"]["selector_metrics"]["readable_ontology_frontier"] > 0
+    assert "cliche_attractor_score" in payload["steps"][0]["picked"]["selector_metrics"]
 
 
 def test_banded_frontier_penalizes_out_of_band_collapse():
@@ -88,3 +89,38 @@ def test_banded_frontier_penalizes_out_of_band_collapse():
     assert "wraps vines" in picked.text
     assert picked.selector_metrics["objective"] == "banded-frontier"
     assert picked.selector_metrics["band_violation"] < run.steps[0].candidates[1].selector_metrics["band_violation"]
+
+
+def test_anchor_guard_steers_selector_away_from_stock_fantasy_props():
+    rng = random.Random(0)
+    generator = FixedGenerator(
+        [
+            "An antique music box opens inside a porcelain miniature clock.",
+            "The umbrella becomes a garden that grips the station sign with wet vines.",
+            "The umbrella rests beside the station wall.",
+        ]
+    )
+    engine = DepaysementEngine(
+        generator,
+        rng=rng,
+        selector=SelectorConfig(
+            objective="hybrid",
+            fantasy_prop_weight=2.0,
+            ordinary_anchor_weight=1.0,
+            ordinary_anchor_min=0.5,
+        ),
+    )
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=1,
+        candidates_per_step=3,
+        choose="best",
+        keep_candidates=3,
+    )
+
+    picked = run.steps[0].picked
+    fantasy = next(c for c in run.steps[0].candidates if "music box" in c.text)
+    assert "station sign" in picked.text
+    assert fantasy.selector_metrics["fantasy_prop_score"] > picked.selector_metrics["fantasy_prop_score"]
+    assert picked.selector_metrics["ordinary_anchor_retention"] >= 0.5
+    assert "umbrella" in picked.selector_metrics["ordinary_anchor_hits"]

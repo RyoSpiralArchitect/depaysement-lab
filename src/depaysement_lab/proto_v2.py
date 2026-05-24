@@ -1445,6 +1445,47 @@ def extract_prompt_motifs(prompt: str) -> List[str]:
 
 SELECT_OBJECTIVES: Tuple[str, ...] = ("depaysement", "frontier", "banded-frontier", "hybrid", "pareto")
 
+FANTASY_PROP_WEIGHTS: Dict[str, float] = {
+    # Targeted attractors from the mundane-seed steering probe.  Plain "clock"
+    # and "forgotten" are deliberately omitted: they can be ordinary seed
+    # material, while the phrases below usually mark a stock miniature-antique
+    # register.
+    "music box": 1.25,
+    "porcelain": 1.00,
+    "miniature": 0.80,
+    "tiny ballerina": 1.20,
+    "ballerina": 0.80,
+    "doll": 0.75,
+    "antique": 0.75,
+    "leather-bound": 1.00,
+    "leather bound": 1.00,
+    "velvet": 0.75,
+    "ornate": 0.65,
+    "crystal": 0.70,
+    "ivory": 0.60,
+    "lullaby": 0.75,
+    "filigree": 0.75,
+    "clockwork": 0.70,
+    "grandfather clock": 0.80,
+    "pocket watch": 0.80,
+    "forgotten dreams": 0.75,
+}
+
+ORDINARY_ANCHOR_STOPWORDS = {
+    "about", "above", "after", "again", "against", "along", "also", "amid", "among", "around",
+    "away", "back", "because", "before", "behind", "below", "beneath", "beside", "between",
+    "beyond", "both", "could", "down", "each", "even", "ever", "every", "from", "here", "into",
+    "itself", "like", "made", "make", "makes", "many", "more", "most", "near", "next", "only",
+    "onto", "outside", "over", "same", "should", "still", "than", "that", "their", "them", "then",
+    "there", "these", "they", "this", "those", "through", "under", "until", "upon", "very", "were",
+    "what", "when", "where", "which", "while", "with", "within", "without", "would", "your",
+    "become", "becomes", "became", "turned", "turns", "turning", "touch", "touches", "touching",
+    "rests", "rested", "resting", "leans", "leaning", "opens", "opening", "wraps", "wrapped",
+    "forgotten", "ordinary", "concrete", "visible", "possible", "random", "small", "large", "tiny",
+    "dusty", "faded", "delicate", "strange", "silent", "soft", "faint", "glowing", "golden",
+    "silver", "moonlit", "ethereal", "ghostly", "spectral", "melancholic", "mournful", "haunting",
+}
+
 
 @dataclass
 class SelectorConfig:
@@ -1455,6 +1496,10 @@ class SelectorConfig:
     repair_weight: float = 0.60
     repetition_weight: float = 0.30
     sprawl_weight: float = 0.20
+    cliche_weight: float = 0.0
+    fantasy_prop_weight: float = 0.0
+    ordinary_anchor_weight: float = 0.0
+    ordinary_anchor_min: float = 0.0
     ontology_min: float = 0.20
     ontology_max: float = 0.60
     readability_min: float = 0.55
@@ -1683,6 +1728,14 @@ class DepaysementEngine:
         readability = float(metrics.syntax_readability_proxy)
         repair = float(metrics.repair_pressure)
         unfinished = float(metrics.unfinished)
+        cliche = float(getattr(metrics, "cliche_attractor_score", 0.0))
+        fantasy_prop, fantasy_hits = fantasy_prop_score(text)
+        ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
+            clean_context,
+            text,
+            concept_fields=self.scorer.concept_fields if self.scorer.lexicon_enabled else None,
+        )
+        ordinary_anchor_deficit = max(0.0, cfg.ordinary_anchor_min - ordinary_anchor)
         repetition = max(0.0, -_score_attr(candidate.score, "anti_repetition"))
         sprawl = max(
             float(metrics.graph_fragmentation),
@@ -1696,6 +1749,9 @@ class DepaysementEngine:
             + cfg.repair_weight * repair
             + cfg.repetition_weight * repetition
             + cfg.sprawl_weight * sprawl
+            + cfg.cliche_weight * cliche
+            + cfg.fantasy_prop_weight * fantasy_prop
+            + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
         )
         readability_deficit = max(0.0, cfg.readability_min - readability)
         frontier_quality_deficit = max(0.0, cfg.frontier_quality_min - quality)
@@ -1712,6 +1768,8 @@ class DepaysementEngine:
             + cfg.unfinished_weight * unfinished_excess
             + 0.30 * repetition
             + 0.30 * sprawl
+            + cfg.fantasy_prop_weight * fantasy_prop
+            + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
         )
         hybrid_score = (
             float(candidate.score.total)
@@ -1728,6 +1786,7 @@ class DepaysementEngine:
             and quality >= cfg.frontier_quality_min
             and repair <= cfg.repair_max
             and unfinished <= cfg.unfinished_max
+            and ordinary_anchor >= cfg.ordinary_anchor_min
         )
         banded_frontier_score = (
             (1.0 if eligible else 0.0)
@@ -1763,6 +1822,17 @@ class DepaysementEngine:
             "graph_fragmentation": float(metrics.graph_fragmentation),
             "repair_pressure": repair,
             "repair_excess": float(repair_excess),
+            "cliche_attractor_score": cliche,
+            "cliche_penalty": float(cfg.cliche_weight * cliche),
+            "fantasy_prop_score": float(fantasy_prop),
+            "fantasy_prop_hits": list(fantasy_hits),
+            "fantasy_prop_penalty": float(cfg.fantasy_prop_weight * fantasy_prop),
+            "ordinary_anchor_retention": float(ordinary_anchor),
+            "ordinary_anchor_weighted": float(cfg.ordinary_anchor_weight * ordinary_anchor),
+            "ordinary_anchor_terms": list(ordinary_terms),
+            "ordinary_anchor_hits": list(ordinary_hits),
+            "ordinary_anchor_deficit": float(ordinary_anchor_deficit),
+            "ordinary_anchor_penalty": float(cfg.ordinary_anchor_weight * ordinary_anchor_deficit),
             "unfinished": unfinished,
             "unfinished_excess": float(unfinished_excess),
             "repetition_pressure": float(repetition),
@@ -1860,6 +1930,84 @@ def _selector_bandpass(value: float, low: float, high: float) -> float:
     return clamp((1.0 - value) / max(1.0 - high, 1e-12), 0.0, 1.0)
 
 
+def fantasy_prop_score(text: str) -> Tuple[float, Tuple[str, ...]]:
+    hits: List[str] = []
+    weight = 0.0
+    low = text.lower()
+    for term, term_weight in FANTASY_PROP_WEIGHTS.items():
+        if anchor_in_text(term, low):
+            hits.append(term)
+            weight += float(term_weight)
+    if not hits:
+        return 0.0, ()
+    scale = max(2.0, len(rough_tokens(text)) / 45.0)
+    return clamp(weight / scale, 0.0, 1.0), tuple(sorted(hits))
+
+
+def ordinary_anchor_retention(
+    context: str,
+    text: str,
+    *,
+    concept_fields: Optional[Mapping[str, Sequence[str]]] = None,
+) -> Tuple[float, Tuple[str, ...], Tuple[str, ...]]:
+    terms = ordinary_anchor_terms(context, concept_fields=concept_fields)
+    if not terms:
+        return 1.0, (), ()
+    low = text.lower()
+    hits = tuple(term for term in terms if anchor_in_text(term, low))
+    target = max(1, min(4, len(terms)))
+    return clamp(len(hits) / target, 0.0, 1.0), hits, tuple(terms)
+
+
+def ordinary_anchor_terms(
+    context: str,
+    *,
+    concept_fields: Optional[Mapping[str, Sequence[str]]] = None,
+    limit: int = 12,
+) -> Tuple[str, ...]:
+    low = context.lower()
+    fantasy_words: set[str] = set()
+    for term in fantasy_prop_score(context)[1]:
+        fantasy_words.update(re.findall(r"[a-zA-Z]{3,}", term.lower()))
+
+    ordered: List[Tuple[int, str]] = []
+    if concept_fields:
+        for words in concept_fields.values():
+            for word in words:
+                term = word.lower()
+                if _is_ordinary_anchor_term(term, fantasy_words) and anchor_in_text(term, low):
+                    pos = low.find(term)
+                    ordered.append((pos if pos >= 0 else len(low), term))
+
+    for match in re.finditer(r"[a-zA-Z][a-zA-Z'-]{2,}", context):
+        term = match.group(0).lower().strip("'")
+        if _is_ordinary_anchor_term(term, fantasy_words):
+            ordered.append((match.start(), term))
+
+    out: List[str] = []
+    seen: set[str] = set()
+    for _pos, term in sorted(ordered, key=lambda item: (item[0], item[1])):
+        if term in seen:
+            continue
+        seen.add(term)
+        out.append(term)
+        if len(out) >= limit:
+            break
+    return tuple(out)
+
+
+def _is_ordinary_anchor_term(term: str, fantasy_words: set[str]) -> bool:
+    if not term or not is_valid_anchor(term):
+        return False
+    if term in ORDINARY_ANCHOR_STOPWORDS or term in fantasy_words:
+        return False
+    if term in FANTASY_PROP_WEIGHTS:
+        return False
+    if re.fullmatch(r"\d+", term):
+        return False
+    return True
+
+
 def _selector_dominates(left: Candidate, right: Candidate) -> bool:
     lm = left.selector_metrics
     rm = right.selector_metrics
@@ -1867,23 +2015,29 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("depaysement_score", 0.0)),
         float(lm.get("readable_ontology_frontier", 0.0)),
         float(lm.get("ontology_band_score", 0.0)),
+        float(lm.get("ordinary_anchor_weighted", 0.0)),
     )
     right_good = (
         float(rm.get("depaysement_score", 0.0)),
         float(rm.get("readable_ontology_frontier", 0.0)),
         float(rm.get("ontology_band_score", 0.0)),
+        float(rm.get("ordinary_anchor_weighted", 0.0)),
     )
     left_bad = (
         float(lm.get("unfinished", 0.0)),
         float(lm.get("repair_pressure", 0.0)),
         float(lm.get("repetition_pressure", 0.0)),
         float(lm.get("sprawl_pressure", 0.0)),
+        float(lm.get("fantasy_prop_penalty", 0.0)),
+        float(lm.get("ordinary_anchor_penalty", 0.0)),
     )
     right_bad = (
         float(rm.get("unfinished", 0.0)),
         float(rm.get("repair_pressure", 0.0)),
         float(rm.get("repetition_pressure", 0.0)),
         float(rm.get("sprawl_pressure", 0.0)),
+        float(rm.get("fantasy_prop_penalty", 0.0)),
+        float(rm.get("ordinary_anchor_penalty", 0.0)),
     )
     no_worse = all(left >= right for left, right in zip(left_good, right_good)) and all(
         left <= right for left, right in zip(left_bad, right_bad)

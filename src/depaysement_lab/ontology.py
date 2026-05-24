@@ -34,6 +34,17 @@ ATMOSPHERE_TERMS = {
     "yellowed", "tarnished", "threadbare", "moth-eaten", "grimy", "stagnant", "hidden",
 }
 
+# Audit-only vocabulary attractors that often make samples feel like generic
+# magic-realist prose rather than a local ontology shift from ordinary language.
+CLICHE_ATTRACTOR_TERMS = {
+    "antique", "music box", "porcelain", "velvet", "ethereal", "moonlit", "crystal",
+    "mist", "fog", "spectral", "ghostly", "melancholic", "forgotten dreams",
+    "leather-bound", "faded photograph", "old man", "old woman", "tiny ballerina",
+    "silver mist", "crimson velvet", "glass eyes", "dusty shelf", "ornate",
+    "delicate", "iridescent", "mournful", "haunting", "gossamer", "lullaby",
+    "whispering", "whispers", "soft glow", "faint glow", "timeless",
+}
+
 # This is intentionally audit-only. It is not a reward lexicon.
 FIELD_EXTENSIONS: Dict[str, List[str]] = {
     "body": ["finger", "fingers", "bony", "eye", "eyes", "paw", "mouth", "knuckles", "face"],
@@ -123,6 +134,9 @@ class OntologyMetrics:
     atmospheric_density_per_100: float
     atmosphere_terms: List[str]
     atmospheric_conservation: float
+    cliche_attractor_density_per_100: float
+    cliche_attractor_score: float
+    cliche_attractor_hits: List[str]
     repair_pressure: float
     repair_markers: List[str]
     narrative_anti_resolution: float
@@ -150,6 +164,7 @@ class OntologyMetrics:
             f"bleed={self.category_bleeding_score:.3f} | "
             f"repair={self.repair_pressure:.3f} | "
             f"read={self.syntax_readability_proxy:.3f} | "
+            f"cliche={self.cliche_attractor_score:.3f} | "
             f"atm={self.atmospheric_conservation:.3f} | "
             f"frontier={self.readable_surreal_frontier:.3f}"
         )
@@ -216,6 +231,9 @@ class OntologyAuditor:
         atmosphere_terms = sorted(atmosphere_hits(clean))
         atmosphere_density = 100.0 * len(atmosphere_terms) / token_count
         atm_conservation = atmosphere_conservation(clean, context=context)
+        cliche_hits = sorted(cliche_attractor_hits(clean))
+        cliche_density = 100.0 * len(cliche_hits) / token_count
+        cliche_score = cliche_attractor_score(clean, token_count=token_count)
         repair_markers = repair_pressure_markers(clean)
         repair_pressure = min(1.0, len(repair_markers) / max(2.0, token_count / 55.0))
         narrative_anti_resolution = max(0.0, 1.0 - repair_pressure)
@@ -250,6 +268,9 @@ class OntologyAuditor:
             atmospheric_density_per_100=atmosphere_density,
             atmosphere_terms=atmosphere_terms,
             atmospheric_conservation=atm_conservation,
+            cliche_attractor_density_per_100=cliche_density,
+            cliche_attractor_score=cliche_score,
+            cliche_attractor_hits=cliche_hits,
             repair_pressure=repair_pressure,
             repair_markers=repair_markers,
             narrative_anti_resolution=narrative_anti_resolution,
@@ -442,6 +463,21 @@ def atmosphere_conservation(text: str, *, context: str = "") -> float:
     return len(here & prev) / max(1, len(here | prev))
 
 
+def cliche_attractor_hits(text: str) -> set[str]:
+    low = normalize_text(text).lower()
+    return {t for t in CLICHE_ATTRACTOR_TERMS if wordish_pattern(t).search(low)}
+
+
+def cliche_attractor_score(text: str, *, token_count: Optional[int] = None) -> float:
+    toks = rough_tokens(text)
+    n_tokens = max(1, int(token_count or len(toks) or 1))
+    hits = cliche_attractor_hits(text)
+    if not hits:
+        return 0.0
+    scale = max(3.0, n_tokens / 45.0)
+    return clamp01(len(hits) / scale)
+
+
 def repair_pressure_markers(text: str) -> List[str]:
     low = normalize_text(text).lower()
     markers: List[str] = []
@@ -493,6 +529,7 @@ def aggregate_ontology_rows(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]
         "ontology_collapse_density", "identity_melt_score", "identity_melt_density_per_100",
         "affordance_corruption_score", "affordance_corruption_density_per_100", "category_bleeding_score",
         "atmospheric_conservation", "atmospheric_density_per_100", "repair_pressure",
+        "cliche_attractor_score", "cliche_attractor_density_per_100",
         "narrative_anti_resolution", "syntax_readability_proxy", "readable_surreal_frontier",
         "graph_fragmentation", "graph_integration", "relation_quantity", "unfinished", "meta_leak",
     ]

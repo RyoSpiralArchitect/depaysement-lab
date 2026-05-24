@@ -175,10 +175,15 @@ frontier_quality
 
 readable_ontology_frontier
   ontology collapse density multiplied by frontier quality
+
+cliche_attractor_score
+  audit-only density of generic magic-realist vocabulary such as antique,
+  porcelain, velvet, ethereal, music box, and moonlit terms
 ```
 
 Failure examples are also retained: high ontology collapse with poor readability,
-truncation, repetition, repair pressure, or graph fragmentation.
+truncation, repetition, repair pressure, cliche-attractor drift, or graph
+fragmentation.
 
 ## Selector Objectives
 
@@ -204,7 +209,16 @@ hybrid_score =
   - repair_weight * repair_pressure
   - repetition_weight * repetition_pressure
   - sprawl_weight * sprawl_pressure
+  - cliche_weight * cliche_attractor_score
+  - fantasy_prop_weight * fantasy_prop_score
+  - ordinary_anchor_weight * ordinary_anchor_deficit
 ```
+
+`cliche_weight` defaults to `0.0`, so old runs are unchanged.  Use it when you
+want to discourage generic magic-realist diction after measuring it.
+`fantasy_prop_weight` targets stock antique/miniature/porcelain props, while
+`ordinary_anchor_weight` discourages candidates that drop mundane source anchors
+such as `receipt`, `folder`, `bus`, `spreadsheet`, or `fridge`.
 
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
@@ -346,6 +360,59 @@ frontier_sweep_texts.md        human-readable generated texts
 frontier_sweep.png             scatter plot
 steer_alpha_*.json             saved generation runs with candidates
 ```
+
+### Multi-seed Mundane Probe
+
+To test whether steering can move ordinary language rather than just falling
+into literary attractors, sweep a mundane seed bank:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
+  --steps 5 \
+  --alphas 0.66,0.72,0.77,0.82,0.88 \
+  --candidate-grid 19 \
+  --max-token-grid 140 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.05 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.15 \
+  --out-dir experiments/frontier_sweep_mundane_seed_probe
+```
+
+`--seed-bank` accepts a JSON list, a JSON object with `seeds`, or a plain text
+file with one seed per line.
+
+After a mundane-seed sweep, reselect saved candidate pools without regenerating:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --unfinished-weight 1.05 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.55 \
+  --fantasy-prop-weight 0.75 \
+  --ordinary-anchor-weight 0.90 \
+  --ordinary-anchor-min 0.50 \
+  --out-dir experiments/posthoc_reselect_mundane_dual_guard
+```
+
+This tests whether better taste can be recovered from existing pools by
+penalizing generic attractors and requiring the prose to retain some ordinary
+source pressure.
 
 ## Collect MLX Steering Vectors
 

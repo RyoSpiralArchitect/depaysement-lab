@@ -45,6 +45,10 @@ FRONTIER_METRICS: Tuple[str, ...] = (
     "graph_integration",
     "graph_fragmentation",
     "repair_pressure",
+    "cliche_attractor_score",
+    "fantasy_prop_score",
+    "ordinary_anchor_retention",
+    "ordinary_anchor_drop",
     "atmospheric_conservation",
     "unfinished",
     "meta_leak",
@@ -164,6 +168,7 @@ class FrontierAuditor:
                 candidates.append(picked)
             if expected_candidates and 0 < len(candidates) < expected_candidates:
                 truncated_steps += 1
+            picked_candidate_index = _first_picked_candidate_index(candidates, picked_text)
             for cand_idx, cand in enumerate(candidates, 1):
                 if not isinstance(cand, Mapping):
                     continue
@@ -175,6 +180,8 @@ class FrontierAuditor:
                 score_total = float(self.scorer.score(text, context=context).total)
                 m = self.ontology.audit_text(text, context=context)
                 frontier_score, frontier_quality = readable_frontier_score(m)
+                metrics = m.to_dict()
+                metrics.update(anchor_guard_metrics(context, text, scorer=self.scorer))
                 rows.append(
                     FrontierCandidateRow(
                         run_name=name,
@@ -182,13 +189,13 @@ class FrontierAuditor:
                         path=path,
                         step=int(step.get("step") or step_idx),
                         candidate_index=cand_idx,
-                        picked=(text == picked_text),
+                        picked=(cand_idx == picked_candidate_index),
                         text=text,
                         context_before=context,
                         score_total=score_total,
                         readable_ontology_frontier=frontier_score,
                         frontier_quality=frontier_quality,
-                        metrics=m.to_dict(),
+                        metrics=metrics,
                         source_score=dict(score_dict),
                         raw_text=raw_text,
                     )
@@ -213,6 +220,17 @@ class FrontierAuditor:
             aggregate=agg,
             rows=rows,
         )
+
+
+def _first_picked_candidate_index(candidates: Sequence[Any], picked_text: str) -> Optional[int]:
+    if not picked_text:
+        return None
+    for idx, cand in enumerate(candidates, 1):
+        if not isinstance(cand, Mapping):
+            continue
+        if clean_generated_text(str(cand.get("text") or "")) == picked_text:
+            return idx
+    return None
 
 
 def audit_frontier_pool(
@@ -288,6 +306,30 @@ def readable_frontier_score(m: OntologyMetrics) -> Tuple[float, float]:
     )
     frontier = clamp01(float(m.ontology_collapse_density) * quality * atmosphere_factor)
     return frontier, quality
+
+
+def anchor_guard_metrics(context: str, text: str, *, scorer: Optional[V07DepaysementScorer] = None) -> Dict[str, Any]:
+    """Expose selector-side mundane-anchor diagnostics in pool audits."""
+
+    from .proto_v2 import fantasy_prop_score, ordinary_anchor_retention
+
+    concept_fields = None
+    if scorer is not None and getattr(scorer, "lexicon_enabled", False):
+        concept_fields = getattr(scorer, "concept_fields", None)
+    anchor, anchor_hits, anchor_terms = ordinary_anchor_retention(
+        context,
+        text,
+        concept_fields=concept_fields,
+    )
+    fantasy, fantasy_hits = fantasy_prop_score(text)
+    return {
+        "ordinary_anchor_retention": float(anchor),
+        "ordinary_anchor_drop": float(1.0 - anchor),
+        "ordinary_anchor_terms": list(anchor_terms),
+        "ordinary_anchor_hits": list(anchor_hits),
+        "fantasy_prop_score": float(fantasy),
+        "fantasy_prop_hits": list(fantasy_hits),
+    }
 
 
 def failure_score(row: FrontierCandidateRow) -> float:
@@ -405,11 +447,16 @@ def compare_frontier_runs(runs: Sequence[FrontierRunAudit]) -> List[Dict[str, An
         "pool_mean_syntax_readability_proxy",
         "pool_mean_graph_integration",
         "pool_mean_repair_pressure",
+        "pool_mean_cliche_attractor_score",
+        "pool_mean_fantasy_prop_score",
+        "pool_mean_ordinary_anchor_retention",
         "pool_unfinished_rate",
         "picked_mean_readable_ontology_frontier",
         "picked_mean_ontology_collapse_density",
+        "picked_mean_ordinary_anchor_retention",
         "selection_lift_readable_ontology_frontier",
         "selection_lift_ontology_collapse_density",
+        "selection_lift_ordinary_anchor_retention",
     )
     comps: List[Dict[str, Any]] = []
     for other in runs[1:]:
@@ -430,8 +477,15 @@ def compare_interpretation(delta: Mapping[str, float]) -> str:
     front = float(delta.get("pool_mean_readable_ontology_frontier", 0.0))
     read = float(delta.get("pool_mean_syntax_readability_proxy", 0.0))
     repair = float(delta.get("pool_mean_repair_pressure", 0.0))
+    cliche = float(delta.get("pool_mean_cliche_attractor_score", 0.0))
+    prop = float(delta.get("pool_mean_fantasy_prop_score", 0.0))
+    anchor = float(delta.get("pool_mean_ordinary_anchor_retention", 0.0))
     sel = float(delta.get("selection_lift_readable_ontology_frontier", 0.0))
     unfinished = float(delta.get("pool_unfinished_rate", 0.0))
+    if anchor < -0.12 and prop > 0.10 and front <= 0.03:
+        return "pool drifted away from ordinary anchors into stock fantasy props"
+    if cliche > 0.18 and front <= 0.03:
+        return "pool drifted toward generic magic-realist vocabulary without a clear frontier gain"
     if front > 0.04 and ont > 0.07 and read > -0.12 and repair <= 0.10 and unfinished <= 0.20:
         return "candidate pool itself moved toward the readable ontology collapse frontier"
     if front <= 0.02 and sel > 0.05:
@@ -458,6 +512,9 @@ def compact_row(row: FrontierCandidateRow) -> Dict[str, Any]:
         "readability": round(float(m.get("syntax_readability_proxy", 0.0)), 4),
         "graph_integration": round(float(m.get("graph_integration", 0.0)), 4),
         "repair": round(float(m.get("repair_pressure", 0.0)), 4),
+        "cliche": round(float(m.get("cliche_attractor_score", 0.0)), 4),
+        "fantasy_prop": round(float(m.get("fantasy_prop_score", 0.0)), 4),
+        "anchor": round(float(m.get("ordinary_anchor_retention", 0.0)), 4),
         "unfinished": round(float(m.get("unfinished", 0.0)), 4),
         "identity_melt_events": m.get("identity_melt_events", [])[:3],
         "affordance_corruption_events": m.get("affordance_corruption_events", [])[:3],
@@ -486,6 +543,14 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
         "graph_integration",
         "graph_fragmentation",
         "repair_pressure",
+        "cliche_attractor_score",
+        "cliche_attractor_density_per_100",
+        "fantasy_prop_score",
+        "fantasy_prop_hits",
+        "ordinary_anchor_retention",
+        "ordinary_anchor_drop",
+        "ordinary_anchor_terms",
+        "ordinary_anchor_hits",
         "atmospheric_conservation",
         "unfinished",
         "meta_leak",
@@ -518,6 +583,14 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
                         "graph_integration": m.get("graph_integration", 0.0),
                         "graph_fragmentation": m.get("graph_fragmentation", 0.0),
                         "repair_pressure": m.get("repair_pressure", 0.0),
+                        "cliche_attractor_score": m.get("cliche_attractor_score", 0.0),
+                        "cliche_attractor_density_per_100": m.get("cliche_attractor_density_per_100", 0.0),
+                        "fantasy_prop_score": m.get("fantasy_prop_score", 0.0),
+                        "fantasy_prop_hits": "; ".join(m.get("fantasy_prop_hits", []) or []),
+                        "ordinary_anchor_retention": m.get("ordinary_anchor_retention", 0.0),
+                        "ordinary_anchor_drop": m.get("ordinary_anchor_drop", 0.0),
+                        "ordinary_anchor_terms": "; ".join(m.get("ordinary_anchor_terms", []) or []),
+                        "ordinary_anchor_hits": "; ".join(m.get("ordinary_anchor_hits", []) or []),
                         "atmospheric_conservation": m.get("atmospheric_conservation", 0.0),
                         "unfinished": m.get("unfinished", 0.0),
                         "meta_leak": m.get("meta_leak", 0.0),
@@ -546,6 +619,10 @@ RATING_SHEET_FIELDS: Tuple[str, ...] = (
     "syntax_readability_proxy",
     "graph_integration",
     "repair_pressure",
+    "cliche_attractor_score",
+    "fantasy_prop_score",
+    "ordinary_anchor_retention",
+    "ordinary_anchor_hits",
     "unfinished",
     "meta_leak",
     "score_total",
@@ -569,15 +646,16 @@ def rating_sheet_rows(
     """
 
     rows: List[Dict[str, Any]] = []
-    seen: Dict[Tuple[str, str, int, int, str], int] = {}
+    seen: Dict[Tuple[str, str, int, str], int] = {}
 
     def add(row: FrontierCandidateRow, kind: str) -> None:
-        key = (row.path, row.run_name, row.step, row.candidate_index, row.text)
+        key = (row.path, row.run_name, row.step, row.text)
         existing = seen.get(key)
         if existing is not None:
             kinds = set(str(rows[existing]["kind"]).split("+"))
             kinds.add(kind)
             rows[existing]["kind"] = "+".join(sorted(kinds))
+            rows[existing]["picked"] = int(bool(rows[existing].get("picked")) or row.picked)
             return
         m = row.metrics
         out = {
@@ -598,6 +676,10 @@ def rating_sheet_rows(
             "syntax_readability_proxy": m.get("syntax_readability_proxy", 0.0),
             "graph_integration": m.get("graph_integration", 0.0),
             "repair_pressure": m.get("repair_pressure", 0.0),
+            "cliche_attractor_score": m.get("cliche_attractor_score", 0.0),
+            "fantasy_prop_score": m.get("fantasy_prop_score", 0.0),
+            "ordinary_anchor_retention": m.get("ordinary_anchor_retention", 0.0),
+            "ordinary_anchor_hits": "; ".join(m.get("ordinary_anchor_hits", []) or []),
             "unfinished": m.get("unfinished", 0.0),
             "meta_leak": m.get("meta_leak", 0.0),
             "score_total": row.score_total,
@@ -657,6 +739,9 @@ def write_rating_markdown(rows: Sequence[Mapping[str, Any]], path: str) -> None:
                     f"frontier={float(row.get('readable_ontology_frontier') or 0.0):.3f} | "
                     f"ont={float(row.get('ontology_collapse_density') or 0.0):.3f} | "
                     f"read={float(row.get('syntax_readability_proxy') or 0.0):.3f} | "
+                    f"cliche={float(row.get('cliche_attractor_score') or 0.0):.3f} | "
+                    f"prop={float(row.get('fantasy_prop_score') or 0.0):.3f} | "
+                    f"anchor={float(row.get('ordinary_anchor_retention') or 0.0):.3f} | "
                     f"repair={float(row.get('repair_pressure') or 0.0):.3f} | "
                     f"unfinished={float(row.get('unfinished') or 0.0):.3f}"
                 ),
@@ -839,8 +924,12 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                     f"pool_read={a.get('pool_mean_syntax_readability_proxy', 0.0):.3f}",
                     f"pool_integr={a.get('pool_mean_graph_integration', 0.0):.3f}",
                     f"pool_repair={a.get('pool_mean_repair_pressure', 0.0):.3f}",
+                    f"pool_cliche={a.get('pool_mean_cliche_attractor_score', 0.0):.3f}",
+                    f"pool_prop={a.get('pool_mean_fantasy_prop_score', 0.0):.3f}",
+                    f"pool_anchor={a.get('pool_mean_ordinary_anchor_retention', 0.0):.3f}",
                     f"pool_unfinished={a.get('pool_unfinished_rate', 0.0):.3f}",
                     f"picked_frontier={a.get('picked_mean_readable_ontology_frontier', 0.0):.3f}",
+                    f"picked_anchor={a.get('picked_mean_ordinary_anchor_retention', 0.0):.3f}",
                     f"selection_lift={a.get('selection_lift_readable_ontology_frontier', 0.0):+.3f}",
                 ]
             )
@@ -862,6 +951,9 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                         f"Δidentity={float(delta.get('pool_mean_identity_melt_score', 0.0)):+.3f}",
                         f"Δread={float(delta.get('pool_mean_syntax_readability_proxy', 0.0)):+.3f}",
                         f"Δrepair={float(delta.get('pool_mean_repair_pressure', 0.0)):+.3f}",
+                        f"Δcliche={float(delta.get('pool_mean_cliche_attractor_score', 0.0)):+.3f}",
+                        f"Δprop={float(delta.get('pool_mean_fantasy_prop_score', 0.0)):+.3f}",
+                        f"Δanchor={float(delta.get('pool_mean_ordinary_anchor_retention', 0.0)):+.3f}",
                         f"Δunfinished={float(delta.get('pool_unfinished_rate', 0.0)):+.3f}",
                     ]
                 )
@@ -872,7 +964,8 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
         for ex in report.top_frontier_examples[:top_k]:
             lines.append(
                 f"- {ex['run']} step {ex['step']} cand {ex['candidate_index']} "
-                f"picked={ex['picked']} frontier={ex['frontier']:.3f} ont={ex['ontology']:.3f} read={ex['readability']:.3f}: "
+                f"picked={ex['picked']} frontier={ex['frontier']:.3f} ont={ex['ontology']:.3f} read={ex['readability']:.3f} "
+                f"cliche={ex['cliche']:.3f} prop={ex['fantasy_prop']:.3f} anchor={ex['anchor']:.3f}: "
                 f"{truncate(ex['text'], 230)}"
             )
         lines.append("")
@@ -881,7 +974,9 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
         for ex in report.failure_examples[:top_k]:
             lines.append(
                 f"- {ex['run']} step {ex['step']} cand {ex['candidate_index']} "
-                f"picked={ex['picked']} ont={ex['ontology']:.3f} read={ex['readability']:.3f} repair={ex['repair']:.3f} unfinished={ex['unfinished']:.3f}: "
+                f"picked={ex['picked']} ont={ex['ontology']:.3f} read={ex['readability']:.3f} "
+                f"cliche={ex['cliche']:.3f} prop={ex['fantasy_prop']:.3f} anchor={ex['anchor']:.3f} "
+                f"repair={ex['repair']:.3f} unfinished={ex['unfinished']:.3f}: "
                 f"{truncate(ex['text'], 230)}"
             )
         lines.append("")
@@ -951,7 +1046,9 @@ def format_frontier_reading_report(report: FrontierAuditReport, *, top_k_per_run
                             f"#### Step {row.step} candidate {row.candidate_index} "
                             f"(frontier={row.readable_ontology_frontier:.3f}, "
                             f"ont={float(row.metrics.get('ontology_collapse_density', 0.0)):.3f}, "
-                            f"read={float(row.metrics.get('syntax_readability_proxy', 0.0)):.3f})"
+                            f"read={float(row.metrics.get('syntax_readability_proxy', 0.0)):.3f}, "
+                            f"prop={float(row.metrics.get('fantasy_prop_score', 0.0)):.3f}, "
+                            f"anchor={float(row.metrics.get('ordinary_anchor_retention', 0.0)):.3f})"
                         ),
                         "",
                         "```text",
@@ -970,7 +1067,9 @@ def format_frontier_reading_report(report: FrontierAuditReport, *, top_k_per_run
                             f"#### Step {row.step} candidate {row.candidate_index} ({picked_note}; "
                             f"frontier={row.readable_ontology_frontier:.3f}, "
                             f"ont={float(row.metrics.get('ontology_collapse_density', 0.0)):.3f}, "
-                            f"read={float(row.metrics.get('syntax_readability_proxy', 0.0)):.3f})"
+                            f"read={float(row.metrics.get('syntax_readability_proxy', 0.0)):.3f}, "
+                            f"prop={float(row.metrics.get('fantasy_prop_score', 0.0)):.3f}, "
+                            f"anchor={float(row.metrics.get('ordinary_anchor_retention', 0.0)):.3f})"
                         ),
                         "",
                         "```text",

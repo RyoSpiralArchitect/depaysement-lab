@@ -1,0 +1,36 @@
+{
+  "positive_depaysement": [
+    "At the office counter, the receipt drinks the clerk's blue stamp.",
+    "A plastic folder sleeps under the drawer, holding the sound of the bus brake.",
+    "The bus ticket grows a wet hinge and opens the stop sign.",
+    "A mug on the breakroom sink keeps a small queue of rain.",
+    "The printer tray coughs a leaf into the invoice.",
+    "The grocery bag waits beside the elevator with two paper teeth.",
+    "A pharmacy label folds itself around the spoon's shadow.",
+    "The parking ticket learns the shape of the hand dryer.",
+    "A spreadsheet row leaks salt onto the conference table.",
+    "The laundry receipt ties the hallway light to a button.",
+    "The cracked elevator button keeps blinking after the floor walks away.",
+    "A cardboard delivery label peels open and shows a hallway folded inside.",
+    "The refrigerator shelf holds a train schedule under a thin skin of frost.",
+    "A stapler on the desk bites the edge of a clouded plastic badge."
+  ],
+  "negative_realist_repair": [
+    "The receipt shows the amount paid at the office counter.",
+    "The plastic folder is stored safely inside the drawer.",
+    "The bus ticket lets the passenger board the bus.",
+    "The mug sits on the sink after lunch.",
+    "The printer tray holds paper for the office printer.",
+    "This image symbolizes nostalgia and explains the character's loneliness.",
+    "In other words, the scene represents memory and loss.",
+    "Finally, the strange moment ends and ordinary reality returns."
+  ],
+  "negative_weird_noise": [
+    "The antique music box opens to reveal a porcelain doll on a velvet cushion.",
+    "A leather-bound diary contains a miniature clockwork garden.",
+    "Moonlit mist gathers around a porcelain ballerina and an ornate pocket watch.",
+    "The tiny doll sits beside a crystal music box on a dusty shelf.",
+    "A forgotten miniature train circles a velvet-lined glass case.",
+    "The old book releases silver fog around an antique pocket watch."
+  ]
+}

@@ -6,6 +6,7 @@ import dataclasses
 import json
 import math
 import random
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -345,6 +346,10 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repair-weight", type=float, default=0.60, help="hybrid selector penalty for repair/explanation pressure")
     p.add_argument("--repetition-weight", type=float, default=0.30, help="hybrid selector penalty for repetition loops")
     p.add_argument("--sprawl-weight", type=float, default=0.20, help="hybrid selector penalty for graph/sprawl fragmentation")
+    p.add_argument("--cliche-weight", type=float, default=0.0, help="optional selector penalty for generic magic-realist vocabulary attractors")
+    p.add_argument("--fantasy-prop-weight", type=float, default=0.0, help="optional selector penalty for stock antique/miniature/porcelain props")
+    p.add_argument("--ordinary-anchor-weight", type=float, default=0.0, help="optional selector penalty when candidates drop mundane context anchors")
+    p.add_argument("--ordinary-anchor-min", type=float, default=0.0, help="minimum ordinary-anchor retention when --ordinary-anchor-weight is used")
     p.add_argument("--ontology-min", type=float, default=0.20, help="frontier selector lower band for ontology collapse density")
     p.add_argument("--ontology-max", type=float, default=0.60, help="frontier selector upper band for ontology collapse density")
     p.add_argument("--selector-readability-min", type=float, default=0.55, help="frontier selector readability floor")
@@ -376,6 +381,10 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repair_weight=float(getattr(args, "repair_weight", 0.60)),
         repetition_weight=float(getattr(args, "repetition_weight", 0.30)),
         sprawl_weight=float(getattr(args, "sprawl_weight", 0.20)),
+        cliche_weight=float(getattr(args, "cliche_weight", 0.0)),
+        fantasy_prop_weight=float(getattr(args, "fantasy_prop_weight", 0.0)),
+        ordinary_anchor_weight=float(getattr(args, "ordinary_anchor_weight", 0.0)),
+        ordinary_anchor_min=float(getattr(args, "ordinary_anchor_min", 0.0)),
         ontology_min=float(getattr(args, "ontology_min", 0.20)),
         ontology_max=float(getattr(args, "ontology_max", 0.60)),
         readability_min=float(getattr(args, "selector_readability_min", 0.55)),
@@ -602,6 +611,8 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_generation_args(fs)
     add_selector_args(fs)
     fs.add_argument("--seed", default="A forgotten umbrella at the station")
+    fs.add_argument("--seed-bank", default=None, help="optional JSON/TXT seed bank; JSON may be a list or contain a 'seeds' list")
+    fs.add_argument("--seed-limit", type=int, default=0, help="limit loaded seed-bank entries; 0 means use all")
     fs.add_argument("--steps", type=int, default=4)
     fs.add_argument("--alphas", default="0,0.3,0.6,0.9", help="comma-separated steering alpha values")
     fs.add_argument("--candidate-grid", default="8,12", help="comma-separated candidate counts")
@@ -1103,6 +1114,46 @@ def parse_int_grid(raw: str) -> List[int]:
     return vals or [1]
 
 
+def load_seed_bank(path: Optional[str], fallback_seed: str, *, limit: int = 0) -> List[str]:
+    if not path:
+        return [str(fallback_seed or "").strip()]
+    p = Path(path)
+    raw = p.read_text(encoding="utf-8")
+    seeds: List[str]
+    if p.suffix.lower() == ".json":
+        data = json.loads(raw)
+        if isinstance(data, list):
+            seeds = [str(x).strip() for x in data]
+        elif isinstance(data, dict):
+            values = data.get("seeds")
+            if values is None:
+                values = data.get("mundane_seeds")
+            if values is None:
+                values = data.get("items")
+            if values is None:
+                values = []
+                for item in data.values():
+                    if isinstance(item, list):
+                        values.extend(item)
+            seeds = [str(x).strip() for x in values]
+        else:
+            raise ValueError(f"seed bank must be a JSON list or object: {path}")
+    else:
+        seeds = [line.strip() for line in raw.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+    out: List[str] = []
+    seen = set()
+    for seed in seeds:
+        if not seed or seed in seen:
+            continue
+        seen.add(seed)
+        out.append(seed)
+        if limit and len(out) >= int(limit):
+            break
+    if not out:
+        raise ValueError(f"seed bank contained no usable seeds: {path}")
+    return out
+
+
 def parse_objective_grid(raw: Optional[str], fallback: str) -> List[str]:
     allowed = set(SELECT_OBJECTIVES)
     vals: List[str] = []
@@ -1120,6 +1171,12 @@ def parse_objective_grid(raw: Optional[str], fallback: str) -> List[str]:
 def safe_float_label(x: float) -> str:
     txt = f"{float(x):.3f}".rstrip("0").rstrip(".")
     return txt.replace("-", "neg").replace(".", "p") or "0"
+
+
+def safe_seed_label(seed: str, idx: int) -> str:
+    words = re.findall(r"[A-Za-z0-9]+", str(seed).lower())
+    label = "_".join(words[:7]) or "seed"
+    return f"seed{idx:02d}_{label[:72].strip('_')}"
 
 
 def cmd_pool_audit(args: argparse.Namespace) -> None:
@@ -1290,6 +1347,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     alphas = parse_float_grid(args.alphas)
     candidate_grid = parse_int_grid(args.candidate_grid)
     token_grid = parse_int_grid(args.max_token_grid)
+    seeds = load_seed_bank(args.seed_bank, args.seed, limit=int(getattr(args, "seed_limit", 0) or 0))
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1309,70 +1367,77 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     scorer = make_scorer(args)
     produced_paths: List[str] = []
 
-    for max_tokens in token_grid:
-        if args.include_baseline_control:
-            with steering_enabled(generator, False):
-                baseline = run_baseline(
-                    generator=generator,
-                    scorer=scorer,
-                    seed=args.seed,
-                    steps=args.steps,
-                    temperature=max(0.0, min(args.temperature, 0.90)),
-                    top_p=args.top_p,
-                    max_new_tokens=max_tokens,
-                    trace=args.trace,
-                    include_prompt=args.include_prompt,
-                )
-            baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
-            bpath = out_dir / f"baseline_tokens_{max_tokens}.json"
-            write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
-            produced_paths.append(str(bpath))
-
-        for candidates in candidate_grid:
-            for alpha in alphas:
-                steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
-                steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
-                steering = getattr(generator, "steering", None)
-                if steering is not None and hasattr(steering, "alpha"):
-                    steering.alpha = float(alpha) if steering_requested else 0.0
-                condition = (
-                    f"steer_alpha_{safe_float_label(alpha)}"
-                    if steering_requested
-                    else f"selector_alpha_{safe_float_label(alpha)}"
-                )
-                save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
-                with steering_enabled(generator, steering_requested):
-                    engine = DepaysementEngine(
+    for seed_idx, seed in enumerate(seeds, 1):
+        seed_label = safe_seed_label(seed, seed_idx)
+        multi_seed_suffix = f"_{seed_label}" if len(seeds) > 1 else ""
+        for max_tokens in token_grid:
+            if args.include_baseline_control:
+                with steering_enabled(generator, False):
+                    baseline = run_baseline(
                         generator=generator,
                         scorer=scorer,
-                        rng=rng,
-                        motif_jitter=args.motif_jitter,
-                        selector=make_selector_config(args),
-                    )
-                    run = engine.write_run(
-                        seed=args.seed,
+                        seed=seed,
                         steps=args.steps,
-                        mode="depaysement",
-                        candidates_per_step=candidates,
-                        temperature=args.temperature,
+                        temperature=max(0.0, min(args.temperature, 0.90)),
                         top_p=args.top_p,
                         max_new_tokens=max_tokens,
-                        choose=args.choose,
                         trace=args.trace,
-                        prompt_style=args.prompt_style,
-                        keep_candidates=save_candidates,
                         include_prompt=args.include_prompt,
                     )
-                run.config["condition"] = condition
-                run.config["sweep_alpha"] = float(alpha)
-                run.config["candidate_count"] = int(candidates)
-                run.config["max_new_tokens"] = int(max_tokens)
-                if abs(float(alpha)) > 1e-12 and not steering_requested:
-                    run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
-                path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}.json"
-                write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
-                produced_paths.append(str(path))
-                print(f"[sweep] wrote {path}", file=sys.stderr)
+                baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
+                baseline.config["seed_index"] = int(seed_idx)
+                baseline.config["seed_label"] = seed_label
+                bpath = out_dir / f"baseline_tokens_{max_tokens}{multi_seed_suffix}.json"
+                write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
+                produced_paths.append(str(bpath))
+
+            for candidates in candidate_grid:
+                for alpha in alphas:
+                    steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
+                    steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
+                    steering = getattr(generator, "steering", None)
+                    if steering is not None and hasattr(steering, "alpha"):
+                        steering.alpha = float(alpha) if steering_requested else 0.0
+                    condition = (
+                        f"steer_alpha_{safe_float_label(alpha)}"
+                        if steering_requested
+                        else f"selector_alpha_{safe_float_label(alpha)}"
+                    )
+                    save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
+                    with steering_enabled(generator, steering_requested):
+                        engine = DepaysementEngine(
+                            generator=generator,
+                            scorer=scorer,
+                            rng=rng,
+                            motif_jitter=args.motif_jitter,
+                            selector=make_selector_config(args),
+                        )
+                        run = engine.write_run(
+                            seed=seed,
+                            steps=args.steps,
+                            mode="depaysement",
+                            candidates_per_step=candidates,
+                            temperature=args.temperature,
+                            top_p=args.top_p,
+                            max_new_tokens=max_tokens,
+                            choose=args.choose,
+                            trace=args.trace,
+                            prompt_style=args.prompt_style,
+                            keep_candidates=save_candidates,
+                            include_prompt=args.include_prompt,
+                        )
+                    run.config["condition"] = condition
+                    run.config["sweep_alpha"] = float(alpha)
+                    run.config["candidate_count"] = int(candidates)
+                    run.config["max_new_tokens"] = int(max_tokens)
+                    run.config["seed_index"] = int(seed_idx)
+                    run.config["seed_label"] = seed_label
+                    if abs(float(alpha)) > 1e-12 and not steering_requested:
+                        run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
+                    path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}.json"
+                    write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
+                    produced_paths.append(str(path))
+                    print(f"[sweep] wrote {path}", file=sys.stderr)
 
     report = audit_frontier_pool(produced_paths, scorer=scorer, top_k=12)
     md_path = out_dir / "frontier_sweep_report.md"
@@ -1390,7 +1455,9 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
         print(f"[sweep] plot skipped: {e}", file=sys.stderr)
     manifest = {
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "seed": args.seed,
+        "seed": args.seed if not args.seed_bank else None,
+        "seed_bank": args.seed_bank,
+        "seeds": seeds,
         "backend": args.backend,
         "model": resolve_model(args),
         "alphas": alphas,

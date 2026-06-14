@@ -54,6 +54,9 @@ FRONTIER_METRICS: Tuple[str, ...] = (
     "ordinary_anchor_drop",
     "atmospheric_conservation",
     "unfinished",
+    "hard_ban_failed",
+    "hard_ban_hit_count",
+    "hard_gate_failed",
     "meta_leak",
     "score_total",
 )
@@ -245,6 +248,23 @@ class FrontierAuditor:
                 frontier_score, frontier_quality = readable_frontier_score(m)
                 metrics = m.to_dict()
                 metrics.update(anchor_guard_metrics(context, text, scorer=self.scorer))
+                selector_metrics = cand.get("selector_metrics") if isinstance(cand.get("selector_metrics"), Mapping) else {}
+                metrics.update(
+                    {
+                        key: value
+                        for key, value in selector_metrics.items()
+                        if str(key).startswith("hard_")
+                        or key
+                        in {
+                            "selector_eligible",
+                            "selector_score",
+                            "banded_frontier_score",
+                            "hybrid_score",
+                            "hard_ban_terms",
+                            "hard_ban_hits",
+                        }
+                    }
+                )
                 rows.append(
                     FrontierCandidateRow(
                         run_name=name,

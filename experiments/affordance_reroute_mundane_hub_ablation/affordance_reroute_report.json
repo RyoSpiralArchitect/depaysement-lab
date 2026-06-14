@@ -1,0 +1,432 @@
+{
+  "settings": {
+    "base_label": "matched_control",
+    "ablation_label": "hub_ablation",
+    "frontier_band_ratio": 0.6,
+    "frontier_band_width": 0.08,
+    "dedupe_texts": true,
+    "base_documents": 7,
+    "ablation_documents": 1,
+    "classes": [
+      "canonical_stock_hub",
+      "acoustic_mechanism",
+      "text_memory",
+      "threshold_container",
+      "time_mechanism",
+      "organic_expansion",
+      "optical_memory",
+      "animating_mediator"
+    ]
+  },
+  "summaries": [
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p77",
+      "documents": 4,
+      "mean_frontier": 0.25977625985016567,
+      "mean_readability": 0.8484970701098755,
+      "mean_ontology": 0.6974786324786325,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 3,
+      "canonical_stock_hub_rate": 0.75,
+      "acoustic_mechanism_count": 3,
+      "acoustic_mechanism_rate": 0.75,
+      "text_memory_count": 2,
+      "text_memory_rate": 0.5,
+      "threshold_container_count": 2,
+      "threshold_container_rate": 0.5,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.5,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.25
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p82",
+      "documents": 3,
+      "mean_frontier": 0.2478760522215889,
+      "mean_readability": 0.8035498631072439,
+      "mean_ontology": 0.6092615596963423,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 2,
+      "canonical_stock_hub_rate": 0.6666666666666666,
+      "acoustic_mechanism_count": 2,
+      "acoustic_mechanism_rate": 0.6666666666666666,
+      "text_memory_count": 2,
+      "text_memory_rate": 0.6666666666666666,
+      "threshold_container_count": 1,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.6666666666666666,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 2,
+      "animating_mediator_rate": 0.6666666666666666
+    },
+    {
+      "source": "hub_ablation",
+      "condition": "steer_alpha_0p66",
+      "documents": 1,
+      "mean_frontier": 0.3717965637589878,
+      "mean_readability": 0.9158839901157498,
+      "mean_ontology": 0.8,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 1,
+      "acoustic_mechanism_rate": 1.0,
+      "text_memory_count": 0,
+      "text_memory_rate": 0.0,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 1.0,
+      "optical_memory_count": 1,
+      "optical_memory_rate": 1.0,
+      "animating_mediator_count": 0,
+      "animating_mediator_rate": 0.0
+    }
+  ],
+  "matrix": [
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.0,
+      "ablation_rate": 1.0,
+      "delta": 1.0,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 1.0,
+      "delta": 1.0,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 1.0,
+      "delta": 1.0,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.75,
+      "ablation_rate": 0.0,
+      "delta": -0.75,
+      "base_count": 3,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.75,
+      "ablation_rate": 0.0,
+      "delta": -0.75,
+      "base_count": 3,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "text_memory",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.5,
+      "ablation_rate": 0.0,
+      "delta": -0.5,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "text_memory",
+      "base_rate": 0.5,
+      "ablation_rate": 0.0,
+      "delta": -0.5,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.5,
+      "ablation_rate": 0.0,
+      "delta": -0.5,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.25,
+      "ablation_rate": 0.0,
+      "delta": -0.25,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "text_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 0,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 0,
+      "ablation_documents": 1
+    }
+  ],
+  "examples": {
+    "acoustic_mechanism": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      }
+    ],
+    "organic_expansion": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      }
+    ],
+    "optical_memory": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      }
+    ]
+  }
+}

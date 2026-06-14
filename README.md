@@ -99,6 +99,8 @@ The follow-up post-hoc selector lab is saved in:
 - [hub ablation probe report](experiments/hub_ablation_probe_mundane/hub_ablation_report.md)
 - [hub ablation generated text reading report](experiments/frontier_sweep_mundane_hub_ablation_smoke/frontier_sweep_texts.md)
 - [hub ablation research note](docs/research_notes/2026-06-14-hub-ablation-probe.md)
+- [affordance reroute matrix](experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md)
+- [affordance reroute research note](docs/research_notes/2026-06-14-affordance-reroute-hard-gate.md)
 
 The post-hoc selector lab performs no generation. It reuses the saved candidate
 pools from the focused sweep and asks which selector would have picked the
@@ -510,6 +512,43 @@ core motifs appear in roughly 79-83% of steered non-ban candidates, but fall to
 6.8%, 8.3%, and 16.7% at alpha `0.66`, `0.77`, and `0.82` under the ban prompt.
 Readable frontier does not disappear; it reroutes through hinges such as
 `harmonica`, `typewriter`, `photograph`, `garden`, `comb`, and `teapot`.
+
+For a hard candidate-level compliance gate, add `--hard-ban-terms`. Unlike
+`--ban-terms`, this does not ask the model to avoid words during generation; it
+rejects candidates at selection time if they contain the listed terms:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_hub_ablation_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/posthoc_reselect_hub_ablation_hard_gate
+```
+
+To inspect rerouting at the affordance-class level, compare matched control and
+ablation artifacts:
+
+```bash
+python3 -m depaysement_lab.cli affordance-reroute \
+  --base experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --ablation experiments/frontier_sweep_mundane_hub_ablation_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_hub_ablation_smoke/steer_alpha_*.json \
+  --base-label matched_control \
+  --ablation-label hub_ablation \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --out experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md \
+  --json-out experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.json \
+  --csv experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_matrix_wide.csv
+```
+
+The wide reroute matrix shows `canonical_stock_hub` falling sharply under
+ablation, while frontier-band candidates reroute into affordance classes such as
+`acoustic_mechanism`, `organic_expansion`, `optical_memory`,
+`threshold_container`, and `animating_mediator`.
 
 Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
 JSONs for the current invocation, while `--resume` skips existing run JSONs in

@@ -1,4 +1,11 @@
-from depaysement_lab.proto_v2 import DepaysementScorer, DepaysementEngine, DummyGenerator, SelectorConfig, cleanup_continuation
+from depaysement_lab.proto_v2 import (
+    DepaysementScorer,
+    DepaysementEngine,
+    DummyGenerator,
+    SelectorConfig,
+    build_depaysement_prompt,
+    cleanup_continuation,
+)
 import random
 
 
@@ -46,6 +53,32 @@ def test_write_run_serializes():
 
 def test_cleanup_removes_generated_control_tokens():
     assert cleanup_continuation("A tiny station garden.<|eot_id|>") == "A tiny station garden."
+
+
+def test_ban_terms_are_added_to_prompt_and_run_config():
+    prompt = build_depaysement_prompt(
+        "The receipt on the counter",
+        motifs=["receipt"],
+        ban_terms=["music box", "leather-bound book"],
+    )
+    assert "Do not use these words or phrases: music box; leather-bound book." in prompt
+    assert "reroute it through ordinary objects" in prompt
+
+    rng = random.Random(0)
+    engine = DepaysementEngine(
+        FixedGenerator(["The receipt folds itself into a small paper hinge."]),
+        rng=rng,
+    )
+    run = engine.write_run(
+        "The receipt on the counter",
+        steps=1,
+        candidates_per_step=1,
+        choose="best",
+        ban_terms=["music box", "leather-bound book"],
+        include_prompt=True,
+    )
+    assert run.config["ban_terms"] == ["music box", "leather-bound book"]
+    assert "leather-bound book" in run.steps[0].prompt
 
 
 def test_frontier_selector_picks_readable_ontology_collapse():

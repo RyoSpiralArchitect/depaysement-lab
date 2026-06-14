@@ -5,11 +5,19 @@ from depaysement_lab.frontier import (
     audit_frontier_pool,
     audit_trajectory_runs,
     format_trajectory_report,
+    frontier_exemplar_store,
     rating_sheet_rows,
     readable_frontier_score,
+    write_frontier_exemplar_store,
     write_frontier_reading_report,
     write_rating_markdown,
     write_rating_sheet,
+)
+from depaysement_lab.noun_graph import (
+    build_noun_graph_report,
+    format_noun_graph_report,
+    write_noun_graph_json,
+    write_noun_graph_nodes_csv,
 )
 from depaysement_lab.ontology import OntologyAuditor
 
@@ -120,6 +128,108 @@ def test_pool_audit_marks_only_one_duplicate_candidate_as_picked(tmp_path):
     assert len(picked) == 1
     assert picked[0].candidate_index == 1
     assert report.runs[0].aggregate["picked_count"] == 1
+
+
+def test_frontier_exemplar_store_exports_max_band_examples(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A receipt on the counter",
+        "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 3},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The receipt, now a garden, wraps vines around the counter drawer.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The receipt, now a garden, wraps vines around the counter drawer.",
+                        "score": {"total": 2.0},
+                    },
+                    {
+                        "text": "The receipt rests on the counter.",
+                        "score": {"total": 1.0},
+                    },
+                    {
+                        "text": "A tiny antique porcelain music box glows beside the receipt.",
+                        "score": {"total": 0.5},
+                    },
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=3)
+    store = frontier_exemplar_store(report, top_k=3)
+    assert store["frontier_max"] > 0
+    assert store["examples"]
+    assert "legend_label" in store["examples"][0]
+    assert "text" in store["examples"][0]
+
+    md_out = tmp_path / "frontier_exemplars.md"
+    json_out = tmp_path / "frontier_exemplars.json"
+    write_frontier_exemplar_store(report, str(md_out), json_path=str(json_out), top_k=3)
+    assert "Frontier Exemplar Store" in md_out.read_text(encoding="utf-8")
+    payload = json.loads(json_out.read_text(encoding="utf-8"))
+    assert payload["examples"][0]["text"]
+
+
+def test_noun_graph_finds_frontier_hub_terms(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A receipt on the counter",
+        "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                        "score": {"total": 2.0},
+                    },
+                    {
+                        "text": "The receipt rests on the counter.",
+                        "score": {"total": 1.0},
+                    },
+                ],
+            },
+            {
+                "step": 2,
+                "picked": {
+                    "text": "The music box becomes a leather-bound book whose key ticks like a clock.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The music box becomes a leather-bound book whose key ticks like a clock.",
+                        "score": {"total": 2.0},
+                    }
+                ],
+            },
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    frontier_report = audit_frontier_pool([str(p)], top_k=3)
+    graph = build_noun_graph_report(frontier_report, top_k=5, max_nodes=20)
+    terms = {node["term"] for node in graph.nodes}
+    assert {"music box", "key", "clock"} & terms
+    assert graph.edges
+    assert "Frontier Noun Graph" in format_noun_graph_report(graph)
+
+    json_out = tmp_path / "noun_graph.json"
+    csv_out = tmp_path / "noun_graph_nodes.csv"
+    write_noun_graph_json(graph, str(json_out))
+    write_noun_graph_nodes_csv(graph, str(csv_out))
+    assert json.loads(json_out.read_text(encoding="utf-8"))["nodes"]
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        assert list(csv.DictReader(f))
 
 
 def test_rating_sheet_exports_picked_and_top_frontier_rows(tmp_path):

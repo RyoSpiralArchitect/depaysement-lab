@@ -93,9 +93,16 @@ The follow-up post-hoc selector lab is saved in:
 - [hard-gated research note](docs/research_notes/2026-06-13-hard-gated-mundane-reselect.md)
 - [trajectory audit report](experiments/trajectory_audit_mundane/trajectory_report.md)
 - [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
+- [frontier noun graph report](experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md)
+- [frontier noun graph research note](docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md)
+- [matched alpha-0 hub bias smoke report](experiments/frontier_sweep_mundane_matched_alpha0_smoke/hub_bias_matched_smoke_report.md)
+- [hub ablation probe report](experiments/hub_ablation_probe_mundane/hub_ablation_report.md)
+- [hub ablation generated text reading report](experiments/frontier_sweep_mundane_hub_ablation_smoke/frontier_sweep_texts.md)
+- [hub ablation research note](docs/research_notes/2026-06-14-hub-ablation-probe.md)
 
-That lab performs no generation. It reuses the saved candidate pools from the
-focused sweep and asks which selector would have picked the readable frontier.
+The post-hoc selector lab performs no generation. It reuses the saved candidate
+pools from the focused sweep and asks which selector would have picked the
+readable frontier.
 
 | source alpha | original hybrid picked frontier | depaysement reselect | frontier reselect | pareto reselect | frontier changed steps |
 |---|---:|---:|---:|---:|---:|
@@ -377,9 +384,18 @@ frontier_sweep_report.md       run-level frontier summary
 frontier_sweep_report.json     full run and candidate audit
 frontier_sweep_candidates.csv  candidate-level table
 frontier_sweep_texts.md        human-readable generated texts
+frontier_exemplars.md          legend of actual candidates from the max-frontier band
+frontier_exemplars.json        structured exemplar store for downstream notes
 frontier_sweep.png             scatter plot
 steer_alpha_*.json             saved generation runs with candidates
 ```
+
+The exemplar store is intentionally qualitative: it preserves real generated
+text from the frontier-maximized band and tags each sample with a lightweight
+legend label such as `readable_object_metamorphosis`,
+`stock_prop_attractor`, `unfinished_frontier_edge`, or
+`anchor_evaporation`. This keeps the sweep from becoming a purely numerical
+exercise.
 
 ### Multi-seed Mundane Probe
 
@@ -410,6 +426,122 @@ python3 -m depaysement_lab.cli frontier-sweep \
 
 `--seed-bank` accepts a JSON list, a JSON object with `seeds`, or a plain text
 file with one seed per line.
+
+To inspect whether high-frontier prose is merely using stock surreal motifs or
+routing through semantic transport hubs, build a no-generation noun graph over
+the saved candidate pools:
+
+```bash
+python3 -m depaysement_lab.cli noun-graph \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --out experiments/noun_graph_mundane_seed_probe/noun_graph_report.md \
+  --json-out experiments/noun_graph_mundane_seed_probe/noun_graph_report.json \
+  --nodes-csv experiments/noun_graph_mundane_seed_probe/noun_graph_nodes.csv \
+  --top-k 30 \
+  --max-nodes 140
+```
+
+For a broader frontier-band map, relax the band:
+
+```bash
+python3 -m depaysement_lab.cli noun-graph \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --out experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md \
+  --json-out experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.json \
+  --nodes-csv experiments/noun_graph_mundane_seed_probe/noun_graph_nodes_wide.csv \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --top-k 30 \
+  --max-nodes 140
+```
+
+To separate selector bias from steering drag, compare a matched alpha-0 smoke
+against the same seed bank with hub words banned at prompt time:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
+  --steps 3 \
+  --alphas 0,0.66,0.77,0.82 \
+  --candidate-grid 8 \
+  --max-token-grid 100 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --cliche-weight 0.15 \
+  --out-dir experiments/frontier_sweep_mundane_matched_alpha0_smoke
+```
+
+Then run the soft hub ablation:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
+  --steps 3 \
+  --alphas 0,0.66,0.77,0.82 \
+  --candidate-grid 8 \
+  --max-token-grid 100 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --cliche-weight 0.15 \
+  --ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/frontier_sweep_mundane_hub_ablation_smoke
+```
+
+The matched smoke suggests steering drag, not just metric preference: banned
+core motifs appear in roughly 79-83% of steered non-ban candidates, but fall to
+6.8%, 8.3%, and 16.7% at alpha `0.66`, `0.77`, and `0.82` under the ban prompt.
+Readable frontier does not disappear; it reroutes through hinges such as
+`harmonica`, `typewriter`, `photograph`, `garden`, `comb`, and `teapot`.
+
+Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
+JSONs for the current invocation, while `--resume` skips existing run JSONs in
+the output directory and includes them in the refreshed audit:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18_blend_orig_softanti_lam0p2.npz \
+  --strict-steering \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --alphas 0.66,0.77,0.88 \
+  --candidate-grid 12 \
+  --max-token-grid 120 \
+  --select-objective banded-frontier \
+  --choose best \
+  --hard-unfinished-max 0.05 \
+  --soft-style-cliche-weight 0.25 \
+  --fantasy-prop-weight 1.10 \
+  --ordinary-anchor-weight 0.45 \
+  --ordinary-anchor-min 0.30 \
+  --trajectory-stop \
+  --trajectory-min-steps 3 \
+  --run-limit 2 \
+  --resume \
+  --out-dir experiments/frontier_sweep_mundane_live_stop_lam0p2
+```
 
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 

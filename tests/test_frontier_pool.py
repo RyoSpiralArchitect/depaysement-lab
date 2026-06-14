@@ -2,6 +2,9 @@ import csv
 import json
 
 from depaysement_lab.frontier import (
+    FrontierAuditReport,
+    FrontierCandidateRow,
+    FrontierRunAudit,
     audit_frontier_pool,
     audit_trajectory_runs,
     format_trajectory_report,
@@ -16,6 +19,7 @@ from depaysement_lab.frontier import (
 from depaysement_lab.noun_graph import (
     build_affordance_reroute_report,
     build_noun_graph_report,
+    frontier_band_documents,
     format_affordance_reroute_report,
     format_noun_graph_report,
     write_affordance_reroute_csv,
@@ -67,6 +71,80 @@ def test_pool_audit_computes_selection_lift_and_truncation(tmp_path):
     assert r.rows[0].metrics["ordinary_anchor_retention"] > 0
     assert "station" in r.rows[0].metrics["ordinary_anchor_hits"]
     assert report.top_frontier_examples
+
+
+def test_compliant_only_band_threshold_ignores_hard_banned_rows():
+    banned = FrontierCandidateRow(
+        run_name="run",
+        condition="steer_alpha_0p77__reselect_banded-frontier_best",
+        path="run.json",
+        step=1,
+        candidate_index=1,
+        picked=False,
+        text="The receipt, now a music box, opens with a porcelain doll and a key.",
+        context_before="receipt",
+        score_total=1.0,
+        readable_ontology_frontier=1.0,
+        frontier_quality=1.0,
+        metrics={
+            "hard_ban_failed": True,
+            "hard_ban_hits": ["music box", "porcelain", "key"],
+            "syntax_readability_proxy": 0.9,
+            "ontology_collapse_density": 0.9,
+            "unfinished": 0.0,
+            "stock_prop_attractor_score": 1.0,
+            "ordinary_anchor_retention": 0.5,
+        },
+    )
+    compliant = FrontierCandidateRow(
+        run_name="run",
+        condition="steer_alpha_0p77__reselect_banded-frontier_best",
+        path="run.json",
+        step=1,
+        candidate_index=2,
+        picked=True,
+        text="The receipt, now a mirror garden, leans toward a window of folded paper.",
+        context_before="receipt",
+        score_total=1.0,
+        readable_ontology_frontier=0.6,
+        frontier_quality=0.6,
+        metrics={
+            "hard_ban_failed": False,
+            "hard_ban_hits": [],
+            "syntax_readability_proxy": 0.8,
+            "ontology_collapse_density": 0.6,
+            "unfinished": 0.0,
+            "stock_prop_attractor_score": 0.0,
+            "ordinary_anchor_retention": 0.5,
+        },
+    )
+    report = FrontierAuditReport(
+        runs=[
+            FrontierRunAudit(
+                name="run",
+                condition="steer_alpha_0p77__reselect_banded-frontier_best",
+                path="run.json",
+                seed="receipt",
+                candidate_count=2,
+                picked_count=1,
+                steps=1,
+                truncated_steps=0,
+                aggregate={},
+                rows=[banned, compliant],
+            )
+        ]
+    )
+
+    docs = frontier_band_documents(
+        report,
+        frontier_band_ratio=0.8,
+        frontier_band_width=0.1,
+        compliant_only=True,
+    )
+
+    assert [doc.text for doc in docs] == [compliant.text]
+    assert docs[0].hard_ban_failed is False
+    assert "optical_memory" in docs[0].affordance_classes
 
 
 def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tmp_path):
@@ -248,7 +326,10 @@ def test_affordance_reroute_matrix_compares_class_shifts(tmp_path):
         json.dumps(
             {
                 "seed": "A receipt on the counter",
-                "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 1},
+                "config": {
+                    "condition": "steer_alpha_0p66__reselect_banded-frontier_best",
+                    "candidates_per_step": 1,
+                },
                 "steps": [
                     {
                         "step": 1,
@@ -305,16 +386,24 @@ def test_affordance_reroute_matrix_compares_class_shifts(tmp_path):
         for row in reroute.matrix
         if row["condition"] == "steer_alpha_0p66"
     }
+    diagnostic = next(row for row in reroute.diagnostics if row["condition"] == "steer_alpha_0p66")
     assert by_class["canonical_stock_hub"]["delta"] < 0
     assert by_class["organic_expansion"]["delta"] > 0
     assert by_class["acoustic_mechanism"]["delta"] == 0
-    assert "Affordance Reroute Matrix" in format_affordance_reroute_report(reroute)
+    assert diagnostic["frontier_survival_rate"] == 1.0
+    assert diagnostic["canonical_drop"] > 0
+    assert "affordance_load_delta" in diagnostic
+    rendered = format_affordance_reroute_report(reroute)
+    assert "Affordance Reroute Matrix" in rendered
+    assert "Reroute Diagnostics" in rendered
 
     json_out = tmp_path / "reroute.json"
     csv_out = tmp_path / "reroute.csv"
     write_affordance_reroute_json(reroute, str(json_out))
     write_affordance_reroute_csv(reroute, str(csv_out))
-    assert json.loads(json_out.read_text(encoding="utf-8"))["matrix"]
+    payload = json.loads(json_out.read_text(encoding="utf-8"))
+    assert payload["matrix"]
+    assert payload["diagnostics"]
     with csv_out.open(encoding="utf-8", newline="") as f:
         assert list(csv.DictReader(f))
 

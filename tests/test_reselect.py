@@ -49,6 +49,46 @@ def test_posthoc_reselect_picks_frontier_candidate_without_generation(tmp_path):
     assert result.run["final_text"].endswith(frontier)
 
 
+def test_posthoc_reselect_hard_ban_picks_compliant_candidate(tmp_path):
+    source = tmp_path / "run.json"
+    seed = "A receipt on the counter"
+    banned = "The receipt, now a music box, opens with a brass key beside a station clock."
+    compliant = "The receipt, now a paper garden, opens beside the counter drawer."
+    run = {
+        "seed": seed,
+        "config": {"condition": "source", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "mode": "depaysement",
+                "context_before": seed,
+                "picked": {"text": banned, "score": {"total": 2.0}},
+                "candidates": [
+                    {"text": banned, "score": {"total": 2.0}},
+                    {"text": compliant, "score": {"total": 1.0}},
+                ],
+            }
+        ],
+    }
+    source.write_text(json.dumps(run), encoding="utf-8")
+
+    results = posthoc_reselect_files(
+        [str(source)],
+        selector=SelectorConfig(
+            objective="banded-frontier",
+            hard_ban_terms=("music box", "key", "clock"),
+        ),
+        choose="best",
+    )
+
+    step = results[0].run["steps"][0]
+    assert step["picked"]["text"] == compliant
+    banned_candidate = next(c for c in step["candidates"] if c["text"] == banned)
+    assert banned_candidate["selector_metrics"]["hard_ban_failed"] is True
+    assert banned_candidate["selector_metrics"]["hard_gate_failed"] is True
+    assert step["picked"]["selector_metrics"]["hard_ban_failed"] is False
+
+
 def test_write_posthoc_reselect_batch(tmp_path):
     source = tmp_path / "run.json"
     source.write_text(

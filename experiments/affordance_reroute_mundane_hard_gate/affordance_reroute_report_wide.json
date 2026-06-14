@@ -1,0 +1,966 @@
+{
+  "settings": {
+    "base_label": "matched_control",
+    "ablation_label": "posthoc_hard_gate",
+    "frontier_band_ratio": 0.4,
+    "frontier_band_width": 0.22,
+    "dedupe_texts": true,
+    "compliant_only": true,
+    "base_documents": 27,
+    "ablation_documents": 13,
+    "classes": [
+      "canonical_stock_hub",
+      "acoustic_mechanism",
+      "text_memory",
+      "threshold_container",
+      "time_mechanism",
+      "organic_expansion",
+      "optical_memory",
+      "animating_mediator"
+    ]
+  },
+  "summaries": [
+    {
+      "source": "matched_control",
+      "condition": "selector_alpha_0",
+      "documents": 3,
+      "mean_frontier": 0.16567406215548097,
+      "mean_readability": 0.6620797240268196,
+      "mean_ontology": 0.5247578347578348,
+      "mean_unfinished": 0.0,
+      "affordance_load": 1.3333333333333333,
+      "reroute_entropy": 1.0,
+      "class_entropy": 1.0,
+      "hard_ban_observed_documents": 0,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 0.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 1,
+      "text_memory_rate": 0.3333333333333333,
+      "threshold_container_count": 1,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 0,
+      "organic_expansion_rate": 0.0,
+      "optical_memory_count": 1,
+      "optical_memory_rate": 0.3333333333333333,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p66",
+      "documents": 4,
+      "mean_frontier": 0.16114195208859738,
+      "mean_readability": 0.6974702259648237,
+      "mean_ontology": 0.675,
+      "mean_unfinished": 0.1,
+      "affordance_load": 3.75,
+      "reroute_entropy": 0.933510035736515,
+      "class_entropy": 0.9283610377070491,
+      "hard_ban_observed_documents": 0,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 0.0,
+      "canonical_stock_hub_count": 4,
+      "canonical_stock_hub_rate": 1.0,
+      "acoustic_mechanism_count": 1,
+      "acoustic_mechanism_rate": 0.25,
+      "text_memory_count": 3,
+      "text_memory_rate": 0.75,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.75,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.25,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.5,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.25
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p77",
+      "documents": 13,
+      "mean_frontier": 0.19391377341853522,
+      "mean_readability": 0.7400718652013389,
+      "mean_ontology": 0.6357363038644296,
+      "mean_unfinished": 0.09230769230769233,
+      "affordance_load": 3.6923076923076925,
+      "reroute_entropy": 0.9303423220558765,
+      "class_entropy": 0.929939710355212,
+      "hard_ban_observed_documents": 0,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 0.0,
+      "canonical_stock_hub_count": 11,
+      "canonical_stock_hub_rate": 0.8461538461538461,
+      "acoustic_mechanism_count": 10,
+      "acoustic_mechanism_rate": 0.7692307692307693,
+      "text_memory_count": 6,
+      "text_memory_rate": 0.46153846153846156,
+      "threshold_container_count": 5,
+      "threshold_container_rate": 0.38461538461538464,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.07692307692307693,
+      "organic_expansion_count": 6,
+      "organic_expansion_rate": 0.46153846153846156,
+      "optical_memory_count": 3,
+      "optical_memory_rate": 0.23076923076923078,
+      "animating_mediator_count": 6,
+      "animating_mediator_rate": 0.46153846153846156
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p82",
+      "documents": 7,
+      "mean_frontier": 0.21256161144519184,
+      "mean_readability": 0.7668099873274722,
+      "mean_ontology": 0.5818913177919389,
+      "mean_unfinished": 0.0,
+      "affordance_load": 3.2857142857142856,
+      "reroute_entropy": 0.966388311600932,
+      "class_entropy": 0.9526621830117249,
+      "hard_ban_observed_documents": 0,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 0.0,
+      "canonical_stock_hub_count": 6,
+      "canonical_stock_hub_rate": 0.8571428571428571,
+      "acoustic_mechanism_count": 4,
+      "acoustic_mechanism_rate": 0.5714285714285714,
+      "text_memory_count": 3,
+      "text_memory_rate": 0.42857142857142855,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.42857142857142855,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.14285714285714285,
+      "organic_expansion_count": 3,
+      "organic_expansion_rate": 0.42857142857142855,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 3,
+      "animating_mediator_rate": 0.42857142857142855
+    },
+    {
+      "source": "posthoc_hard_gate",
+      "condition": "selector_alpha_0__reselect_banded-frontier_best",
+      "documents": 7,
+      "mean_frontier": 0.1316024112600567,
+      "mean_readability": 0.6748285973989436,
+      "mean_ontology": 0.43645456956021367,
+      "mean_unfinished": 0.0,
+      "affordance_load": 1.4285714285714286,
+      "reroute_entropy": 0.881353453268883,
+      "class_entropy": 0.881353453268883,
+      "hard_ban_observed_documents": 7,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 4,
+      "text_memory_rate": 0.5714285714285714,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.42857142857142855,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 0.14285714285714285,
+      "optical_memory_count": 1,
+      "optical_memory_rate": 0.14285714285714285,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.14285714285714285
+    },
+    {
+      "source": "posthoc_hard_gate",
+      "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+      "documents": 3,
+      "mean_frontier": 0.1659091779567668,
+      "mean_readability": 0.7300092751584927,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.13333333333333333,
+      "affordance_load": 1.3333333333333333,
+      "reroute_entropy": 0.946394630357186,
+      "class_entropy": 0.946394630357186,
+      "hard_ban_observed_documents": 3,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 1,
+      "text_memory_rate": 0.3333333333333333,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 0,
+      "organic_expansion_rate": 0.0,
+      "optical_memory_count": 2,
+      "optical_memory_rate": 0.6666666666666666,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "posthoc_hard_gate",
+      "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+      "documents": 3,
+      "mean_frontier": 0.1495410157988857,
+      "mean_readability": 0.7135310449785665,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.26666666666666666,
+      "affordance_load": 2.0,
+      "reroute_entropy": 0.9591479170272448,
+      "class_entropy": 0.9591479170272448,
+      "hard_ban_observed_documents": 3,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 0,
+      "text_memory_rate": 0.0,
+      "threshold_container_count": 1,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.6666666666666666,
+      "optical_memory_count": 2,
+      "optical_memory_rate": 0.6666666666666666,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    }
+  ],
+  "matrix": [
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 1.0,
+      "ablation_rate": 0.0,
+      "delta": -1.0,
+      "base_count": 4,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.8571428571428571,
+      "ablation_rate": 0.0,
+      "delta": -0.8571428571428571,
+      "base_count": 6,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.8461538461538461,
+      "ablation_rate": 0.0,
+      "delta": -0.8461538461538461,
+      "base_count": 11,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.7692307692307693,
+      "ablation_rate": 0.0,
+      "delta": -0.7692307692307693,
+      "base_count": 10,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.75,
+      "ablation_rate": 0.0,
+      "delta": -0.75,
+      "base_count": 3,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "text_memory",
+      "base_rate": 0.75,
+      "ablation_rate": 0.0,
+      "delta": -0.75,
+      "base_count": 3,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.6666666666666666,
+      "delta": 0.6666666666666666,
+      "base_count": 0,
+      "ablation_count": 2,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.5714285714285714,
+      "ablation_rate": 0.0,
+      "delta": -0.5714285714285714,
+      "base_count": 4,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.5,
+      "ablation_rate": 0.0,
+      "delta": -0.5,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.0,
+      "delta": -0.46153846153846156,
+      "base_count": 6,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.23076923076923078,
+      "ablation_rate": 0.6666666666666666,
+      "delta": 0.43589743589743585,
+      "base_count": 3,
+      "ablation_count": 2,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "text_memory",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.0,
+      "delta": -0.42857142857142855,
+      "base_count": 3,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.38461538461538464,
+      "ablation_rate": 0.0,
+      "delta": -0.38461538461538464,
+      "base_count": 5,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.25,
+      "ablation_rate": 0.0,
+      "delta": -0.25,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.25,
+      "ablation_rate": 0.0,
+      "delta": -0.25,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.25,
+      "ablation_rate": 0.0,
+      "delta": -0.25,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.6666666666666666,
+      "delta": 0.23809523809523808,
+      "base_count": 3,
+      "ablation_count": 2,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "text_memory",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.5714285714285714,
+      "delta": 0.23809523809523808,
+      "base_count": 1,
+      "ablation_count": 4,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.14285714285714285,
+      "delta": -0.19047619047619047,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.14285714285714285,
+      "delta": -0.19047619047619047,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.14285714285714285,
+      "ablation_rate": 0.0,
+      "delta": -0.14285714285714285,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.0,
+      "ablation_rate": 0.14285714285714285,
+      "delta": 0.14285714285714285,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "text_memory",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.3333333333333333,
+      "delta": -0.12820512820512825,
+      "base_count": 6,
+      "ablation_count": 1,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.3333333333333333,
+      "delta": -0.12820512820512825,
+      "base_count": 6,
+      "ablation_count": 1,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.3333333333333333,
+      "delta": -0.09523809523809523,
+      "base_count": 3,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.3333333333333333,
+      "delta": -0.09523809523809523,
+      "base_count": 3,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.42857142857142855,
+      "delta": 0.09523809523809523,
+      "base_count": 1,
+      "ablation_count": 3,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.07692307692307693,
+      "ablation_rate": 0.0,
+      "delta": -0.07692307692307693,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 3
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 0
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 7
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 7
+    }
+  ],
+  "diagnostics": [
+    {
+      "condition": "selector_alpha_0",
+      "base_documents": 3,
+      "ablation_documents": 7,
+      "frontier_survival_rate": 1.0,
+      "frontier_survival_ratio": 2.3333333333333335,
+      "base_frontier": 0.16567406215548097,
+      "ablation_frontier": 0.1316024112600567,
+      "frontier_delta": -0.03407165089542427,
+      "hub_dependence_index": 0.2056547081186968,
+      "canonical_stock_hub_delta": 0.0,
+      "canonical_drop": 0.0,
+      "base_noncanonical_affordance_rate": 0.3333333333333333,
+      "ablation_noncanonical_affordance_rate": 0.5714285714285714,
+      "noncanonical_affordance_delta": 0.23809523809523808,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 1.0,
+      "ablation_reroute_entropy": 0.881353453268883,
+      "reroute_entropy_delta": -0.11864654673111696,
+      "base_affordance_load": 1.3333333333333333,
+      "ablation_affordance_load": 1.4285714285714286,
+      "affordance_load_delta": 0.09523809523809534,
+      "hard_compliance_rate": 1.0
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "base_documents": 4,
+      "ablation_documents": 0,
+      "frontier_survival_rate": 0.0,
+      "frontier_survival_ratio": 0.0,
+      "base_frontier": 0.16114195208859738,
+      "ablation_frontier": 0.0,
+      "frontier_delta": -0.16114195208859738,
+      "hub_dependence_index": 1.0,
+      "canonical_stock_hub_delta": -1.0,
+      "canonical_drop": 1.0,
+      "base_noncanonical_affordance_rate": 0.75,
+      "ablation_noncanonical_affordance_rate": 0.0,
+      "noncanonical_affordance_delta": -0.75,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 0.933510035736515,
+      "ablation_reroute_entropy": 0.0,
+      "reroute_entropy_delta": -0.933510035736515,
+      "base_affordance_load": 3.75,
+      "ablation_affordance_load": 0.0,
+      "affordance_load_delta": -3.75,
+      "hard_compliance_rate": 0.0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "base_documents": 13,
+      "ablation_documents": 3,
+      "frontier_survival_rate": 0.23076923076923078,
+      "frontier_survival_ratio": 0.23076923076923078,
+      "base_frontier": 0.19391377341853522,
+      "ablation_frontier": 0.1659091779567668,
+      "frontier_delta": -0.028004595461768422,
+      "hub_dependence_index": 0.1444177737768245,
+      "canonical_stock_hub_delta": -0.8461538461538461,
+      "canonical_drop": 0.8461538461538461,
+      "base_noncanonical_affordance_rate": 0.7692307692307693,
+      "ablation_noncanonical_affordance_rate": 0.6666666666666666,
+      "noncanonical_affordance_delta": -0.10256410256410264,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 0.9303423220558765,
+      "ablation_reroute_entropy": 0.946394630357186,
+      "reroute_entropy_delta": 0.016052308301309437,
+      "base_affordance_load": 3.6923076923076925,
+      "ablation_affordance_load": 1.3333333333333333,
+      "affordance_load_delta": -2.3589743589743595,
+      "hard_compliance_rate": 1.0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "base_documents": 7,
+      "ablation_documents": 3,
+      "frontier_survival_rate": 0.42857142857142855,
+      "frontier_survival_ratio": 0.42857142857142855,
+      "base_frontier": 0.21256161144519184,
+      "ablation_frontier": 0.1495410157988857,
+      "frontier_delta": -0.06302059564630613,
+      "hub_dependence_index": 0.29648154818658656,
+      "canonical_stock_hub_delta": -0.8571428571428571,
+      "canonical_drop": 0.8571428571428571,
+      "base_noncanonical_affordance_rate": 0.5714285714285714,
+      "ablation_noncanonical_affordance_rate": 0.6666666666666666,
+      "noncanonical_affordance_delta": 0.09523809523809523,
+      "affordance_substitution_index": 0.08163265306122448,
+      "base_reroute_entropy": 0.966388311600932,
+      "ablation_reroute_entropy": 0.9591479170272448,
+      "reroute_entropy_delta": -0.007240394573687192,
+      "base_affordance_load": 3.2857142857142856,
+      "ablation_affordance_load": 2.0,
+      "affordance_load_delta": -1.2857142857142856,
+      "hard_compliance_rate": 1.0
+    }
+  ],
+  "examples": {
+    "text_memory": [
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed05_the_spreadsheet_was_still_open__banded-frontier_best.json",
+        "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2298526083333333,
+        "terms": [
+          "map",
+          "spreadsheet"
+        ],
+        "affordance_classes": [
+          "text_memory"
+        ],
+        "text": "The spreadsheet, now a portal to a small, cluttered antique shop, where a bespectacled shopkeeper, surrounded by dusty, forgotten trinkets and faded, yellowed maps, tends to a small, potted cactus, as a faint, eerie glow emanates from its soil."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.19168466207239088,
+        "terms": [
+          "delivery label",
+          "bird",
+          "book"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "animating_mediator"
+        ],
+        "text": "The dusty trunk's lid creaked open, releasing a faint whisper of aged air as a soft, worn leather book tumbled out, its pages fluttering like a bird taking flight, and the delivery label, now a tattered fragment, was caught in the book's pages, a fleeting echo of a long-lost delivery."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed01_the_receipt_on_the_counter__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.1165052999718237,
+        "terms": [
+          "counter",
+          "receipt"
+        ],
+        "affordance_classes": [
+          "text_memory"
+        ],
+        "text": "The receipt slips from her fingers and falls to the counter, the Polaroid shattering into a hundred pieces as she reaches to catch it, her eyes widening in a mix of surprise and desperation, the scribbled numbers now scattered across the counter like fragments of a broken promise."
+      }
+    ],
+    "threshold_container": [
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed04_a_blue_mug_near_the_sink__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.14688010027049025,
+        "terms": [
+          "box",
+          "counter",
+          "photograph",
+          "window"
+        ],
+        "affordance_classes": [
+          "threshold_container",
+          "optical_memory"
+        ],
+        "text": "The pebbles, now scattered across the countertop, merged with the dust motes dancing in the faint sunlight filtering through the window, creating a miniature, turbulent landscape of stone and air, as the refrigerator's hum grew louder, vibrating the box, which began to slide towards the edge of the counter, its contents spilling out onto the floor, mingling with the pebbles, the photograph, and the dust, now a small, chaotic, and shifting mosaic."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.10577499705882355,
+        "terms": [
+          "crystal",
+          "door",
+          "glass"
+        ],
+        "affordance_classes": [
+          "threshold_container",
+          "optical_memory"
+        ],
+        "text": "A small, Victorian-style, wooden door creaks open, revealing a tiny, dusty, crystal chandelier, its crystals, now a tangle of ivy and a small, leather-bound, leather, worn, and almost forgotten, miniature, Gothic-style, stained glass, depicting a Gothic, stone"
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.10495164303943287,
+        "terms": [
+          "delivery label",
+          "box"
+        ],
+        "affordance_classes": [
+          "threshold_container"
+        ],
+        "text": "The cardboard box now lies empty and crumpled on a dusty attic shelf, the delivery label a faded reminder of a long-forgotten package, its adhesive still clinging to the roof of the old trunk that has now become its new home."
+      }
+    ],
+    "organic_expansion": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.233243366851595,
+        "terms": [
+          "hand",
+          "moss"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "animating_mediator"
+        ],
+        "text": "A small, antique, ornate, metal, andirin, now a miniature, moss-covered, and a few, forgotten, water-stained, hand-paint"
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.10960468348623853,
+        "terms": [
+          "crystal",
+          "mist",
+          "rose"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A tiny, antique, copper kett, suspended from a delicate, crystal chandelier, above a miniature, Victorian-era, ornate, rose, which, at night, unfurls, releasing a wispy, silver mist, that, as the first light of dawn, glistens, and the kett, now a tiny, enamell"
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.0995589218909575,
+        "terms": [
+          "book",
+          "garden",
+          "letter"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "organic_expansion"
+        ],
+        "text": "The book, bound in a rich, dark leather, lay open on a nearby stack of yellowed letters, its pages dog-eared and worn, a phrase highlighted in faint, crimson ink: \"In the garden of forgotten memories, where shadows dance and moonlight whispers secrets to the wind.\""
+      }
+    ],
+    "optical_memory": [
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed05_the_spreadsheet_was_still_open__banded-frontier_best.json",
+        "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.17063790663788453,
+        "terms": [
+          "mirror"
+        ],
+        "affordance_classes": [
+          "optical_memory"
+        ],
+        "text": "The shopkeeper, lost in thought, strokes the cactus, its spines quivering with an ethereal music, as the portal, now a large, ornate mirror, materializes, its surface etched with ancient, cryptic symbols that begin to whisper secrets to the shopkeeper, while the cactus, now a tiny, delicate baller, pirouettes and pirouettes, its tiny, glassy eyes glimmering with an otherworldly light."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed04_a_blue_mug_near_the_sink__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.14688010027049025,
+        "terms": [
+          "box",
+          "counter",
+          "photograph",
+          "window"
+        ],
+        "affordance_classes": [
+          "threshold_container",
+          "optical_memory"
+        ],
+        "text": "The pebbles, now scattered across the countertop, merged with the dust motes dancing in the faint sunlight filtering through the window, creating a miniature, turbulent landscape of stone and air, as the refrigerator's hum grew louder, vibrating the box, which began to slide towards the edge of the counter, its contents spilling out onto the floor, mingling with the pebbles, the photograph, and the dust, now a small, chaotic, and shifting mosaic."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.10960468348623853,
+        "terms": [
+          "crystal",
+          "mist",
+          "rose"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A tiny, antique, copper kett, suspended from a delicate, crystal chandelier, above a miniature, Victorian-era, ornate, rose, which, at night, unfurls, releasing a wispy, silver mist, that, as the first light of dawn, glistens, and the kett, now a tiny, enamell"
+      }
+    ],
+    "animating_mediator": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.233243366851595,
+        "terms": [
+          "hand",
+          "moss"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "animating_mediator"
+        ],
+        "text": "A small, antique, ornate, metal, andirin, now a miniature, moss-covered, and a few, forgotten, water-stained, hand-paint"
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.19168466207239088,
+        "terms": [
+          "delivery label",
+          "bird",
+          "book"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "animating_mediator"
+        ],
+        "text": "The dusty trunk's lid creaked open, releasing a faint whisper of aged air as a soft, worn leather book tumbled out, its pages fluttering like a bird taking flight, and the delivery label, now a tattered fragment, was caught in the book's pages, a fleeting echo of a long-lost delivery."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink__banded-frontier_best.json",
+        "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.09723701889908258,
+        "terms": [
+          "bird",
+          "crystal",
+          "glass"
+        ],
+        "affordance_classes": [
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "The tiny, crystal statuette, now a paperweight, holds down a small, translucent, antique, glass, and on the wall, a vintage, metal, bird, with brass, copper, and a faded, silk, a small, framed, watercolor, depicting a serene, moonlit, overgrown, and forgotten"
+      }
+    ]
+  }
+}

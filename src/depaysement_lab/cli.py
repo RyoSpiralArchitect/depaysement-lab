@@ -671,6 +671,7 @@ def build_parser() -> argparse.ArgumentParser:
     ar.add_argument("--frontier-band-ratio", type=float, default=0.60)
     ar.add_argument("--frontier-band-width", type=float, default=0.08)
     ar.add_argument("--no-dedupe-texts", action="store_true", help="keep duplicate candidate texts in class-rate denominators")
+    ar.add_argument("--compliant-only", action="store_true", help="drop candidates marked hard_ban_failed before computing the matrix")
     ar.add_argument("--ontology-threshold", type=float, default=0.23)
     ar.add_argument("--readability-threshold", type=float, default=0.58)
     ar.add_argument("--repair-threshold", type=float, default=0.35)
@@ -1437,6 +1438,7 @@ def cmd_affordance_reroute(args: argparse.Namespace) -> None:
         frontier_band_ratio=args.frontier_band_ratio,
         frontier_band_width=args.frontier_band_width,
         dedupe_texts=not args.no_dedupe_texts,
+        compliant_only=bool(args.compliant_only),
         top_k=max(args.top_k, 1),
     )
     if args.json_out:

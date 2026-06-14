@@ -100,6 +100,7 @@ The follow-up post-hoc selector lab is saved in:
 - [hub ablation generated text reading report](experiments/frontier_sweep_mundane_hub_ablation_smoke/frontier_sweep_texts.md)
 - [hub ablation research note](docs/research_notes/2026-06-14-hub-ablation-probe.md)
 - [affordance reroute matrix](experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md)
+- [post-hoc hard-gate affordance reroute matrix](experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md)
 - [affordance reroute research note](docs/research_notes/2026-06-14-affordance-reroute-hard-gate.md)
 
 The post-hoc selector lab performs no generation. It reuses the saved candidate
@@ -549,6 +550,41 @@ The wide reroute matrix shows `canonical_stock_hub` falling sharply under
 ablation, while frontier-band candidates reroute into affordance classes such as
 `acoustic_mechanism`, `organic_expansion`, `optical_memory`,
 `threshold_container`, and `animating_mediator`.
+
+For the stricter no-generation check, run post-hoc reselection on the matched
+control pools with a hard gate, then audit only compliant candidates:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/posthoc_reselect_mundane_hub_hard_gate
+```
+
+```bash
+python3 -m depaysement_lab.cli affordance-reroute \
+  --base experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --ablation experiments/posthoc_reselect_mundane_hub_hard_gate/*__banded-frontier_best.json \
+  --base-label matched_control \
+  --ablation-label posthoc_hard_gate \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --compliant-only \
+  --out experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md \
+  --json-out experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.json \
+  --csv experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_matrix_wide.csv
+```
+
+That stricter pass drives `canonical_stock_hub` to 0% in the compliant frontier
+band. Alpha `0.77` and `0.82` still retain compliant frontier examples, mainly
+through `optical_memory` and `organic_expansion`, while alpha `0.66` loses the
+frontier band under the same hard gate.
 
 Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
 JSONs for the current invocation, while `--resume` skips existing run JSONs in

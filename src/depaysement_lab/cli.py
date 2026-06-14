@@ -22,8 +22,12 @@ from .backends import (
 from .mlx_intervention import MLXSteeringRuntimeConfig, collect_mlx_steering_vectors
 from .model_policy import default_english_system_prompt, infer_model_policy
 from .noun_graph import (
+    build_affordance_reroute_report,
     build_noun_graph_report,
+    format_affordance_reroute_report,
     format_noun_graph_report,
+    write_affordance_reroute_csv,
+    write_affordance_reroute_json,
     write_noun_graph_json,
     write_noun_graph_nodes_csv,
 )
@@ -376,6 +380,7 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--selector-repair-max", type=float, default=0.45, help="frontier selector repair-pressure ceiling")
     p.add_argument("--selector-unfinished-max", type=float, default=0.50, help="frontier selector unfinished/truncation ceiling")
     p.add_argument("--hard-unfinished-max", type=float, default=-1.0, help="hard reject candidates above this unfinished score; negative disables the gate")
+    p.add_argument("--hard-ban-terms", default=None, help="comma/semicolon-separated terms to hard-reject during candidate selection")
 
 
 def add_trajectory_stop_args(p: argparse.ArgumentParser) -> None:
@@ -422,6 +427,7 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repair_max=float(getattr(args, "selector_repair_max", 0.45)),
         unfinished_max=float(getattr(args, "selector_unfinished_max", 0.50)),
         hard_unfinished_max=float(getattr(args, "hard_unfinished_max", -1.0)),
+        hard_ban_terms=tuple(parse_ban_terms(getattr(args, "hard_ban_terms", None))),
     )
 
 
@@ -652,6 +658,33 @@ def build_parser() -> argparse.ArgumentParser:
     ng.add_argument("--bank-weight", type=float, default=None)
     ng.add_argument("--embed-model", default=None)
     ng.add_argument("--device", default=None)
+
+    ar = sub.add_parser("affordance-reroute", help="compare affordance-class rerouting between matched frontier artifacts")
+    ar.add_argument("--base", nargs="+", required=True, help="baseline/control write JSON artifacts")
+    ar.add_argument("--ablation", nargs="+", required=True, help="ablation/write JSON artifacts to compare against --base")
+    ar.add_argument("--base-label", default="base")
+    ar.add_argument("--ablation-label", default="ablation")
+    ar.add_argument("--out", default=None, help="write markdown reroute matrix report")
+    ar.add_argument("--json-out", default=None, help="write structured reroute matrix JSON")
+    ar.add_argument("--csv", default=None, help="write condition/class reroute matrix CSV")
+    ar.add_argument("--top-k", type=int, default=18)
+    ar.add_argument("--frontier-band-ratio", type=float, default=0.60)
+    ar.add_argument("--frontier-band-width", type=float, default=0.08)
+    ar.add_argument("--no-dedupe-texts", action="store_true", help="keep duplicate candidate texts in class-rate denominators")
+    ar.add_argument("--ontology-threshold", type=float, default=0.23)
+    ar.add_argument("--readability-threshold", type=float, default=0.58)
+    ar.add_argument("--repair-threshold", type=float, default=0.35)
+    ar.add_argument("--bank", default=None)
+    ar.add_argument("--lexicon", default=None)
+    ar.add_argument("--disable-lexicon", action="store_true")
+    ar.add_argument("--enable-lexicon", action="store_true")
+    ar.add_argument("--lexicon-prior-scale", type=float, default=None)
+    ar.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    ar.add_argument("--no-bank-score", action="store_true")
+    ar.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    ar.add_argument("--bank-weight", type=float, default=None)
+    ar.add_argument("--embed-model", default=None)
+    ar.add_argument("--device", default=None)
 
     ta = sub.add_parser("trajectory-audit", help="audit picked trajectories without generating new text")
     ta.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with picked steps")
@@ -1378,6 +1411,50 @@ def cmd_noun_graph(args: argparse.Namespace) -> None:
         print(rendered)
 
 
+def cmd_affordance_reroute(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    base_frontier = audit_frontier_pool(
+        args.base,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    ablation_frontier = audit_frontier_pool(
+        args.ablation,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    report = build_affordance_reroute_report(
+        base_frontier,
+        ablation_frontier,
+        base_label=args.base_label,
+        ablation_label=args.ablation_label,
+        frontier_band_ratio=args.frontier_band_ratio,
+        frontier_band_width=args.frontier_band_width,
+        dedupe_texts=not args.no_dedupe_texts,
+        top_k=max(args.top_k, 1),
+    )
+    if args.json_out:
+        write_affordance_reroute_json(report, args.json_out)
+        print(f"Wrote affordance reroute JSON: {args.json_out}", file=sys.stderr)
+    if args.csv:
+        write_affordance_reroute_csv(report, args.csv)
+        print(f"Wrote affordance reroute CSV: {args.csv}", file=sys.stderr)
+    rendered = format_affordance_reroute_report(report, top_k=args.top_k)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(rendered, encoding="utf-8")
+        print(f"Wrote affordance reroute report: {args.out}", file=sys.stderr)
+    else:
+        print(rendered)
+
+
 def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
     scorer = make_scorer(args)
     report = audit_frontier_pool(
@@ -1750,6 +1827,8 @@ def main() -> None:
         cmd_pool_audit(args)
     elif args.command == "noun-graph":
         cmd_noun_graph(args)
+    elif args.command == "affordance-reroute":
+        cmd_affordance_reroute(args)
     elif args.command == "trajectory-audit":
         cmd_trajectory_audit(args)
     elif args.command == "reselect":

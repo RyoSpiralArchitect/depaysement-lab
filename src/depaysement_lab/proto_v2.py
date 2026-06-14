@@ -1508,6 +1508,7 @@ class SelectorConfig:
     repair_max: float = 0.45
     unfinished_max: float = 0.50
     hard_unfinished_max: float = -1.0
+    hard_ban_terms: Tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.objective not in SELECT_OBJECTIVES:
@@ -1800,6 +1801,8 @@ class DepaysementEngine:
         stock_prop = float(getattr(metrics, "stock_prop_attractor_score", 0.0))
         soft_style = float(getattr(metrics, "soft_style_cliche_score", 0.0))
         fantasy_prop, fantasy_hits = fantasy_prop_score(text)
+        hard_ban_terms = tuple(str(term).strip() for term in cfg.hard_ban_terms if str(term).strip())
+        hard_ban_hits = banned_term_hits(text, hard_ban_terms)
         ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
             clean_context,
             text,
@@ -1832,7 +1835,8 @@ class DepaysementEngine:
         unfinished_excess = max(0.0, unfinished - cfg.unfinished_max)
         hard_unfinished_enabled = cfg.hard_unfinished_max >= 0.0
         hard_unfinished_failed = hard_unfinished_enabled and unfinished > cfg.hard_unfinished_max
-        hard_gate_failed = bool(hard_unfinished_failed)
+        hard_ban_failed = bool(hard_ban_hits)
+        hard_gate_failed = bool(hard_unfinished_failed or hard_ban_failed)
         hard_gate_penalty = 1000.0 if hard_gate_failed else 0.0
         band_violation = (
             1.50 * ontology_below
@@ -1919,6 +1923,10 @@ class DepaysementEngine:
             "unfinished_excess": float(unfinished_excess),
             "hard_unfinished_max": float(cfg.hard_unfinished_max),
             "hard_unfinished_failed": bool(hard_unfinished_failed),
+            "hard_ban_terms": list(hard_ban_terms),
+            "hard_ban_hits": list(hard_ban_hits),
+            "hard_ban_hit_count": len(hard_ban_hits),
+            "hard_ban_failed": bool(hard_ban_failed),
             "hard_gate_failed": bool(hard_gate_failed),
             "hard_gate_penalty": float(hard_gate_penalty),
             "repetition_pressure": float(repetition),
@@ -2054,6 +2062,31 @@ def _selector_bandpass(value: float, low: float, high: float) -> float:
     if value < low:
         return clamp(value / max(low, 1e-12), 0.0, 1.0)
     return clamp((1.0 - value) / max(1.0 - high, 1e-12), 0.0, 1.0)
+
+
+def banned_term_hits(text: str, terms: Sequence[str]) -> Tuple[str, ...]:
+    """Return banned terms present in text using loose word/phrase boundaries."""
+
+    clean = str(text or "").lower()
+    hits: List[str] = []
+    seen: set[str] = set()
+    for raw in terms:
+        term = str(raw).strip().lower()
+        if not term:
+            continue
+        parts = [part for part in re.split(r"[\s-]+", term) if part]
+        if not parts:
+            continue
+        if len(parts) == 1:
+            pattern = r"\b" + re.escape(parts[0]) + r"(?:s|es)?\b"
+        else:
+            body = r"[\s-]+".join(re.escape(part) for part in parts[:-1])
+            last = re.escape(parts[-1])
+            pattern = r"\b" + body + r"[\s-]+" + last + r"(?:s|es)?\b"
+        if re.search(pattern, clean) and term not in seen:
+            seen.add(term)
+            hits.append(term)
+    return tuple(hits)
 
 
 def fantasy_prop_score(text: str) -> Tuple[float, Tuple[str, ...]]:

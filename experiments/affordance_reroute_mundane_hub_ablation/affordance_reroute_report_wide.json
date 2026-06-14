@@ -1,0 +1,1078 @@
+{
+  "settings": {
+    "base_label": "matched_control",
+    "ablation_label": "hub_ablation",
+    "frontier_band_ratio": 0.4,
+    "frontier_band_width": 0.22,
+    "dedupe_texts": true,
+    "base_documents": 27,
+    "ablation_documents": 35,
+    "classes": [
+      "canonical_stock_hub",
+      "acoustic_mechanism",
+      "text_memory",
+      "threshold_container",
+      "time_mechanism",
+      "organic_expansion",
+      "optical_memory",
+      "animating_mediator"
+    ]
+  },
+  "summaries": [
+    {
+      "source": "matched_control",
+      "condition": "selector_alpha_0",
+      "documents": 3,
+      "mean_frontier": 0.16567406215548097,
+      "mean_readability": 0.6620797240268196,
+      "mean_ontology": 0.5247578347578348,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 1,
+      "text_memory_rate": 0.3333333333333333,
+      "threshold_container_count": 1,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 0,
+      "organic_expansion_rate": 0.0,
+      "optical_memory_count": 1,
+      "optical_memory_rate": 0.3333333333333333,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p66",
+      "documents": 4,
+      "mean_frontier": 0.16114195208859738,
+      "mean_readability": 0.6974702259648237,
+      "mean_ontology": 0.675,
+      "mean_unfinished": 0.1,
+      "canonical_stock_hub_count": 4,
+      "canonical_stock_hub_rate": 1.0,
+      "acoustic_mechanism_count": 1,
+      "acoustic_mechanism_rate": 0.25,
+      "text_memory_count": 3,
+      "text_memory_rate": 0.75,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.75,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.25,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.5,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.25
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p77",
+      "documents": 13,
+      "mean_frontier": 0.19391377341853522,
+      "mean_readability": 0.7400718652013389,
+      "mean_ontology": 0.6357363038644296,
+      "mean_unfinished": 0.09230769230769233,
+      "canonical_stock_hub_count": 11,
+      "canonical_stock_hub_rate": 0.8461538461538461,
+      "acoustic_mechanism_count": 10,
+      "acoustic_mechanism_rate": 0.7692307692307693,
+      "text_memory_count": 6,
+      "text_memory_rate": 0.46153846153846156,
+      "threshold_container_count": 5,
+      "threshold_container_rate": 0.38461538461538464,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.07692307692307693,
+      "organic_expansion_count": 6,
+      "organic_expansion_rate": 0.46153846153846156,
+      "optical_memory_count": 3,
+      "optical_memory_rate": 0.23076923076923078,
+      "animating_mediator_count": 6,
+      "animating_mediator_rate": 0.46153846153846156
+    },
+    {
+      "source": "matched_control",
+      "condition": "steer_alpha_0p82",
+      "documents": 7,
+      "mean_frontier": 0.21256161144519184,
+      "mean_readability": 0.7668099873274722,
+      "mean_ontology": 0.5818913177919389,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 6,
+      "canonical_stock_hub_rate": 0.8571428571428571,
+      "acoustic_mechanism_count": 4,
+      "acoustic_mechanism_rate": 0.5714285714285714,
+      "text_memory_count": 3,
+      "text_memory_rate": 0.42857142857142855,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.42857142857142855,
+      "time_mechanism_count": 1,
+      "time_mechanism_rate": 0.14285714285714285,
+      "organic_expansion_count": 3,
+      "organic_expansion_rate": 0.42857142857142855,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 3,
+      "animating_mediator_rate": 0.42857142857142855
+    },
+    {
+      "source": "hub_ablation",
+      "condition": "selector_alpha_0",
+      "documents": 4,
+      "mean_frontier": 0.19467092898185837,
+      "mean_readability": 0.662152118780216,
+      "mean_ontology": 0.5795265643439902,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 1,
+      "acoustic_mechanism_rate": 0.25,
+      "text_memory_count": 3,
+      "text_memory_rate": 0.75,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 0.25,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 0,
+      "animating_mediator_rate": 0.0
+    },
+    {
+      "source": "hub_ablation",
+      "condition": "steer_alpha_0p66",
+      "documents": 12,
+      "mean_frontier": 0.22062476920981022,
+      "mean_readability": 0.7523585970407983,
+      "mean_ontology": 0.5714778383600223,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 6,
+      "acoustic_mechanism_rate": 0.5,
+      "text_memory_count": 1,
+      "text_memory_rate": 0.08333333333333333,
+      "threshold_container_count": 5,
+      "threshold_container_rate": 0.4166666666666667,
+      "time_mechanism_count": 2,
+      "time_mechanism_rate": 0.16666666666666666,
+      "organic_expansion_count": 6,
+      "organic_expansion_rate": 0.5,
+      "optical_memory_count": 5,
+      "optical_memory_rate": 0.4166666666666667,
+      "animating_mediator_count": 4,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "hub_ablation",
+      "condition": "steer_alpha_0p77",
+      "documents": 10,
+      "mean_frontier": 0.22515546307707046,
+      "mean_readability": 0.8005160915153322,
+      "mean_ontology": 0.5758888888888889,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 2,
+      "canonical_stock_hub_rate": 0.2,
+      "acoustic_mechanism_count": 4,
+      "acoustic_mechanism_rate": 0.4,
+      "text_memory_count": 4,
+      "text_memory_rate": 0.4,
+      "threshold_container_count": 2,
+      "threshold_container_rate": 0.2,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 4,
+      "organic_expansion_rate": 0.4,
+      "optical_memory_count": 2,
+      "optical_memory_rate": 0.2,
+      "animating_mediator_count": 2,
+      "animating_mediator_rate": 0.2
+    },
+    {
+      "source": "hub_ablation",
+      "condition": "steer_alpha_0p82",
+      "documents": 9,
+      "mean_frontier": 0.19875651064498087,
+      "mean_readability": 0.7703863532116224,
+      "mean_ontology": 0.5505291005291005,
+      "mean_unfinished": 0.0,
+      "canonical_stock_hub_count": 1,
+      "canonical_stock_hub_rate": 0.1111111111111111,
+      "acoustic_mechanism_count": 1,
+      "acoustic_mechanism_rate": 0.1111111111111111,
+      "text_memory_count": 2,
+      "text_memory_rate": 0.2222222222222222,
+      "threshold_container_count": 4,
+      "threshold_container_rate": 0.4444444444444444,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 6,
+      "organic_expansion_rate": 0.6666666666666666,
+      "optical_memory_count": 4,
+      "optical_memory_rate": 0.4444444444444444,
+      "animating_mediator_count": 5,
+      "animating_mediator_rate": 0.5555555555555556
+    }
+  ],
+  "matrix": [
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 1.0,
+      "ablation_rate": 0.0,
+      "delta": -1.0,
+      "base_count": 4,
+      "ablation_count": 0,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.8571428571428571,
+      "ablation_rate": 0.1111111111111111,
+      "delta": -0.746031746031746,
+      "base_count": 6,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "text_memory",
+      "base_rate": 0.75,
+      "ablation_rate": 0.08333333333333333,
+      "delta": -0.6666666666666666,
+      "base_count": 3,
+      "ablation_count": 1,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.8461538461538461,
+      "ablation_rate": 0.2,
+      "delta": -0.6461538461538461,
+      "base_count": 11,
+      "ablation_count": 2,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.5714285714285714,
+      "ablation_rate": 0.1111111111111111,
+      "delta": -0.4603174603174603,
+      "base_count": 4,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.4444444444444444,
+      "delta": 0.4444444444444444,
+      "base_count": 0,
+      "ablation_count": 4,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.4166666666666667,
+      "delta": 0.4166666666666667,
+      "base_count": 0,
+      "ablation_count": 5,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "text_memory",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.75,
+      "delta": 0.4166666666666667,
+      "base_count": 1,
+      "ablation_count": 3,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.7692307692307693,
+      "ablation_rate": 0.4,
+      "delta": -0.36923076923076925,
+      "base_count": 10,
+      "ablation_count": 4,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.75,
+      "ablation_rate": 0.4166666666666667,
+      "delta": -0.3333333333333333,
+      "base_count": 3,
+      "ablation_count": 5,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.2,
+      "delta": -0.26153846153846155,
+      "base_count": 6,
+      "ablation_count": 2,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.25,
+      "ablation_rate": 0.5,
+      "delta": 0.25,
+      "base_count": 1,
+      "ablation_count": 6,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.0,
+      "ablation_rate": 0.25,
+      "delta": 0.25,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.25,
+      "delta": 0.25,
+      "base_count": 0,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.6666666666666666,
+      "delta": 0.23809523809523808,
+      "base_count": 3,
+      "ablation_count": 6,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "text_memory",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.2222222222222222,
+      "delta": -0.20634920634920634,
+      "base_count": 3,
+      "ablation_count": 2,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.38461538461538464,
+      "ablation_rate": 0.2,
+      "delta": -0.18461538461538463,
+      "base_count": 5,
+      "ablation_count": 2,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.14285714285714285,
+      "ablation_rate": 0.0,
+      "delta": -0.14285714285714285,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.5555555555555556,
+      "delta": 0.12698412698412703,
+      "base_count": 3,
+      "ablation_count": 5,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.25,
+      "ablation_rate": 0.16666666666666666,
+      "delta": -0.08333333333333334,
+      "base_count": 1,
+      "ablation_count": 2,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.25,
+      "ablation_rate": 0.3333333333333333,
+      "delta": 0.08333333333333331,
+      "base_count": 1,
+      "ablation_count": 4,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.07692307692307693,
+      "ablation_rate": 0.0,
+      "delta": -0.07692307692307693,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "text_memory",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.4,
+      "delta": -0.06153846153846154,
+      "base_count": 6,
+      "ablation_count": 4,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.46153846153846156,
+      "ablation_rate": 0.4,
+      "delta": -0.06153846153846154,
+      "base_count": 6,
+      "ablation_count": 4,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.23076923076923078,
+      "ablation_rate": 0.2,
+      "delta": -0.03076923076923077,
+      "base_count": 3,
+      "ablation_count": 2,
+      "base_documents": 13,
+      "ablation_documents": 10
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.4444444444444444,
+      "delta": 0.015873015873015872,
+      "base_count": 3,
+      "ablation_count": 4,
+      "base_documents": 7,
+      "ablation_documents": 9
+    },
+    {
+      "condition": "steer_alpha_0p66",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.5,
+      "ablation_rate": 0.5,
+      "delta": 0.0,
+      "base_count": 2,
+      "ablation_count": 6,
+      "base_documents": 4,
+      "ablation_documents": 12
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 4
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 4
+    }
+  ],
+  "examples": {
+    "canonical_stock_hub": [
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.2531605445486407,
+        "terms": [
+          "comb",
+          "door",
+          "harmonica",
+          "key",
+          "moss",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "text_memory",
+          "threshold_container",
+          "organic_expansion"
+        ],
+        "text": "As the comb, now a delicate, transparent, and iridescent wing, begins to attach itself to the side of a small, ancient, wooden door, a small, wispy, and forgotten key, once hidden behind a tangle of old, silver hair, stirs, and a small, delicate, and forgotten typewriter, now a tiny, moss-like verdure, begins to unfurl, releasing a small, forgotten, and shimmering, silver harmonica."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.24388368623188408,
+        "terms": [
+          "harmonium",
+          "bird",
+          "porcelain"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "animating_mediator"
+        ],
+        "text": "The bird, perched on a cracked, old porcelain, no longer holding, but instead, a small, antique harmonium, once a tiny, forgotten musician, now a tiny, delicate bird."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p82",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.22315002642857146,
+        "terms": [
+          "mist",
+          "porcelain"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub"
+        ],
+        "text": "On the wall, a small, white porcelain sink, once a woman's, now a man's, wears a pair of steel spectacles, fogging up with morning mist."
+      }
+    ],
+    "acoustic_mechanism": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "selector_alpha_0",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.27618255213060033,
+        "terms": [
+          "plastic folder",
+          "counter",
+          "harmonica",
+          "label"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "text_memory"
+        ],
+        "text": "Among the tangled cords, a frayed extension cord had become entangled with the harmonica, as if the instrument had been passed through it at some point, while a nearby VHS tape, its label worn and faded, sat on the edge of the counter, its worn cover bearing an uncanny resemblance to the plastic folder."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.2531605445486407,
+        "terms": [
+          "comb",
+          "door",
+          "harmonica",
+          "key",
+          "moss",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "text_memory",
+          "threshold_container",
+          "organic_expansion"
+        ],
+        "text": "As the comb, now a delicate, transparent, and iridescent wing, begins to attach itself to the side of a small, ancient, wooden door, a small, wispy, and forgotten key, once hidden behind a tangle of old, silver hair, stirs, and a small, delicate, and forgotten typewriter, now a tiny, moss-like verdure, begins to unfurl, releasing a small, forgotten, and shimmering, silver harmonica."
+      }
+    ],
+    "text_memory": [
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "selector_alpha_0",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.27618255213060033,
+        "terms": [
+          "plastic folder",
+          "counter",
+          "harmonica",
+          "label"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "text_memory"
+        ],
+        "text": "Among the tangled cords, a frayed extension cord had become entangled with the harmonica, as if the instrument had been passed through it at some point, while a nearby VHS tape, its label worn and faded, sat on the edge of the counter, its worn cover bearing an uncanny resemblance to the plastic folder."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2572589498327759,
+        "terms": [
+          "glass",
+          "hand",
+          "moss",
+          "paper",
+          "teapot"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container",
+          "organic_expansion",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "A delicate, copper teapot, once a treant, now a tiny, moss-covered statu in a forgotten, stone, where a small, forgotten, glass, filled with dew, contains a small, folded, paper, with a miniature, hand-painted, gargo."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.2531605445486407,
+        "terms": [
+          "comb",
+          "door",
+          "harmonica",
+          "key",
+          "moss",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "text_memory",
+          "threshold_container",
+          "organic_expansion"
+        ],
+        "text": "As the comb, now a delicate, transparent, and iridescent wing, begins to attach itself to the side of a small, ancient, wooden door, a small, wispy, and forgotten key, once hidden behind a tangle of old, silver hair, stirs, and a small, delicate, and forgotten typewriter, now a tiny, moss-like verdure, begins to unfurl, releasing a small, forgotten, and shimmering, silver harmonica."
+      }
+    ],
+    "threshold_container": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2572589498327759,
+        "terms": [
+          "glass",
+          "hand",
+          "moss",
+          "paper",
+          "teapot"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container",
+          "organic_expansion",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "A delicate, copper teapot, once a treant, now a tiny, moss-covered statu in a forgotten, stone, where a small, forgotten, glass, filled with dew, contains a small, folded, paper, with a miniature, hand-painted, gargo."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.2531605445486407,
+        "terms": [
+          "comb",
+          "door",
+          "harmonica",
+          "key",
+          "moss",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "text_memory",
+          "threshold_container",
+          "organic_expansion"
+        ],
+        "text": "As the comb, now a delicate, transparent, and iridescent wing, begins to attach itself to the side of a small, ancient, wooden door, a small, wispy, and forgotten key, once hidden behind a tangle of old, silver hair, stirs, and a small, delicate, and forgotten typewriter, now a tiny, moss-like verdure, begins to unfurl, releasing a small, forgotten, and shimmering, silver harmonica."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.2311107169985719,
+        "terms": [
+          "plastic folder",
+          "box",
+          "hand",
+          "moss",
+          "teapot",
+          "vine"
+        ],
+        "affordance_classes": [
+          "threshold_container",
+          "organic_expansion",
+          "animating_mediator"
+        ],
+        "text": "As the plastic folder, now a moldering, slimy, green, and slimy, the antique box, now a gaping, tooth-like maw, slowly devours the plastic folder, its worn, gold filigework, now a tangle of twisted, serpentine vines, as the copper teapot, once a tiny, moss-covered, ceramic creature, slowly rises, its delicate, hand-paint..."
+      }
+    ],
+    "time_mechanism": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p66",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.21635998817290947,
+        "terms": [
+          "cabinet",
+          "fridge",
+          "metronome",
+          "piano"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "threshold_container",
+          "time_mechanism"
+        ],
+        "text": "As I push aside a crisper, a tiny, antique music maker, a miniature metronome, slowly begins to play a soft, lilac-colored piano tune, while the fridge's shelves, now a miniature, ornate, Victorian-era wooden cabinet, quietly hums a soft, melancholic melody."
+      },
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p66",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.17736935053374875,
+        "terms": [
+          "harmonium",
+          "crystal",
+          "fog",
+          "metronome",
+          "mist",
+          "piano"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "time_mechanism",
+          "optical_memory"
+        ],
+        "text": "The miniature metronome, now free from the crisper, begins to slide across the countertops, its delicate, mother-of-pearl surface reflecting the soft, lilac-colored piano tune, as a small, delicate, antique harmonium, hidden behind a shelf, stirs to life, its bellows puffing out a faint, wispy mist of fog that condenses into a tiny, delicate, crystal, which levitates above the harmonium, reflecting the lilac piano tune."
+      }
+    ],
+    "organic_expansion": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2626041733939537,
+        "terms": [
+          "blue mug",
+          "comb",
+          "mist",
+          "moss"
+        ],
+        "affordance_classes": [
+          "organic_expansion"
+        ],
+        "text": "The blue mug, now filled with a faint, wispy mist, slowly rises into the air, and the sink, now a small, moss-like verdure, begins to unfold, releasing a small, forgotten comb."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2572589498327759,
+        "terms": [
+          "glass",
+          "hand",
+          "moss",
+          "paper",
+          "teapot"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container",
+          "organic_expansion",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "A delicate, copper teapot, once a treant, now a tiny, moss-covered statu in a forgotten, stone, where a small, forgotten, glass, filled with dew, contains a small, folded, paper, with a miniature, hand-painted, gargo."
+      }
+    ],
+    "optical_memory": [
+      {
+        "run_name": "steer_alpha_0p66_c8_tok100_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p66",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.3717965637589878,
+        "terms": [
+          "bell",
+          "crystal",
+          "garden",
+          "umbrella"
+        ],
+        "affordance_classes": [
+          "acoustic_mechanism",
+          "organic_expansion",
+          "optical_memory"
+        ],
+        "text": "A delicate, filigework of spider, its legs splayed and twisted, weeps a tiny, crystal droplet of water, as the umbrella, now a miniature, forlorn garden, slowly unfurls, a tangle of petunias, forget-me-nots, and anemones, their tiny, bell-shaped bells, a soft, morning hymn."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2572589498327759,
+        "terms": [
+          "glass",
+          "hand",
+          "moss",
+          "paper",
+          "teapot"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container",
+          "organic_expansion",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "A delicate, copper teapot, once a treant, now a tiny, moss-covered statu in a forgotten, stone, where a small, forgotten, glass, filled with dew, contains a small, folded, paper, with a miniature, hand-painted, gargo."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2488977842251457,
+        "terms": [
+          "faded photograph",
+          "bird",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "As I pull out a dusty old typewriter, a faint hum, long-forgotten memories begin to stir, and a faded photograph slips out, revealing a faded couple, their eyes locked on a small, antique music, now a tiny, delicate bird."
+      }
+    ],
+    "animating_mediator": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer.json",
+        "condition": "steer_alpha_0p82",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2572589498327759,
+        "terms": [
+          "glass",
+          "hand",
+          "moss",
+          "paper",
+          "teapot"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container",
+          "organic_expansion",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "A delicate, copper teapot, once a treant, now a tiny, moss-covered statu in a forgotten, stone, where a small, forgotten, glass, filled with dew, contains a small, folded, paper, with a miniature, hand-painted, gargo."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2488977842251457,
+        "terms": [
+          "faded photograph",
+          "bird",
+          "typewriter"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "optical_memory",
+          "animating_mediator"
+        ],
+        "text": "As I pull out a dusty old typewriter, a faint hum, long-forgotten memories begin to stir, and a faded photograph slips out, revealing a faded couple, their eyes locked on a small, antique music, now a tiny, delicate bird."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p77",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.24388368623188408,
+        "terms": [
+          "harmonium",
+          "bird",
+          "porcelain"
+        ],
+        "affordance_classes": [
+          "canonical_stock_hub",
+          "acoustic_mechanism",
+          "animating_mediator"
+        ],
+        "text": "The bird, perched on a cracked, old porcelain, no longer holding, but instead, a small, antique harmonium, once a tiny, forgotten musician, now a tiny, delicate bird."
+      }
+    ]
+  }
+}

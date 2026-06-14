@@ -14,8 +14,12 @@ from depaysement_lab.frontier import (
     write_rating_sheet,
 )
 from depaysement_lab.noun_graph import (
+    build_affordance_reroute_report,
     build_noun_graph_report,
+    format_affordance_reroute_report,
     format_noun_graph_report,
+    write_affordance_reroute_csv,
+    write_affordance_reroute_json,
     write_noun_graph_json,
     write_noun_graph_nodes_csv,
 )
@@ -220,14 +224,97 @@ def test_noun_graph_finds_frontier_hub_terms(tmp_path):
     graph = build_noun_graph_report(frontier_report, top_k=5, max_nodes=20)
     terms = {node["term"] for node in graph.nodes}
     assert {"music box", "key", "clock"} & terms
+    assert any("canonical_stock_hub" in node["affordance_classes"] for node in graph.nodes)
     assert graph.edges
-    assert "Frontier Noun Graph" in format_noun_graph_report(graph)
+    rendered = format_noun_graph_report(graph)
+    assert "Frontier Noun Graph" in rendered
+    assert "Affordance Classes" in rendered
 
     json_out = tmp_path / "noun_graph.json"
     csv_out = tmp_path / "noun_graph_nodes.csv"
     write_noun_graph_json(graph, str(json_out))
     write_noun_graph_nodes_csv(graph, str(csv_out))
     assert json.loads(json_out.read_text(encoding="utf-8"))["nodes"]
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    assert rows
+    assert "affordance_classes" in rows[0]
+
+
+def test_affordance_reroute_matrix_compares_class_shifts(tmp_path):
+    base = tmp_path / "base.json"
+    ablation = tmp_path / "ablation.json"
+    base.write_text(
+        json.dumps(
+            {
+                "seed": "A receipt on the counter",
+                "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 1},
+                "steps": [
+                    {
+                        "step": 1,
+                        "picked": {
+                            "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                            "score": {"total": 2.0},
+                        },
+                        "candidates": [
+                            {
+                                "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                                "score": {"total": 2.0},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    ablation.write_text(
+        json.dumps(
+            {
+                "seed": "A receipt on the counter",
+                "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 1},
+                "steps": [
+                    {
+                        "step": 1,
+                        "picked": {
+                            "text": "The receipt, now a typewriter, opens a paper garden beside a harmonica.",
+                            "score": {"total": 2.0},
+                        },
+                        "candidates": [
+                            {
+                                "text": "The receipt, now a typewriter, opens a paper garden beside a harmonica.",
+                                "score": {"total": 2.0},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    base_frontier = audit_frontier_pool([str(base)], top_k=2)
+    ablation_frontier = audit_frontier_pool([str(ablation)], top_k=2)
+    reroute = build_affordance_reroute_report(
+        base_frontier,
+        ablation_frontier,
+        frontier_band_ratio=0.0,
+        frontier_band_width=1.0,
+    )
+    by_class = {
+        row["affordance_class"]: row
+        for row in reroute.matrix
+        if row["condition"] == "steer_alpha_0p66"
+    }
+    assert by_class["canonical_stock_hub"]["delta"] < 0
+    assert by_class["organic_expansion"]["delta"] > 0
+    assert by_class["acoustic_mechanism"]["delta"] == 0
+    assert "Affordance Reroute Matrix" in format_affordance_reroute_report(reroute)
+
+    json_out = tmp_path / "reroute.json"
+    csv_out = tmp_path / "reroute.csv"
+    write_affordance_reroute_json(reroute, str(json_out))
+    write_affordance_reroute_csv(reroute, str(csv_out))
+    assert json.loads(json_out.read_text(encoding="utf-8"))["matrix"]
     with csv_out.open(encoding="utf-8", newline="") as f:
         assert list(csv.DictReader(f))
 

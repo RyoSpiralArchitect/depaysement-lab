@@ -203,6 +203,35 @@ def test_hard_unfinished_gate_rejects_truncated_frontier_candidate():
     assert rejected.selector_metrics["hard_gate_penalty"] > 0
 
 
+def test_hard_ban_terms_reject_banned_candidate():
+    rng = random.Random(0)
+    banned = "The umbrella, now a music box, opens inside the station clock."
+    compliant = "The umbrella becomes a garden that grips the station sign."
+    generator = FixedGenerator([banned, compliant])
+    engine = DepaysementEngine(
+        generator,
+        rng=rng,
+        selector=SelectorConfig(
+            objective="banded-frontier",
+            hard_ban_terms=("music box",),
+        ),
+    )
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=1,
+        candidates_per_step=2,
+        choose="best",
+        keep_candidates=2,
+    )
+
+    picked = run.steps[0].picked
+    rejected = next(c for c in run.steps[0].candidates if c.text == banned)
+    assert picked.text == compliant
+    assert rejected.selector_metrics["hard_ban_failed"] is True
+    assert rejected.selector_metrics["hard_ban_hits"] == ["music box"]
+    assert rejected.selector_metrics["hard_gate_failed"] is True
+
+
 def test_trajectory_stop_halts_after_unfinished_pick():
     rng = random.Random(0)
     generator = SequentialGenerator(

@@ -26,6 +26,16 @@ def test_cliche_attractor_detects_generic_magic_realist_vocab():
     assert "music box" in cliche.cliche_attractor_hits
 
 
+def test_cliche_attractor_splits_stock_props_from_soft_style():
+    auditor = OntologyAuditor()
+    stock = auditor.audit_text("The antique music box opened beside a porcelain doll.")
+    soft = auditor.audit_text("The fog became an ethereal mist with a soft glow.")
+    assert stock.stock_prop_attractor_score > stock.soft_style_cliche_score
+    assert soft.soft_style_cliche_score > soft.stock_prop_attractor_score
+    assert "music box" in stock.stock_prop_attractor_hits
+    assert "ethereal" in soft.soft_style_cliche_hits
+
+
 def test_audit_run_files_accepts_write_run_json(tmp_path):
     p = tmp_path / "run.json"
     p.write_text(

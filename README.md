@@ -86,6 +86,13 @@ The follow-up post-hoc selector lab is saved in:
 - [banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-rating-sheet.md)
 - [actual banded-frontier generation sweep](experiments/frontier_sweep_banded_frontier_focus/)
 - [actual banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-generation.md)
+- [hard-gated mundane reselect directory](experiments/posthoc_reselect_mundane_hard_gate/)
+- [hard-gated mundane report](experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_report.md)
+- [hard-gated generated text reading report](experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_texts.md)
+- [hard-gated focused rating sheet](experiments/posthoc_reselect_mundane_hard_gate/human_rating_sheet_hard_gate_focus.md)
+- [hard-gated research note](docs/research_notes/2026-06-13-hard-gated-mundane-reselect.md)
+- [trajectory audit report](experiments/trajectory_audit_mundane/trajectory_report.md)
+- [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
 
 That lab performs no generation. It reuses the saved candidate pools from the
 focused sweep and asks which selector would have picked the readable frontier.
@@ -179,6 +186,14 @@ readable_ontology_frontier
 cliche_attractor_score
   audit-only density of generic magic-realist vocabulary such as antique,
   porcelain, velvet, ethereal, music box, and moonlit terms
+
+stock_prop_attractor_score
+  audit-only subscore for stock props such as antique objects, music boxes,
+  porcelain dolls, miniatures, pocket watches, and clockwork objects
+
+soft_style_cliche_score
+  audit-only subscore for soft atmospheric diction such as ethereal, fog,
+  mist, spectral, ghostly, moonlit, soft glow, and whispering terms
 ```
 
 Failure examples are also retained: high ontology collapse with poor readability,
@@ -210,15 +225,20 @@ hybrid_score =
   - repetition_weight * repetition_pressure
   - sprawl_weight * sprawl_pressure
   - cliche_weight * cliche_attractor_score
+  - soft_style_cliche_weight * soft_style_cliche_score
   - fantasy_prop_weight * fantasy_prop_score
   - ordinary_anchor_weight * ordinary_anchor_deficit
+  - hard_gate_penalty
 ```
 
 `cliche_weight` defaults to `0.0`, so old runs are unchanged.  Use it when you
 want to discourage generic magic-realist diction after measuring it.
+`soft_style_cliche_weight` targets the softer "ethereal fog" register separately.
 `fantasy_prop_weight` targets stock antique/miniature/porcelain props, while
 `ordinary_anchor_weight` discourages candidates that drop mundane source anchors
 such as `receipt`, `folder`, `bus`, `spreadsheet`, or `fridge`.
+`hard_unfinished_max` is disabled by default; when set to `0.0` or `0.05`, it
+hard-rejects candidates whose unfinished score exceeds that threshold.
 
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
@@ -413,6 +433,40 @@ python3 -m depaysement_lab.cli reselect \
 This tests whether better taste can be recovered from existing pools by
 penalizing generic attractors and requiring the prose to retain some ordinary
 source pressure.
+
+For a stricter no-generation pass that refuses unfinished tails before ranking,
+split the cliche pressure and add a hard unfinished gate:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --selector-unfinished-max 0.50 \
+  --hard-unfinished-max 0.05 \
+  --unfinished-weight 1.40 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.0 \
+  --soft-style-cliche-weight 0.25 \
+  --fantasy-prop-weight 1.10 \
+  --ordinary-anchor-weight 0.45 \
+  --ordinary-anchor-min 0.30 \
+  --out-dir experiments/posthoc_reselect_mundane_hard_gate
+```
+
+Then audit picked runs as trajectories rather than isolated steps:
+
+```bash
+python3 -m depaysement_lab.cli trajectory-audit \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  experiments/posthoc_reselect_mundane_balanced_guard/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_hard_gate/*__banded-frontier_best.json \
+  --out experiments/trajectory_audit_mundane/trajectory_report.md \
+  --json-out experiments/trajectory_audit_mundane/trajectory_report.json \
+  --csv experiments/trajectory_audit_mundane/trajectory_runs.csv
+```
 
 ## Collect MLX Steering Vectors
 

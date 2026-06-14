@@ -10,6 +10,17 @@ class FixedGenerator:
         return self.candidates[:n]
 
 
+class SequentialGenerator:
+    def __init__(self, batches):
+        self.batches = [list(batch) for batch in batches]
+        self.calls = 0
+
+    def generate(self, prompt, n, temperature, top_p, max_new_tokens):
+        batch = self.batches[min(self.calls, len(self.batches) - 1)]
+        self.calls += 1
+        return batch[:n]
+
+
 def test_meta_leak_is_cut_from_cleanup():
     text = "A plastic bag flaps beside the nest. (Note: I've tried to continue the fragment as per the instructions.)"
     assert cleanup_continuation(text) == "A plastic bag flaps beside the nest."
@@ -124,3 +135,68 @@ def test_anchor_guard_steers_selector_away_from_stock_fantasy_props():
     assert fantasy.selector_metrics["fantasy_prop_score"] > picked.selector_metrics["fantasy_prop_score"]
     assert picked.selector_metrics["ordinary_anchor_retention"] >= 0.5
     assert "umbrella" in picked.selector_metrics["ordinary_anchor_hits"]
+
+
+def test_hard_unfinished_gate_rejects_truncated_frontier_candidate():
+    rng = random.Random(0)
+    truncated = (
+        "The umbrella, now a garden, wraps vines around the station clock, "
+        "as the platform, the sign, the ticket, the old rain, the"
+    )
+    complete = "The umbrella becomes a garden that grips the station sign."
+    generator = FixedGenerator([truncated, complete])
+    engine = DepaysementEngine(
+        generator,
+        rng=rng,
+        selector=SelectorConfig(
+            objective="banded-frontier",
+            hard_unfinished_max=0.0,
+            unfinished_weight=1.4,
+        ),
+    )
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=1,
+        candidates_per_step=2,
+        choose="best",
+        keep_candidates=2,
+    )
+
+    picked = run.steps[0].picked
+    rejected = next(c for c in run.steps[0].candidates if c.text == truncated)
+    assert picked.text == complete
+    assert picked.selector_metrics["hard_gate_failed"] is False
+    assert rejected.selector_metrics["hard_gate_failed"] is True
+    assert rejected.selector_metrics["hard_gate_penalty"] > 0
+
+
+def test_trajectory_stop_halts_after_unfinished_pick():
+    rng = random.Random(0)
+    generator = SequentialGenerator(
+        [
+            ["The umbrella, now a garden, wraps vines around the station clock."],
+            ["The garden becomes a clock that listens to the platform rain."],
+            ["The clock, now a ticket booth, as the platform, the sign, the old rain, the"],
+            ["This step should not be generated."],
+        ]
+    )
+    engine = DepaysementEngine(
+        generator,
+        rng=rng,
+        selector=SelectorConfig(objective="frontier"),
+    )
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=5,
+        candidates_per_step=1,
+        choose="best",
+        keep_candidates=1,
+        trajectory_stop=True,
+        trajectory_min_steps=3,
+        trajectory_unfinished_max=0.0,
+    )
+
+    assert len(run.steps) == 3
+    assert run.config["trajectory_stop"]["triggered"] is True
+    assert run.config["trajectory_stop"]["step"] == 3
+    assert "unfinished" in run.config["trajectory_stop"]["reason"]

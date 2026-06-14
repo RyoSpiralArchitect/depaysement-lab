@@ -24,7 +24,9 @@ from .model_policy import default_english_system_prompt, infer_model_policy
 from .ontology import audit_run_files, format_report
 from .frontier import (
     audit_frontier_pool,
+    audit_trajectory_runs,
     format_frontier_report,
+    format_trajectory_report,
     rating_sheet_rows,
     write_rating_markdown,
     write_rating_sheet,
@@ -32,6 +34,8 @@ from .frontier import (
     write_frontier_json,
     write_frontier_plot,
     write_frontier_reading_report,
+    write_trajectory_csv,
+    write_trajectory_json,
 )
 from .observation import (
     DisplacementObserver,
@@ -347,6 +351,7 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repetition-weight", type=float, default=0.30, help="hybrid selector penalty for repetition loops")
     p.add_argument("--sprawl-weight", type=float, default=0.20, help="hybrid selector penalty for graph/sprawl fragmentation")
     p.add_argument("--cliche-weight", type=float, default=0.0, help="optional selector penalty for generic magic-realist vocabulary attractors")
+    p.add_argument("--soft-style-cliche-weight", type=float, default=0.0, help="optional selector penalty for soft style cliche diction such as ethereal/fog/mist")
     p.add_argument("--fantasy-prop-weight", type=float, default=0.0, help="optional selector penalty for stock antique/miniature/porcelain props")
     p.add_argument("--ordinary-anchor-weight", type=float, default=0.0, help="optional selector penalty when candidates drop mundane context anchors")
     p.add_argument("--ordinary-anchor-min", type=float, default=0.0, help="minimum ordinary-anchor retention when --ordinary-anchor-weight is used")
@@ -356,6 +361,16 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--selector-frontier-quality-min", type=float, default=0.20, help="frontier selector quality floor")
     p.add_argument("--selector-repair-max", type=float, default=0.45, help="frontier selector repair-pressure ceiling")
     p.add_argument("--selector-unfinished-max", type=float, default=0.50, help="frontier selector unfinished/truncation ceiling")
+    p.add_argument("--hard-unfinished-max", type=float, default=-1.0, help="hard reject candidates above this unfinished score; negative disables the gate")
+
+
+def add_trajectory_stop_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--trajectory-stop", action="store_true", help="stop a live run when the picked trajectory begins to decay")
+    p.add_argument("--trajectory-min-steps", type=int, default=3, help="minimum steps before trajectory stopping can trigger")
+    p.add_argument("--trajectory-frontier-drop", type=float, default=0.08, help="stop if frontier falls this far below the previous peak")
+    p.add_argument("--trajectory-unfinished-stop-max", type=float, default=0.05, help="stop if picked unfinished exceeds this value")
+    p.add_argument("--trajectory-repetition-stop-max", type=float, default=0.55, help="stop if picked repetition pressure exceeds this value")
+    p.add_argument("--trajectory-sprawl-stop-max", type=float, default=0.65, help="stop if picked sprawl pressure exceeds this value")
 
 
 def add_scorer_args(p: argparse.ArgumentParser) -> None:
@@ -382,6 +397,7 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repetition_weight=float(getattr(args, "repetition_weight", 0.30)),
         sprawl_weight=float(getattr(args, "sprawl_weight", 0.20)),
         cliche_weight=float(getattr(args, "cliche_weight", 0.0)),
+        soft_style_cliche_weight=float(getattr(args, "soft_style_cliche_weight", 0.0)),
         fantasy_prop_weight=float(getattr(args, "fantasy_prop_weight", 0.0)),
         ordinary_anchor_weight=float(getattr(args, "ordinary_anchor_weight", 0.0)),
         ordinary_anchor_min=float(getattr(args, "ordinary_anchor_min", 0.0)),
@@ -391,7 +407,19 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         frontier_quality_min=float(getattr(args, "selector_frontier_quality_min", 0.20)),
         repair_max=float(getattr(args, "selector_repair_max", 0.45)),
         unfinished_max=float(getattr(args, "selector_unfinished_max", 0.50)),
+        hard_unfinished_max=float(getattr(args, "hard_unfinished_max", -1.0)),
     )
+
+
+def trajectory_stop_kwargs(args: argparse.Namespace) -> Dict[str, Any]:
+    return {
+        "trajectory_stop": bool(getattr(args, "trajectory_stop", False)),
+        "trajectory_min_steps": int(getattr(args, "trajectory_min_steps", 3)),
+        "trajectory_frontier_drop": float(getattr(args, "trajectory_frontier_drop", 0.08)),
+        "trajectory_unfinished_max": float(getattr(args, "trajectory_unfinished_stop_max", 0.05)),
+        "trajectory_repetition_max": float(getattr(args, "trajectory_repetition_stop_max", 0.55)),
+        "trajectory_sprawl_max": float(getattr(args, "trajectory_sprawl_stop_max", 0.65)),
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -401,6 +429,7 @@ def build_parser() -> argparse.ArgumentParser:
     w = sub.add_parser("write", help="multi-step depaysement / automatic writing")
     add_common_generation_args(w)
     add_selector_args(w)
+    add_trajectory_stop_args(w)
     w.add_argument("--seed", default="A forgotten umbrella at the station")
     w.add_argument("--mode", choices=["depaysement", "automatic"], default="depaysement")
     w.add_argument("--steps", type=int, default=5)
@@ -583,6 +612,25 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--embed-model", default=None)
     pa.add_argument("--device", default=None)
 
+    ta = sub.add_parser("trajectory-audit", help="audit picked trajectories without generating new text")
+    ta.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with picked steps")
+    ta.add_argument("--out", default=None, help="write markdown/text report")
+    ta.add_argument("--json-out", default=None, help="write full JSON report")
+    ta.add_argument("--csv", default=None, help="write run-level trajectory CSV")
+    ta.add_argument("--json", action="store_true", help="print full JSON report")
+    ta.add_argument("--top-k", type=int, default=8)
+    ta.add_argument("--bank", default=None)
+    ta.add_argument("--lexicon", default=None)
+    ta.add_argument("--disable-lexicon", action="store_true")
+    ta.add_argument("--enable-lexicon", action="store_true")
+    ta.add_argument("--lexicon-prior-scale", type=float, default=None)
+    ta.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    ta.add_argument("--no-bank-score", action="store_true")
+    ta.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    ta.add_argument("--bank-weight", type=float, default=None)
+    ta.add_argument("--embed-model", default=None)
+    ta.add_argument("--device", default=None)
+
     rs = sub.add_parser("reselect", help="post-hoc reselect saved candidate pools without new generation")
     add_selector_args(rs)
     add_scorer_args(rs)
@@ -610,6 +658,7 @@ def build_parser() -> argparse.ArgumentParser:
     fs = sub.add_parser("frontier-sweep", help="run alpha/candidate/token sweeps and audit the readable ontology collapse frontier")
     add_common_generation_args(fs)
     add_selector_args(fs)
+    add_trajectory_stop_args(fs)
     fs.add_argument("--seed", default="A forgotten umbrella at the station")
     fs.add_argument("--seed-bank", default=None, help="optional JSON/TXT seed bank; JSON may be a list or contain a 'seeds' list")
     fs.add_argument("--seed-limit", type=int, default=0, help="limit loaded seed-bank entries; 0 means use all")
@@ -700,6 +749,7 @@ def cmd_write(args: argparse.Namespace) -> None:
         prompt_style=args.prompt_style,
         keep_candidates=(args.save_candidates if args.out else 0),
         include_prompt=bool(args.include_prompt),
+        **trajectory_stop_kwargs(args),
     )
     print("\n=== result ===")
     print(run.final_text)
@@ -1212,6 +1262,26 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
         print(format_frontier_report(report, top_k=args.top_k))
 
 
+def cmd_trajectory_audit(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    report = audit_trajectory_runs(args.runs, scorer=scorer, top_k=args.top_k)
+    if args.json_out:
+        write_trajectory_json(report, args.json_out, include_steps=True)
+        print(f"Wrote trajectory JSON: {args.json_out}", file=sys.stderr)
+    if args.csv:
+        write_trajectory_csv(report, args.csv)
+        print(f"Wrote trajectory CSV: {args.csv}", file=sys.stderr)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(format_trajectory_report(report, top_k=args.top_k), encoding="utf-8")
+        print(f"Wrote trajectory report: {args.out}", file=sys.stderr)
+    if args.json and not args.out:
+        print(json.dumps(report.to_dict(include_steps=True), ensure_ascii=False, indent=2))
+    elif not args.out:
+        print(format_trajectory_report(report, top_k=args.top_k))
+
+
 def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
     scorer = make_scorer(args)
     report = audit_frontier_pool(
@@ -1425,6 +1495,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                             prompt_style=args.prompt_style,
                             keep_candidates=save_candidates,
                             include_prompt=args.include_prompt,
+                            **trajectory_stop_kwargs(args),
                         )
                     run.config["condition"] = condition
                     run.config["sweep_alpha"] = float(alpha)
@@ -1526,6 +1597,8 @@ def main() -> None:
         cmd_observe(args)
     elif args.command == "pool-audit":
         cmd_pool_audit(args)
+    elif args.command == "trajectory-audit":
+        cmd_trajectory_audit(args)
     elif args.command == "reselect":
         cmd_reselect(args)
     elif args.command == "frontier-sweep":

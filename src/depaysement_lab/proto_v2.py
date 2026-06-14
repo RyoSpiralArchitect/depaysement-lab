@@ -1497,6 +1497,7 @@ class SelectorConfig:
     repetition_weight: float = 0.30
     sprawl_weight: float = 0.20
     cliche_weight: float = 0.0
+    soft_style_cliche_weight: float = 0.0
     fantasy_prop_weight: float = 0.0
     ordinary_anchor_weight: float = 0.0
     ordinary_anchor_min: float = 0.0
@@ -1506,6 +1507,7 @@ class SelectorConfig:
     frontier_quality_min: float = 0.20
     repair_max: float = 0.45
     unfinished_max: float = 0.50
+    hard_unfinished_max: float = -1.0
 
     def __post_init__(self) -> None:
         if self.objective not in SELECT_OBJECTIVES:
@@ -1595,6 +1597,12 @@ class DepaysementEngine:
         choose: str = "softmax",
         trace: bool = False,
         prompt_style: str = "scene",
+        trajectory_stop: bool = False,
+        trajectory_min_steps: int = 3,
+        trajectory_frontier_drop: float = 0.08,
+        trajectory_unfinished_max: float = 0.05,
+        trajectory_repetition_max: float = 0.55,
+        trajectory_sprawl_max: float = 0.65,
     ) -> str:
         return self.write_run(
             seed=seed,
@@ -1608,6 +1616,12 @@ class DepaysementEngine:
             trace=trace,
             prompt_style=prompt_style,
             keep_candidates=0,
+            trajectory_stop=trajectory_stop,
+            trajectory_min_steps=trajectory_min_steps,
+            trajectory_frontier_drop=trajectory_frontier_drop,
+            trajectory_unfinished_max=trajectory_unfinished_max,
+            trajectory_repetition_max=trajectory_repetition_max,
+            trajectory_sprawl_max=trajectory_sprawl_max,
         ).final_text
 
     def write_run(
@@ -1624,6 +1638,12 @@ class DepaysementEngine:
         prompt_style: str = "scene",
         keep_candidates: int = 0,
         include_prompt: bool = False,
+        trajectory_stop: bool = False,
+        trajectory_min_steps: int = 3,
+        trajectory_frontier_drop: float = 0.08,
+        trajectory_unfinished_max: float = 0.05,
+        trajectory_repetition_max: float = 0.55,
+        trajectory_sprawl_max: float = 0.65,
     ) -> WriteRun:
         text = seed.strip()
         records: List[StepRecord] = []
@@ -1639,8 +1659,20 @@ class DepaysementEngine:
             "motif_jitter": self.motif_jitter,
             "select_objective": self.selector.objective,
             "selector": self.selector.to_dict(),
+            "trajectory_stop": {
+                "enabled": bool(trajectory_stop),
+                "min_steps": int(trajectory_min_steps),
+                "frontier_drop": float(trajectory_frontier_drop),
+                "unfinished_max": float(trajectory_unfinished_max),
+                "repetition_max": float(trajectory_repetition_max),
+                "sprawl_max": float(trajectory_sprawl_max),
+                "triggered": False,
+                "step": None,
+                "reason": "",
+            },
         }
         for step in range(1, steps + 1):
+            context_before_step = text
             prompt = ""
             motifs: List[str] = []
             stored_candidates: List[Candidate] = []
@@ -1673,6 +1705,9 @@ class DepaysementEngine:
                 picked = self._pick(ranked, choose=choose, score_fn=self._pick_score)
                 stored_candidates = list(ranked[:keep_candidates]) if keep_candidates > 0 else []
 
+            if trajectory_stop and not picked.selector_metrics:
+                self._attach_selector_metrics(picked, context=context_before_step)
+
             if trace:
                 print(f"\n--- step {step} picked ---")
                 print(picked.text)
@@ -1689,6 +1724,25 @@ class DepaysementEngine:
                 )
             )
             text = join_text(text, picked.text)
+            stop_reason = self._trajectory_stop_reason(
+                records,
+                min_steps=trajectory_min_steps,
+                frontier_drop=trajectory_frontier_drop,
+                unfinished_max=trajectory_unfinished_max,
+                repetition_max=trajectory_repetition_max,
+                sprawl_max=trajectory_sprawl_max,
+            )
+            if trajectory_stop and stop_reason:
+                config["trajectory_stop"].update(
+                    {
+                        "triggered": True,
+                        "step": int(step),
+                        "reason": stop_reason,
+                    }
+                )
+                if trace:
+                    print(f"[trajectory-stop] step {step}: {stop_reason}")
+                break
         return WriteRun(seed=seed.strip(), final_text=text, steps=records, config=config)
 
     def rank(self, seed: str, n: int = 12, temperature: float = 1.05, top_p: float = 0.92, max_new_tokens: int = 120, prompt_style: str = "scene") -> List[Candidate]:
@@ -1729,6 +1783,8 @@ class DepaysementEngine:
         repair = float(metrics.repair_pressure)
         unfinished = float(metrics.unfinished)
         cliche = float(getattr(metrics, "cliche_attractor_score", 0.0))
+        stock_prop = float(getattr(metrics, "stock_prop_attractor_score", 0.0))
+        soft_style = float(getattr(metrics, "soft_style_cliche_score", 0.0))
         fantasy_prop, fantasy_hits = fantasy_prop_score(text)
         ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
             clean_context,
@@ -1750,6 +1806,7 @@ class DepaysementEngine:
             + cfg.repetition_weight * repetition
             + cfg.sprawl_weight * sprawl
             + cfg.cliche_weight * cliche
+            + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
             + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
         )
@@ -1759,6 +1816,10 @@ class DepaysementEngine:
         ontology_above = max(0.0, ontology - cfg.ontology_max)
         repair_excess = max(0.0, repair - cfg.repair_max)
         unfinished_excess = max(0.0, unfinished - cfg.unfinished_max)
+        hard_unfinished_enabled = cfg.hard_unfinished_max >= 0.0
+        hard_unfinished_failed = hard_unfinished_enabled and unfinished > cfg.hard_unfinished_max
+        hard_gate_failed = bool(hard_unfinished_failed)
+        hard_gate_penalty = 1000.0 if hard_gate_failed else 0.0
         band_violation = (
             1.50 * ontology_below
             + 1.10 * ontology_above
@@ -1768,8 +1829,10 @@ class DepaysementEngine:
             + cfg.unfinished_weight * unfinished_excess
             + 0.30 * repetition
             + 0.30 * sprawl
+            + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
             + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
+            + hard_gate_penalty
         )
         hybrid_score = (
             float(candidate.score.total)
@@ -1779,6 +1842,7 @@ class DepaysementEngine:
             - 0.50 * readability_deficit
             - 0.25 * frontier_quality_deficit
             - 0.20 * (1.0 - ontology_band)
+            - hard_gate_penalty
         )
         eligible = (
             cfg.ontology_min <= ontology <= cfg.ontology_max
@@ -1787,6 +1851,7 @@ class DepaysementEngine:
             and repair <= cfg.repair_max
             and unfinished <= cfg.unfinished_max
             and ordinary_anchor >= cfg.ordinary_anchor_min
+            and not hard_gate_failed
         )
         banded_frontier_score = (
             (1.0 if eligible else 0.0)
@@ -1824,6 +1889,9 @@ class DepaysementEngine:
             "repair_excess": float(repair_excess),
             "cliche_attractor_score": cliche,
             "cliche_penalty": float(cfg.cliche_weight * cliche),
+            "stock_prop_attractor_score": stock_prop,
+            "soft_style_cliche_score": soft_style,
+            "soft_style_cliche_penalty": float(cfg.soft_style_cliche_weight * soft_style),
             "fantasy_prop_score": float(fantasy_prop),
             "fantasy_prop_hits": list(fantasy_hits),
             "fantasy_prop_penalty": float(cfg.fantasy_prop_weight * fantasy_prop),
@@ -1835,6 +1903,10 @@ class DepaysementEngine:
             "ordinary_anchor_penalty": float(cfg.ordinary_anchor_weight * ordinary_anchor_deficit),
             "unfinished": unfinished,
             "unfinished_excess": float(unfinished_excess),
+            "hard_unfinished_max": float(cfg.hard_unfinished_max),
+            "hard_unfinished_failed": bool(hard_unfinished_failed),
+            "hard_gate_failed": bool(hard_gate_failed),
+            "hard_gate_penalty": float(hard_gate_penalty),
             "repetition_pressure": float(repetition),
             "sprawl_pressure": float(sprawl),
             "selector_penalty": float(penalty),
@@ -1899,6 +1971,46 @@ class DepaysementEngine:
             if r <= acc:
                 return c
         return top[-1]
+
+    def _trajectory_stop_reason(
+        self,
+        records: Sequence[StepRecord],
+        *,
+        min_steps: int,
+        frontier_drop: float,
+        unfinished_max: float,
+        repetition_max: float,
+        sprawl_max: float,
+    ) -> str:
+        if len(records) < max(1, int(min_steps)):
+            return ""
+        current = records[-1].picked.selector_metrics
+        if not current:
+            return ""
+        frontiers = [
+            float(record.picked.selector_metrics.get("readable_ontology_frontier", 0.0))
+            for record in records
+            if record.picked.selector_metrics
+        ]
+        if not frontiers:
+            return ""
+        current_frontier = frontiers[-1]
+        previous_peak = max(frontiers[:-1] or [current_frontier])
+        reasons: List[str] = []
+        unfinished = float(current.get("unfinished", 0.0))
+        repetition = float(current.get("repetition_pressure", 0.0))
+        sprawl = float(current.get("sprawl_pressure", 0.0))
+        if unfinished > float(trajectory_unfinished_max := unfinished_max):
+            reasons.append(f"unfinished {unfinished:.3f}>{trajectory_unfinished_max:.3f}")
+        if current_frontier < previous_peak - float(frontier_drop) and current_frontier < 0.12:
+            reasons.append(
+                f"frontier decay {previous_peak:.3f}->{current_frontier:.3f}"
+            )
+        if repetition > float(repetition_max):
+            reasons.append(f"repetition {repetition:.3f}>{float(repetition_max):.3f}")
+        if sprawl > float(sprawl_max):
+            reasons.append(f"sprawl {sprawl:.3f}>{float(sprawl_max):.3f}")
+        return "; ".join(reasons)
 
     def _pick_motifs(self, context: str) -> List[str]:
         terms = sorted(salient_terms(context, self.scorer.concept_fields if self.scorer.lexicon_enabled else None))
@@ -2028,6 +2140,8 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("repair_pressure", 0.0)),
         float(lm.get("repetition_pressure", 0.0)),
         float(lm.get("sprawl_pressure", 0.0)),
+        float(lm.get("hard_gate_penalty", 0.0)),
+        float(lm.get("soft_style_cliche_penalty", 0.0)),
         float(lm.get("fantasy_prop_penalty", 0.0)),
         float(lm.get("ordinary_anchor_penalty", 0.0)),
     )
@@ -2036,6 +2150,8 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(rm.get("repair_pressure", 0.0)),
         float(rm.get("repetition_pressure", 0.0)),
         float(rm.get("sprawl_pressure", 0.0)),
+        float(rm.get("hard_gate_penalty", 0.0)),
+        float(rm.get("soft_style_cliche_penalty", 0.0)),
         float(rm.get("fantasy_prop_penalty", 0.0)),
         float(rm.get("ordinary_anchor_penalty", 0.0)),
     )

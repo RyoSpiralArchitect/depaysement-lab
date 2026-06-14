@@ -3,6 +3,8 @@ import json
 
 from depaysement_lab.frontier import (
     audit_frontier_pool,
+    audit_trajectory_runs,
+    format_trajectory_report,
     rating_sheet_rows,
     readable_frontier_score,
     write_frontier_reading_report,
@@ -48,6 +50,8 @@ def test_pool_audit_computes_selection_lift_and_truncation(tmp_path):
     assert "selection_lift_readable_ontology_frontier" in r.aggregate
     assert "pool_mean_ordinary_anchor_retention" in r.aggregate
     assert "pool_mean_fantasy_prop_score" in r.aggregate
+    assert "pool_mean_stock_prop_attractor_score" in r.aggregate
+    assert "pool_mean_soft_style_cliche_score" in r.aggregate
     assert r.rows[0].metrics["ordinary_anchor_retention"] > 0
     assert "station" in r.rows[0].metrics["ordinary_anchor_hits"]
     assert report.top_frontier_examples
@@ -156,6 +160,8 @@ def test_rating_sheet_exports_picked_and_top_frontier_rows(tmp_path):
     assert exported[0]["human_notes"] == ""
     assert "ordinary_anchor_retention" in exported[0]
     assert "fantasy_prop_score" in exported[0]
+    assert "stock_prop_attractor_score" in exported[0]
+    assert "soft_style_cliche_score" in exported[0]
     assert "Human Rating Sheet" in md_out.read_text(encoding="utf-8")
 
 
@@ -183,3 +189,38 @@ def test_rating_sheet_dedupes_same_step_text(tmp_path):
     assert len(rows) == 1
     assert rows[0]["picked"] == 1
     assert set(rows[0]["kind"].split("+")) == {"picked", "top_frontier"}
+
+
+def test_trajectory_audit_scores_picked_sequence(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "steer_alpha_0p66"},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The umbrella, now a garden, wraps vines around the station clock.",
+                    "score": {"total": 2.0, "anti_repetition": 0.0},
+                },
+            },
+            {
+                "step": 2,
+                "picked": {
+                    "text": 'The garden, now a clock, reads: "For the rain that kept waiting."',
+                    "score": {"total": 1.0, "anti_repetition": -0.2},
+                },
+            },
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_trajectory_runs([str(p)], top_k=1)
+    assert len(report.runs) == 1
+    aggregate = report.runs[0].aggregate
+    assert aggregate["trajectory_frontier_auc"] > 0
+    assert aggregate["anchor_survival"] > 0
+    assert aggregate["lineage_continuity"] > 0
+    assert aggregate["now_chain_pressure"] > 0
+    assert aggregate["inscription_pressure"] > 0
+    assert "Readable Ontology Collapse Trajectory" in format_trajectory_report(report)

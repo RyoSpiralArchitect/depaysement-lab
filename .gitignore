@@ -41,3 +41,14 @@ experiments/*
 !experiments/posthoc_reselect_banded_frontier_lab/**
 !experiments/frontier_sweep_banded_frontier_focus/
 !experiments/frontier_sweep_banded_frontier_focus/**
+!experiments/posthoc_reselect_mundane_hard_gate/
+experiments/posthoc_reselect_mundane_hard_gate/*
+!experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_report.md
+!experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_texts.md
+!experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_candidates.csv
+!experiments/posthoc_reselect_mundane_hard_gate/human_rating_sheet_hard_gate_focus.csv
+!experiments/posthoc_reselect_mundane_hard_gate/human_rating_sheet_hard_gate_focus.md
+!experiments/trajectory_audit_mundane/
+experiments/trajectory_audit_mundane/*
+!experiments/trajectory_audit_mundane/trajectory_report.md
+!experiments/trajectory_audit_mundane/trajectory_runs.csv

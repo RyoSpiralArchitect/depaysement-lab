@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from .frontier import FrontierAuditReport, clean_generated_text, truncate
 
@@ -275,6 +276,9 @@ class NounGraphDocument:
     text: str
     terms: List[str]
     affordance_classes: List[str] = field(default_factory=list)
+    hard_ban_observed: bool = False
+    hard_ban_failed: bool = False
+    hard_ban_hits: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -300,6 +304,7 @@ class AffordanceRerouteReport:
     settings: Dict[str, Any]
     summaries: List[Dict[str, Any]]
     matrix: List[Dict[str, Any]]
+    diagnostics: List[Dict[str, Any]] = field(default_factory=list)
     examples: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -307,6 +312,7 @@ class AffordanceRerouteReport:
             "settings": dict(self.settings),
             "summaries": list(self.summaries),
             "matrix": list(self.matrix),
+            "diagnostics": list(self.diagnostics),
             "examples": dict(self.examples),
         }
 
@@ -480,8 +486,18 @@ def frontier_band_documents(
     frontier_band_width: float = 0.08,
     dedupe_texts: bool = True,
     require_multiple_terms: bool = False,
+    compliant_only: bool = False,
 ) -> List[NounGraphDocument]:
     rows = [row for run in frontier_report.runs for row in run.rows]
+    if compliant_only:
+        rows = [
+            row
+            for row in rows
+            if not (
+                ("hard_ban_failed" in row.metrics or "hard_ban_hits" in row.metrics)
+                and bool(row.metrics.get("hard_ban_failed", False))
+            )
+        ]
     max_frontier = max((float(row.readable_ontology_frontier) for row in rows), default=0.0)
     band_min = frontier_band_min(
         max_frontier,
@@ -503,6 +519,9 @@ def frontier_band_documents(
         if not terms:
             continue
         m = row.metrics
+        hard_ban_observed = "hard_ban_failed" in m or "hard_ban_hits" in m
+        hard_ban_failed = bool(m.get("hard_ban_failed", False))
+        hard_ban_hits = [str(hit) for hit in list(m.get("hard_ban_hits", []) or [])]
         documents.append(
             NounGraphDocument(
                 run_name=row.run_name,
@@ -520,6 +539,9 @@ def frontier_band_documents(
                 text=row.text,
                 terms=terms,
                 affordance_classes=affordance_classes_for_terms(terms),
+                hard_ban_observed=bool(hard_ban_observed),
+                hard_ban_failed=hard_ban_failed,
+                hard_ban_hits=hard_ban_hits,
             )
         )
     return documents
@@ -628,6 +650,7 @@ def build_affordance_reroute_report(
     frontier_band_ratio: float = 0.60,
     frontier_band_width: float = 0.08,
     dedupe_texts: bool = True,
+    compliant_only: bool = False,
     top_k: int = 12,
 ) -> AffordanceRerouteReport:
     base_docs = frontier_band_documents(
@@ -635,23 +658,27 @@ def build_affordance_reroute_report(
         frontier_band_ratio=frontier_band_ratio,
         frontier_band_width=frontier_band_width,
         dedupe_texts=dedupe_texts,
+        compliant_only=compliant_only,
     )
     ablation_docs = frontier_band_documents(
         ablation_report,
         frontier_band_ratio=frontier_band_ratio,
         frontier_band_width=frontier_band_width,
         dedupe_texts=dedupe_texts,
+        compliant_only=compliant_only,
     )
     base_summaries = summarize_affordance_documents(base_docs, source=base_label)
     ablation_summaries = summarize_affordance_documents(ablation_docs, source=ablation_label)
-    base_by_condition = {str(row["condition"]): row for row in base_summaries}
-    ablation_by_condition = {str(row["condition"]): row for row in ablation_summaries}
+    base_by_condition = {reroute_condition_key(str(row["condition"])): row for row in base_summaries}
+    ablation_by_condition = {reroute_condition_key(str(row["condition"])): row for row in ablation_summaries}
     conditions = sorted(set(base_by_condition) | set(ablation_by_condition))
 
     matrix: List[Dict[str, Any]] = []
+    diagnostics: List[Dict[str, Any]] = []
     for condition in conditions:
         base_row = base_by_condition.get(condition, {})
         ablation_row = ablation_by_condition.get(condition, {})
+        diagnostics.append(affordance_condition_diagnostics(condition, base_row, ablation_row))
         for class_name in AFFORDANCE_CLASS_ORDER:
             base_rate = float(base_row.get(f"{class_name}_rate", 0.0) or 0.0)
             ablation_rate = float(ablation_row.get(f"{class_name}_rate", 0.0) or 0.0)
@@ -684,14 +711,20 @@ def build_affordance_reroute_report(
             "frontier_band_ratio": float(frontier_band_ratio),
             "frontier_band_width": float(frontier_band_width),
             "dedupe_texts": bool(dedupe_texts),
+            "compliant_only": bool(compliant_only),
             "base_documents": len(base_docs),
             "ablation_documents": len(ablation_docs),
             "classes": list(AFFORDANCE_CLASS_ORDER),
         },
         summaries=[*base_summaries, *ablation_summaries],
         matrix=matrix,
+        diagnostics=diagnostics,
         examples=examples,
     )
+
+
+def reroute_condition_key(condition: str) -> str:
+    return re.sub(r"__reselect_.*$", "", condition)
 
 
 def summarize_affordance_documents(documents: Sequence[NounGraphDocument], *, source: str) -> List[Dict[str, Any]]:
@@ -709,7 +742,17 @@ def summarize_affordance_documents(documents: Sequence[NounGraphDocument], *, so
             "mean_readability": mean(doc.readability for doc in docs),
             "mean_ontology": mean(doc.ontology for doc in docs),
             "mean_unfinished": mean(doc.unfinished for doc in docs),
+            "affordance_load": mean(len(set(doc.affordance_classes)) for doc in docs),
+            "reroute_entropy": normalized_entropy(affordance_class_counts(docs), ignore={"canonical_stock_hub"}),
+            "class_entropy": normalized_entropy(affordance_class_counts(docs)),
+            "hard_ban_observed_documents": sum(1 for doc in docs if doc.hard_ban_observed),
+            "hard_ban_failed_documents": sum(1 for doc in docs if doc.hard_ban_failed),
         }
+        row["hard_compliance_rate"] = (
+            1.0 - float(row["hard_ban_failed_documents"]) / float(row["hard_ban_observed_documents"])
+            if row["hard_ban_observed_documents"]
+            else 0.0
+        )
         counts = affordance_class_counts(docs)
         for class_name in AFFORDANCE_CLASS_ORDER:
             count = int(counts.get(class_name, 0))
@@ -731,6 +774,61 @@ def affordance_example(doc: NounGraphDocument) -> Dict[str, Any]:
         "affordance_classes": list(doc.affordance_classes),
         "text": doc.text,
     }
+
+
+def affordance_condition_diagnostics(
+    condition: str,
+    base_row: Mapping[str, Any],
+    ablation_row: Mapping[str, Any],
+) -> Dict[str, Any]:
+    base_docs = int(base_row.get("documents", 0) or 0)
+    ablation_docs = int(ablation_row.get("documents", 0) or 0)
+    base_frontier = float(base_row.get("mean_frontier", 0.0) or 0.0)
+    ablation_frontier = float(ablation_row.get("mean_frontier", 0.0) or 0.0)
+    base_canonical = float(base_row.get("canonical_stock_hub_rate", 0.0) or 0.0)
+    ablation_canonical = float(ablation_row.get("canonical_stock_hub_rate", 0.0) or 0.0)
+    base_noncanonical = noncanonical_affordance_rate(base_row)
+    ablation_noncanonical = noncanonical_affordance_rate(ablation_row)
+    canonical_drop = max(0.0, base_canonical - ablation_canonical)
+    noncanonical_gain = ablation_noncanonical - base_noncanonical
+    frontier_survival_ratio = float(ablation_docs / base_docs) if base_docs else (1.0 if ablation_docs else 0.0)
+    frontier_survival_rate = min(1.0, frontier_survival_ratio)
+    hub_dependence_index = float((base_frontier - ablation_frontier) / base_frontier) if base_frontier > 0.0 else 0.0
+    return {
+        "condition": condition,
+        "base_documents": base_docs,
+        "ablation_documents": ablation_docs,
+        "frontier_survival_rate": frontier_survival_rate,
+        "frontier_survival_ratio": frontier_survival_ratio,
+        "base_frontier": base_frontier,
+        "ablation_frontier": ablation_frontier,
+        "frontier_delta": ablation_frontier - base_frontier,
+        "hub_dependence_index": hub_dependence_index,
+        "canonical_stock_hub_delta": ablation_canonical - base_canonical,
+        "canonical_drop": canonical_drop,
+        "base_noncanonical_affordance_rate": base_noncanonical,
+        "ablation_noncanonical_affordance_rate": ablation_noncanonical,
+        "noncanonical_affordance_delta": noncanonical_gain,
+        "affordance_substitution_index": canonical_drop * max(0.0, noncanonical_gain),
+        "base_reroute_entropy": float(base_row.get("reroute_entropy", 0.0) or 0.0),
+        "ablation_reroute_entropy": float(ablation_row.get("reroute_entropy", 0.0) or 0.0),
+        "reroute_entropy_delta": float(ablation_row.get("reroute_entropy", 0.0) or 0.0)
+        - float(base_row.get("reroute_entropy", 0.0) or 0.0),
+        "base_affordance_load": float(base_row.get("affordance_load", 0.0) or 0.0),
+        "ablation_affordance_load": float(ablation_row.get("affordance_load", 0.0) or 0.0),
+        "affordance_load_delta": float(ablation_row.get("affordance_load", 0.0) or 0.0)
+        - float(base_row.get("affordance_load", 0.0) or 0.0),
+        "hard_compliance_rate": float(ablation_row.get("hard_compliance_rate", 0.0) or 0.0),
+    }
+
+
+def noncanonical_affordance_rate(row: Mapping[str, Any]) -> float:
+    rates = [
+        float(row.get(f"{class_name}_rate", 0.0) or 0.0)
+        for class_name in AFFORDANCE_CLASS_ORDER
+        if class_name != "canonical_stock_hub"
+    ]
+    return max(rates, default=0.0)
 
 
 def format_affordance_reroute_report(report: AffordanceRerouteReport, *, top_k: int = 18) -> str:
@@ -762,6 +860,31 @@ def format_affordance_reroute_report(report: AffordanceRerouteReport, *, top_k: 
         )
     lines.append("")
 
+    if report.diagnostics:
+        lines.extend(
+            [
+                "## Reroute Diagnostics",
+                "",
+                "| condition | survival | frontier delta | hub dependence | canonical drop | substitution | entropy delta | load delta | compliance |",
+                "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+            ]
+        )
+        for row in sorted(report.diagnostics, key=lambda r: str(r.get("condition", ""))):
+            lines.append(
+                "| {condition} | {survival:.2f} | {frontier_delta:+.3f} | {dependence:+.3f} | {drop:.1%} | {substitution:.3f} | {entropy:+.3f} | {load:+.2f} | {compliance:.1%} |".format(
+                    condition=row["condition"],
+                    survival=float(row["frontier_survival_rate"]),
+                    frontier_delta=float(row["frontier_delta"]),
+                    dependence=float(row["hub_dependence_index"]),
+                    drop=float(row["canonical_drop"]),
+                    substitution=float(row["affordance_substitution_index"]),
+                    entropy=float(row["reroute_entropy_delta"]),
+                    load=float(row["affordance_load_delta"]),
+                    compliance=float(row["hard_compliance_rate"]),
+                )
+            )
+        lines.append("")
+
     if report.summaries:
         lines.extend(["## Source Summaries", ""])
         for row in report.summaries:
@@ -775,12 +898,15 @@ def format_affordance_reroute_report(report: AffordanceRerouteReport, *, top_k: 
             )[:4]
             top = ", ".join(f"{name}={rate:.1%}" for name, rate in top_classes if rate > 0.0) or "-"
             lines.append(
-                "- {source} {condition}: docs={docs} frontier={frontier:.3f} unfinished={unfinished:.3f} | {top}".format(
+                "- {source} {condition}: docs={docs} frontier={frontier:.3f} unfinished={unfinished:.3f} load={load:.2f} entropy={entropy:.3f} compliance={compliance:.1%} | {top}".format(
                     source=row["source"],
                     condition=row["condition"],
                     docs=int(row["documents"]),
                     frontier=float(row["mean_frontier"]),
                     unfinished=float(row["mean_unfinished"]),
+                    load=float(row.get("affordance_load", 0.0) or 0.0),
+                    entropy=float(row.get("reroute_entropy", 0.0) or 0.0),
+                    compliance=float(row.get("hard_compliance_rate", 0.0) or 0.0),
                     top=top,
                 )
             )
@@ -813,6 +939,9 @@ def format_affordance_reroute_report(report: AffordanceRerouteReport, *, top_k: 
         [
             "## Notes",
             "- Rates are document hit rates inside the observed frontier band, not token frequencies.",
+            "- survival is ablation frontier-band documents divided by base frontier-band documents for the same condition.",
+            "- hub dependence is positive when mean frontier falls after ablation; negative values mean frontier rose.",
+            "- reroute entropy ignores canonical_stock_hub and asks whether replacement affordances spread across classes.",
             "- Classes overlap: one candidate can count as both text_memory and threshold_container.",
             "- Use this matrix to distinguish word-level bans from function-level rerouting.",
         ]
@@ -845,6 +974,16 @@ def write_affordance_reroute_csv(report: AffordanceRerouteReport, path: str) -> 
         writer.writeheader()
         for row in report.matrix:
             writer.writerow({field: row.get(field, "") for field in fields})
+
+
+def normalized_entropy(counts: Mapping[str, int], *, ignore: Optional[set[str]] = None) -> float:
+    ignore = ignore or set()
+    vals = [float(count) for key, count in counts.items() if key not in ignore and count > 0]
+    total = sum(vals)
+    if total <= 0.0 or len(vals) <= 1:
+        return 0.0
+    entropy = -sum((value / total) * math.log(value / total) for value in vals)
+    return float(entropy / math.log(len(vals)))
 
 
 def format_noun_graph_report(report: NounGraphReport, *, top_k: int = 24) -> str:

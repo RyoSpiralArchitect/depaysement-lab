@@ -102,6 +102,8 @@ The follow-up post-hoc selector lab is saved in:
 - [affordance reroute matrix](experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md)
 - [post-hoc hard-gate affordance reroute matrix](experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md)
 - [affordance reroute research note](docs/research_notes/2026-06-14-affordance-reroute-hard-gate.md)
+- [affordance class knockout research note](docs/research_notes/2026-06-14-affordance-class-knockout.md)
+- [optical + organic knockout matrix](experiments/affordance_class_knockout_mundane/optical_organic_report.md)
 
 The post-hoc selector lab performs no generation. It reuses the saved candidate
 pools from the focused sweep and asks which selector would have picked the
@@ -585,6 +587,29 @@ That stricter pass drives `canonical_stock_hub` to 0% in the compliant frontier
 band. Alpha `0.77` and `0.82` still retain compliant frontier examples, mainly
 through `optical_memory` and `organic_expansion`, while alpha `0.66` loses the
 frontier band under the same hard gate.
+
+To knock out whole affordance classes, use `--hard-ban-affordance-classes`.
+This expands class names such as `optical_memory` or `organic_expansion` into
+their audited term sets before hard candidate selection:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --hard-ban-affordance-classes optical_memory,organic_expansion \
+  --out-dir experiments/posthoc_reselect_mundane_class_knockout_optical_organic
+```
+
+The first class-knockout smoke suggests different corridors by alpha. With
+canonical stock hubs already hard-gated, `alpha=0.77` still survives the
+`optical_memory + organic_expansion` knockout through a narrow `text_memory`
+route. `alpha=0.82` does not: the same double knockout removes its compliant
+frontier band.
 
 Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
 JSONs for the current invocation, while `--resume` skips existing run JSONs in

@@ -106,3 +106,8 @@ experiments/affordance_reroute_mundane_hard_gate/*
 !experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md
 !experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.json
 !experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_matrix_wide.csv
+!experiments/affordance_class_knockout_mundane/
+experiments/affordance_class_knockout_mundane/*
+!experiments/affordance_class_knockout_mundane/*_report.md
+!experiments/affordance_class_knockout_mundane/*_report.json
+!experiments/affordance_class_knockout_mundane/*_matrix.csv

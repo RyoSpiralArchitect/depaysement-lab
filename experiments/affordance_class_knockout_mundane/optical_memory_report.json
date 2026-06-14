@@ -1,0 +1,716 @@
+{
+  "settings": {
+    "base_label": "canonical_hard_gate",
+    "ablation_label": "knockout_optical_memory",
+    "frontier_band_ratio": 0.4,
+    "frontier_band_width": 0.22,
+    "dedupe_texts": true,
+    "compliant_only": true,
+    "base_documents": 13,
+    "ablation_documents": 8,
+    "classes": [
+      "canonical_stock_hub",
+      "acoustic_mechanism",
+      "text_memory",
+      "threshold_container",
+      "time_mechanism",
+      "organic_expansion",
+      "optical_memory",
+      "animating_mediator"
+    ]
+  },
+  "summaries": [
+    {
+      "source": "canonical_hard_gate",
+      "condition": "selector_alpha_0__reselect_banded-frontier_best",
+      "documents": 7,
+      "mean_frontier": 0.1316024112600567,
+      "mean_readability": 0.6748285973989436,
+      "mean_ontology": 0.43645456956021367,
+      "mean_unfinished": 0.0,
+      "affordance_load": 1.4285714285714286,
+      "reroute_entropy": 0.881353453268883,
+      "class_entropy": 0.881353453268883,
+      "hard_ban_observed_documents": 7,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 4,
+      "text_memory_rate": 0.5714285714285714,
+      "threshold_container_count": 3,
+      "threshold_container_rate": 0.42857142857142855,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 0.14285714285714285,
+      "optical_memory_count": 1,
+      "optical_memory_rate": 0.14285714285714285,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.14285714285714285
+    },
+    {
+      "source": "canonical_hard_gate",
+      "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+      "documents": 3,
+      "mean_frontier": 0.1659091779567668,
+      "mean_readability": 0.7300092751584927,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.13333333333333333,
+      "affordance_load": 1.3333333333333333,
+      "reroute_entropy": 0.946394630357186,
+      "class_entropy": 0.946394630357186,
+      "hard_ban_observed_documents": 3,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 1,
+      "text_memory_rate": 0.3333333333333333,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 0,
+      "organic_expansion_rate": 0.0,
+      "optical_memory_count": 2,
+      "optical_memory_rate": 0.6666666666666666,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "canonical_hard_gate",
+      "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+      "documents": 3,
+      "mean_frontier": 0.1495410157988857,
+      "mean_readability": 0.7135310449785665,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.26666666666666666,
+      "affordance_load": 2.0,
+      "reroute_entropy": 0.9591479170272448,
+      "class_entropy": 0.9591479170272448,
+      "hard_ban_observed_documents": 3,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 0,
+      "text_memory_rate": 0.0,
+      "threshold_container_count": 1,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 2,
+      "organic_expansion_rate": 0.6666666666666666,
+      "optical_memory_count": 2,
+      "optical_memory_rate": 0.6666666666666666,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.3333333333333333
+    },
+    {
+      "source": "knockout_optical_memory",
+      "condition": "selector_alpha_0__reselect_banded-frontier_best",
+      "documents": 6,
+      "mean_frontier": 0.1290561297583178,
+      "mean_readability": 0.6878475796923275,
+      "mean_ontology": 0.4301514137746653,
+      "mean_unfinished": 0.0,
+      "affordance_load": 1.3333333333333333,
+      "reroute_entropy": 0.875,
+      "class_entropy": 0.875,
+      "hard_ban_observed_documents": 6,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 4,
+      "text_memory_rate": 0.6666666666666666,
+      "threshold_container_count": 2,
+      "threshold_container_rate": 0.3333333333333333,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 0.16666666666666666,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 0.16666666666666666
+    },
+    {
+      "source": "knockout_optical_memory",
+      "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+      "documents": 1,
+      "mean_frontier": 0.2298526083333333,
+      "mean_readability": 0.9276666666666666,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.0,
+      "affordance_load": 1.0,
+      "reroute_entropy": 0.0,
+      "class_entropy": 0.0,
+      "hard_ban_observed_documents": 1,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 1,
+      "text_memory_rate": 1.0,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 0,
+      "organic_expansion_rate": 0.0,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 0,
+      "animating_mediator_rate": 0.0
+    },
+    {
+      "source": "knockout_optical_memory",
+      "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+      "documents": 1,
+      "mean_frontier": 0.233243366851595,
+      "mean_readability": 0.9022954230235783,
+      "mean_ontology": 0.55,
+      "mean_unfinished": 0.0,
+      "affordance_load": 2.0,
+      "reroute_entropy": 1.0,
+      "class_entropy": 1.0,
+      "hard_ban_observed_documents": 1,
+      "hard_ban_failed_documents": 0,
+      "hard_compliance_rate": 1.0,
+      "canonical_stock_hub_count": 0,
+      "canonical_stock_hub_rate": 0.0,
+      "acoustic_mechanism_count": 0,
+      "acoustic_mechanism_rate": 0.0,
+      "text_memory_count": 0,
+      "text_memory_rate": 0.0,
+      "threshold_container_count": 0,
+      "threshold_container_rate": 0.0,
+      "time_mechanism_count": 0,
+      "time_mechanism_rate": 0.0,
+      "organic_expansion_count": 1,
+      "organic_expansion_rate": 1.0,
+      "optical_memory_count": 0,
+      "optical_memory_rate": 0.0,
+      "animating_mediator_count": 1,
+      "animating_mediator_rate": 1.0
+    }
+  ],
+  "matrix": [
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 1.0,
+      "delta": 0.6666666666666667,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "text_memory",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 1.0,
+      "delta": 0.6666666666666667,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 0.0,
+      "delta": -0.6666666666666666,
+      "base_count": 2,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.6666666666666666,
+      "ablation_rate": 1.0,
+      "delta": 0.33333333333333337,
+      "base_count": 2,
+      "ablation_count": 1,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.3333333333333333,
+      "ablation_rate": 0.0,
+      "delta": -0.3333333333333333,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "optical_memory",
+      "base_rate": 0.14285714285714285,
+      "ablation_rate": 0.0,
+      "delta": -0.14285714285714285,
+      "base_count": 1,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.42857142857142855,
+      "ablation_rate": 0.3333333333333333,
+      "delta": -0.09523809523809523,
+      "base_count": 3,
+      "ablation_count": 2,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "text_memory",
+      "base_rate": 0.5714285714285714,
+      "ablation_rate": 0.6666666666666666,
+      "delta": 0.09523809523809523,
+      "base_count": 4,
+      "ablation_count": 4,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.14285714285714285,
+      "ablation_rate": 0.16666666666666666,
+      "delta": 0.023809523809523808,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "animating_mediator",
+      "base_rate": 0.14285714285714285,
+      "ablation_rate": 0.16666666666666666,
+      "delta": 0.023809523809523808,
+      "base_count": 1,
+      "ablation_count": 1,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "text_memory",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "threshold_container",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "organic_expansion",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 3,
+      "ablation_documents": 1
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "time_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "canonical_stock_hub",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 6
+    },
+    {
+      "condition": "selector_alpha_0",
+      "affordance_class": "acoustic_mechanism",
+      "base_rate": 0.0,
+      "ablation_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 0,
+      "ablation_count": 0,
+      "base_documents": 7,
+      "ablation_documents": 6
+    }
+  ],
+  "diagnostics": [
+    {
+      "condition": "selector_alpha_0",
+      "base_documents": 7,
+      "ablation_documents": 6,
+      "frontier_survival_rate": 0.8571428571428571,
+      "frontier_survival_ratio": 0.8571428571428571,
+      "base_frontier": 0.1316024112600567,
+      "ablation_frontier": 0.1290561297583178,
+      "frontier_delta": -0.0025462815017389118,
+      "hub_dependence_index": 0.019348289118405738,
+      "canonical_stock_hub_delta": 0.0,
+      "canonical_drop": 0.0,
+      "base_noncanonical_affordance_rate": 0.5714285714285714,
+      "ablation_noncanonical_affordance_rate": 0.6666666666666666,
+      "noncanonical_affordance_delta": 0.09523809523809523,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 0.881353453268883,
+      "ablation_reroute_entropy": 0.875,
+      "reroute_entropy_delta": -0.006353453268883036,
+      "base_affordance_load": 1.4285714285714286,
+      "ablation_affordance_load": 1.3333333333333333,
+      "affordance_load_delta": -0.09523809523809534,
+      "hard_compliance_rate": 1.0
+    },
+    {
+      "condition": "steer_alpha_0p77",
+      "base_documents": 3,
+      "ablation_documents": 1,
+      "frontier_survival_rate": 0.3333333333333333,
+      "frontier_survival_ratio": 0.3333333333333333,
+      "base_frontier": 0.1659091779567668,
+      "ablation_frontier": 0.2298526083333333,
+      "frontier_delta": 0.0639434303765665,
+      "hub_dependence_index": -0.3854122548496329,
+      "canonical_stock_hub_delta": 0.0,
+      "canonical_drop": 0.0,
+      "base_noncanonical_affordance_rate": 0.6666666666666666,
+      "ablation_noncanonical_affordance_rate": 1.0,
+      "noncanonical_affordance_delta": 0.33333333333333337,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 0.946394630357186,
+      "ablation_reroute_entropy": 0.0,
+      "reroute_entropy_delta": -0.946394630357186,
+      "base_affordance_load": 1.3333333333333333,
+      "ablation_affordance_load": 1.0,
+      "affordance_load_delta": -0.33333333333333326,
+      "hard_compliance_rate": 1.0
+    },
+    {
+      "condition": "steer_alpha_0p82",
+      "base_documents": 3,
+      "ablation_documents": 1,
+      "frontier_survival_rate": 0.3333333333333333,
+      "frontier_survival_ratio": 0.3333333333333333,
+      "base_frontier": 0.1495410157988857,
+      "ablation_frontier": 0.233243366851595,
+      "frontier_delta": 0.08370235105270929,
+      "hub_dependence_index": -0.5597283835845991,
+      "canonical_stock_hub_delta": 0.0,
+      "canonical_drop": 0.0,
+      "base_noncanonical_affordance_rate": 0.6666666666666666,
+      "ablation_noncanonical_affordance_rate": 1.0,
+      "noncanonical_affordance_delta": 0.33333333333333337,
+      "affordance_substitution_index": 0.0,
+      "base_reroute_entropy": 0.9591479170272448,
+      "ablation_reroute_entropy": 1.0,
+      "reroute_entropy_delta": 0.04085208297275522,
+      "base_affordance_load": 2.0,
+      "ablation_affordance_load": 2.0,
+      "affordance_load_delta": 0.0,
+      "hard_compliance_rate": 1.0
+    }
+  ],
+  "examples": {
+    "text_memory": [
+      {
+        "run_name": "steer_alpha_0p77_c8_tok100_seed05_the_spreadsheet_was_still_open__banded-frontier_best.json",
+        "condition": "steer_alpha_0p77__reselect_banded-frontier_best",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.2298526083333333,
+        "terms": [
+          "map",
+          "spreadsheet"
+        ],
+        "affordance_classes": [
+          "text_memory"
+        ],
+        "text": "The spreadsheet, now a portal to a small, cluttered antique shop, where a bespectacled shopkeeper, surrounded by dusty, forgotten trinkets and faded, yellowed maps, tends to a small, potted cactus, as a faint, eerie glow emanates from its soil."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.19168466207239088,
+        "terms": [
+          "delivery label",
+          "bird",
+          "book"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "animating_mediator"
+        ],
+        "text": "The dusty trunk's lid creaked open, releasing a faint whisper of aged air as a soft, worn leather book tumbled out, its pages fluttering like a bird taking flight, and the delivery label, now a tattered fragment, was caught in the book's pages, a fleeting echo of a long-lost delivery."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed01_the_receipt_on_the_counter__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.1165052999718237,
+        "terms": [
+          "counter",
+          "receipt"
+        ],
+        "affordance_classes": [
+          "text_memory"
+        ],
+        "text": "The receipt slips from her fingers and falls to the counter, the Polaroid shattering into a hundred pieces as she reaches to catch it, her eyes widening in a mix of surprise and desperation, the scribbled numbers now scattered across the counter like fragments of a broken promise."
+      }
+    ],
+    "threshold_container": [
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 1,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.10495164303943287,
+        "terms": [
+          "delivery label",
+          "box"
+        ],
+        "affordance_classes": [
+          "threshold_container"
+        ],
+        "text": "The cardboard box now lies empty and crumpled on a dusty attic shelf, the delivery label a faded reminder of a long-forgotten package, its adhesive still clinging to the roof of the old trunk that has now become its new home."
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed08_i_am_opening_the_fridge__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.10317882745173997,
+        "terms": [
+          "book",
+          "cabinet",
+          "counter",
+          "label",
+          "paper"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "threshold_container"
+        ],
+        "text": "The worn bottle of olive oil rolls off the counter and onto the floor, its label fluttering like a torn piece of paper in the faint hum of the refrigerator's motor, while my mother's recipe book slips between the kitchen cabinets, its yellowed pages rustling softly against the painted walls."
+      }
+    ],
+    "organic_expansion": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.233243366851595,
+        "terms": [
+          "hand",
+          "moss"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "animating_mediator"
+        ],
+        "text": "A small, antique, ornate, metal, andirin, now a miniature, moss-covered, and a few, forgotten, water-stained, hand-paint"
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.0995589218909575,
+        "terms": [
+          "book",
+          "garden",
+          "letter"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "organic_expansion"
+        ],
+        "text": "The book, bound in a rich, dark leather, lay open on a nearby stack of yellowed letters, its pages dog-eared and worn, a phrase highlighted in faint, crimson ink: \"In the garden of forgotten memories, where shadows dance and moonlight whispers secrets to the wind.\""
+      }
+    ],
+    "animating_mediator": [
+      {
+        "run_name": "steer_alpha_0p82_c8_tok100_seed02_a_plastic_folder_in_the_drawer__banded-frontier_best.json",
+        "condition": "steer_alpha_0p82__reselect_banded-frontier_best",
+        "step": 3,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.233243366851595,
+        "terms": [
+          "hand",
+          "moss"
+        ],
+        "affordance_classes": [
+          "organic_expansion",
+          "animating_mediator"
+        ],
+        "text": "A small, antique, ornate, metal, andirin, now a miniature, moss-covered, and a few, forgotten, water-stained, hand-paint"
+      },
+      {
+        "run_name": "selector_alpha_0_c8_tok100_seed07_a_delivery_label_on_a_cardboard_box__banded-frontier_best.json",
+        "condition": "selector_alpha_0__reselect_banded-frontier_best",
+        "step": 2,
+        "candidate_index": 1,
+        "picked": true,
+        "frontier": 0.19168466207239088,
+        "terms": [
+          "delivery label",
+          "bird",
+          "book"
+        ],
+        "affordance_classes": [
+          "text_memory",
+          "animating_mediator"
+        ],
+        "text": "The dusty trunk's lid creaked open, releasing a faint whisper of aged air as a soft, worn leather book tumbled out, its pages fluttering like a bird taking flight, and the delivery label, now a tattered fragment, was caught in the book's pages, a fleeting echo of a long-lost delivery."
+      }
+    ]
+  }
+}

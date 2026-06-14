@@ -21,6 +21,12 @@ from .backends import (
 )
 from .mlx_intervention import MLXSteeringRuntimeConfig, collect_mlx_steering_vectors
 from .model_policy import default_english_system_prompt, infer_model_policy
+from .noun_graph import (
+    build_noun_graph_report,
+    format_noun_graph_report,
+    write_noun_graph_json,
+    write_noun_graph_nodes_csv,
+)
 from .ontology import audit_run_files, format_report
 from .frontier import (
     audit_frontier_pool,
@@ -31,6 +37,7 @@ from .frontier import (
     write_rating_markdown,
     write_rating_sheet,
     write_frontier_csv,
+    write_frontier_exemplar_store,
     write_frontier_json,
     write_frontier_plot,
     write_frontier_reading_report,
@@ -95,6 +102,12 @@ def resolve_system_prompt(args: argparse.Namespace) -> Optional[str]:
     if raw in {None, "auto"}:
         return default_english_system_prompt()
     return raw
+
+
+def parse_ban_terms(raw: Optional[str]) -> List[str]:
+    if not raw:
+        return []
+    return [part.strip() for part in re.split(r"[,;\n]+", raw) if part.strip()]
 
 
 def emit_model_policy(args: argparse.Namespace, *, stream=None) -> None:
@@ -335,6 +348,7 @@ def add_common_generation_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--tokenizer-config", default=None, help="MLX only: JSON tokenizer_config")
     p.add_argument("--trust-remote-code", action="store_true", help="MLX tokenizer_config trust_remote_code")
     p.add_argument("--random-seed", type=int, default=7)
+    p.add_argument("--ban-terms", default=None, help="comma/semicolon-separated words or phrases to forbid in depaysement prompts")
 
 
 def add_selector_args(p: argparse.ArgumentParser) -> None:
@@ -595,6 +609,8 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--csv", default=None, help="write candidate-level CSV")
     pa.add_argument("--plot", default=None, help="write frontier scatter plot PNG; requires matplotlib")
     pa.add_argument("--texts-out", default=None, help="write markdown reading report with picked final texts and top frontier candidates")
+    pa.add_argument("--exemplars-out", default=None, help="write markdown/json store of examples from the frontier-maximized band")
+    pa.add_argument("--exemplars-json-out", default=None, help="optional JSON copy of the frontier exemplar store")
     pa.add_argument("--json", action="store_true", help="print full JSON report")
     pa.add_argument("--top-k", type=int, default=8)
     pa.add_argument("--ontology-threshold", type=float, default=0.23)
@@ -611,6 +627,31 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--bank-weight", type=float, default=None)
     pa.add_argument("--embed-model", default=None)
     pa.add_argument("--device", default=None)
+
+    ng = sub.add_parser("noun-graph", help="build a heuristic noun co-occurrence graph from frontier-band candidates")
+    ng.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with saved candidates")
+    ng.add_argument("--out", default=None, help="write markdown noun graph report")
+    ng.add_argument("--json-out", default=None, help="write structured noun graph JSON")
+    ng.add_argument("--nodes-csv", default=None, help="write node-level centrality CSV")
+    ng.add_argument("--top-k", type=int, default=24)
+    ng.add_argument("--max-nodes", type=int, default=120)
+    ng.add_argument("--frontier-band-ratio", type=float, default=0.60)
+    ng.add_argument("--frontier-band-width", type=float, default=0.08)
+    ng.add_argument("--no-dedupe-texts", action="store_true", help="keep duplicate candidate texts when building the graph")
+    ng.add_argument("--ontology-threshold", type=float, default=0.23)
+    ng.add_argument("--readability-threshold", type=float, default=0.58)
+    ng.add_argument("--repair-threshold", type=float, default=0.35)
+    ng.add_argument("--bank", default=None)
+    ng.add_argument("--lexicon", default=None)
+    ng.add_argument("--disable-lexicon", action="store_true")
+    ng.add_argument("--enable-lexicon", action="store_true")
+    ng.add_argument("--lexicon-prior-scale", type=float, default=None)
+    ng.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    ng.add_argument("--no-bank-score", action="store_true")
+    ng.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    ng.add_argument("--bank-weight", type=float, default=None)
+    ng.add_argument("--embed-model", default=None)
+    ng.add_argument("--device", default=None)
 
     ta = sub.add_parser("trajectory-audit", help="audit picked trajectories without generating new text")
     ta.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with picked steps")
@@ -673,6 +714,8 @@ def build_parser() -> argparse.ArgumentParser:
     fs.add_argument("--prompt-style", choices=["scene", "legacy"], default="scene")
     fs.add_argument("--out-dir", required=True)
     fs.add_argument("--save-candidates", type=int, default=0, help="0 means save the full candidate pool for each step")
+    fs.add_argument("--resume", action="store_true", help="skip existing run JSONs in --out-dir and include them in the final audit")
+    fs.add_argument("--run-limit", type=int, default=0, help="maximum new run JSONs to generate in this invocation; 0 means no limit")
     fs.add_argument("--include-baseline-control", action="store_true", help="also save ordinary baseline runs for each max-token setting")
     fs.add_argument("--include-prompt", action="store_true")
     fs.add_argument("--trace", action="store_true")
@@ -747,6 +790,7 @@ def cmd_write(args: argparse.Namespace) -> None:
         choose=args.choose,
         trace=args.trace,
         prompt_style=args.prompt_style,
+        ban_terms=parse_ban_terms(args.ban_terms),
         keep_candidates=(args.save_candidates if args.out else 0),
         include_prompt=bool(args.include_prompt),
         **trajectory_stop_kwargs(args),
@@ -763,7 +807,15 @@ def cmd_rank(args: argparse.Namespace) -> None:
     generator = make_generator(args, rng)
     scorer = make_scorer(args)
     engine = DepaysementEngine(generator=generator, scorer=scorer, rng=rng)
-    ranked = engine.rank(args.seed, n=args.candidates, temperature=args.temperature, top_p=args.top_p, max_new_tokens=args.max_new_tokens, prompt_style=args.prompt_style)
+    ranked = engine.rank(
+        args.seed,
+        n=args.candidates,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        max_new_tokens=args.max_new_tokens,
+        prompt_style=args.prompt_style,
+        ban_terms=parse_ban_terms(args.ban_terms),
+    )
     for i, c in enumerate(ranked, 1):
         print(f"\n#{i} {c.score.compact()}\n{c.text}")
 
@@ -1251,6 +1303,16 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
     if args.texts_out:
         write_frontier_reading_report(report, args.texts_out)
         print(f"Wrote frontier reading report: {args.texts_out}", file=sys.stderr)
+    if args.exemplars_out:
+        write_frontier_exemplar_store(
+            report,
+            args.exemplars_out,
+            json_path=args.exemplars_json_out,
+            top_k=max(args.top_k, 1),
+        )
+        print(f"Wrote frontier exemplar store: {args.exemplars_out}", file=sys.stderr)
+        if args.exemplars_json_out:
+            print(f"Wrote frontier exemplar JSON: {args.exemplars_json_out}", file=sys.stderr)
     if args.out:
         out = Path(args.out)
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -1280,6 +1342,40 @@ def cmd_trajectory_audit(args: argparse.Namespace) -> None:
         print(json.dumps(report.to_dict(include_steps=True), ensure_ascii=False, indent=2))
     elif not args.out:
         print(format_trajectory_report(report, top_k=args.top_k))
+
+
+def cmd_noun_graph(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    frontier_report = audit_frontier_pool(
+        args.runs,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    report = build_noun_graph_report(
+        frontier_report,
+        top_k=max(args.top_k, 1),
+        max_nodes=max(args.max_nodes, 1),
+        frontier_band_ratio=args.frontier_band_ratio,
+        frontier_band_width=args.frontier_band_width,
+        dedupe_texts=not args.no_dedupe_texts,
+    )
+    if args.json_out:
+        write_noun_graph_json(report, args.json_out)
+        print(f"Wrote noun graph JSON: {args.json_out}", file=sys.stderr)
+    if args.nodes_csv:
+        write_noun_graph_nodes_csv(report, args.nodes_csv)
+        print(f"Wrote noun graph nodes CSV: {args.nodes_csv}", file=sys.stderr)
+    rendered = format_noun_graph_report(report, top_k=args.top_k)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(rendered, encoding="utf-8")
+        print(f"Wrote noun graph report: {args.out}", file=sys.stderr)
+    else:
+        print(rendered)
 
 
 def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
@@ -1418,6 +1514,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     candidate_grid = parse_int_grid(args.candidate_grid)
     token_grid = parse_int_grid(args.max_token_grid)
     seeds = load_seed_bank(args.seed_bank, args.seed, limit=int(getattr(args, "seed_limit", 0) or 0))
+    ban_terms = parse_ban_terms(args.ban_terms)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1436,32 +1533,58 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     generator = make_generator(gen_args, rng)
     scorer = make_scorer(args)
     produced_paths: List[str] = []
+    new_run_limit = max(0, int(getattr(args, "run_limit", 0) or 0))
+    new_runs = 0
+    stop_sweep = False
+    total_runs = len(seeds) * len(token_grid) * len(candidate_grid) * len(alphas)
+    if args.include_baseline_control:
+        total_runs += len(seeds) * len(token_grid)
 
     for seed_idx, seed in enumerate(seeds, 1):
+        if stop_sweep:
+            break
         seed_label = safe_seed_label(seed, seed_idx)
         multi_seed_suffix = f"_{seed_label}" if len(seeds) > 1 else ""
         for max_tokens in token_grid:
+            if stop_sweep:
+                break
             if args.include_baseline_control:
-                with steering_enabled(generator, False):
-                    baseline = run_baseline(
-                        generator=generator,
-                        scorer=scorer,
-                        seed=seed,
-                        steps=args.steps,
-                        temperature=max(0.0, min(args.temperature, 0.90)),
-                        top_p=args.top_p,
-                        max_new_tokens=max_tokens,
-                        trace=args.trace,
-                        include_prompt=args.include_prompt,
-                    )
-                baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
-                baseline.config["seed_index"] = int(seed_idx)
-                baseline.config["seed_label"] = seed_label
                 bpath = out_dir / f"baseline_tokens_{max_tokens}{multi_seed_suffix}.json"
-                write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
-                produced_paths.append(str(bpath))
+                if args.resume and bpath.exists():
+                    produced_paths.append(str(bpath))
+                    print(f"[sweep] resume skip existing {bpath}", file=sys.stderr)
+                else:
+                    if new_run_limit and new_runs >= new_run_limit:
+                        stop_sweep = True
+                        break
+                    print(
+                        f"[sweep] running {len(produced_paths) + 1}/{total_runs}: "
+                        f"baseline_tokens_{max_tokens}{multi_seed_suffix}",
+                        file=sys.stderr,
+                    )
+                    with steering_enabled(generator, False):
+                        baseline = run_baseline(
+                            generator=generator,
+                            scorer=scorer,
+                            seed=seed,
+                            steps=args.steps,
+                            temperature=max(0.0, min(args.temperature, 0.90)),
+                            top_p=args.top_p,
+                            max_new_tokens=max_tokens,
+                            trace=args.trace,
+                            include_prompt=args.include_prompt,
+                        )
+                    baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
+                    baseline.config["seed_index"] = int(seed_idx)
+                    baseline.config["seed_label"] = seed_label
+                    write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
+                    produced_paths.append(str(bpath))
+                    new_runs += 1
+                    print(f"[sweep] wrote {bpath}", file=sys.stderr)
 
             for candidates in candidate_grid:
+                if stop_sweep:
+                    break
                 for alpha in alphas:
                     steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
                     steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
@@ -1474,6 +1597,19 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                         else f"selector_alpha_{safe_float_label(alpha)}"
                     )
                     save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
+                    path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}.json"
+                    if args.resume and path.exists():
+                        produced_paths.append(str(path))
+                        print(f"[sweep] resume skip existing {path}", file=sys.stderr)
+                        continue
+                    if new_run_limit and new_runs >= new_run_limit:
+                        stop_sweep = True
+                        break
+                    print(
+                        f"[sweep] running {len(produced_paths) + 1}/{total_runs}: "
+                        f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}",
+                        file=sys.stderr,
+                    )
                     with steering_enabled(generator, steering_requested):
                         engine = DepaysementEngine(
                             generator=generator,
@@ -1493,6 +1629,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                             choose=args.choose,
                             trace=args.trace,
                             prompt_style=args.prompt_style,
+                            ban_terms=ban_terms,
                             keep_candidates=save_candidates,
                             include_prompt=args.include_prompt,
                             **trajectory_stop_kwargs(args),
@@ -1505,10 +1642,15 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                     run.config["seed_label"] = seed_label
                     if abs(float(alpha)) > 1e-12 and not steering_requested:
                         run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
-                    path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}.json"
                     write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
                     produced_paths.append(str(path))
+                    new_runs += 1
                     print(f"[sweep] wrote {path}", file=sys.stderr)
+
+    if not produced_paths:
+        raise SystemExit("[sweep] no run artifacts were produced or found; relax --run-limit or disable --resume")
+    if stop_sweep:
+        print(f"[sweep] run limit reached after {new_runs} new run(s)", file=sys.stderr)
 
     report = audit_frontier_pool(produced_paths, scorer=scorer, top_k=12)
     md_path = out_dir / "frontier_sweep_report.md"
@@ -1516,10 +1658,13 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     csv_path = out_dir / "frontier_sweep_candidates.csv"
     plot_path = out_dir / "frontier_sweep.png"
     texts_path = out_dir / "frontier_sweep_texts.md"
+    exemplars_path = out_dir / "frontier_exemplars.md"
+    exemplars_json_path = out_dir / "frontier_exemplars.json"
     md_path.write_text(format_frontier_report(report, top_k=12), encoding="utf-8")
     write_frontier_json(report, str(json_path), include_rows=True)
     write_frontier_csv(report, str(csv_path))
     write_frontier_reading_report(report, str(texts_path))
+    write_frontier_exemplar_store(report, str(exemplars_path), json_path=str(exemplars_json_path), top_k=24)
     try:
         write_frontier_plot(report, str(plot_path))
     except RuntimeError as e:
@@ -1536,12 +1681,18 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
         "max_token_grid": token_grid,
         "select_objective": args.select_objective,
         "selector": make_selector_config(args).to_dict(),
+        "ban_terms": list(ban_terms),
+        "resume": bool(args.resume),
+        "run_limit": int(new_run_limit),
+        "new_runs": int(new_runs),
         "runs": produced_paths,
         "report_md": str(md_path),
         "report_json": str(json_path),
         "candidate_csv": str(csv_path),
         "plot": str(plot_path) if plot_path.exists() else None,
         "texts": str(texts_path),
+        "frontier_exemplars": str(exemplars_path),
+        "frontier_exemplars_json": str(exemplars_json_path),
         "notes": [getattr(gen_args, "_steering_preflight_note", None)],
     }
     (out_dir / "frontier_sweep_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -1597,6 +1748,8 @@ def main() -> None:
         cmd_observe(args)
     elif args.command == "pool-audit":
         cmd_pool_audit(args)
+    elif args.command == "noun-graph":
+        cmd_noun_graph(args)
     elif args.command == "trajectory-audit":
         cmd_trajectory_audit(args)
     elif args.command == "reselect":

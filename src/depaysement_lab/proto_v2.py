@@ -1597,6 +1597,7 @@ class DepaysementEngine:
         choose: str = "softmax",
         trace: bool = False,
         prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
         trajectory_stop: bool = False,
         trajectory_min_steps: int = 3,
         trajectory_frontier_drop: float = 0.08,
@@ -1615,6 +1616,7 @@ class DepaysementEngine:
             choose=choose,
             trace=trace,
             prompt_style=prompt_style,
+            ban_terms=ban_terms,
             keep_candidates=0,
             trajectory_stop=trajectory_stop,
             trajectory_min_steps=trajectory_min_steps,
@@ -1636,6 +1638,7 @@ class DepaysementEngine:
         choose: str = "softmax",
         trace: bool = False,
         prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
         keep_candidates: int = 0,
         include_prompt: bool = False,
         trajectory_stop: bool = False,
@@ -1646,6 +1649,7 @@ class DepaysementEngine:
         trajectory_sprawl_max: float = 0.65,
     ) -> WriteRun:
         text = seed.strip()
+        ban_terms = [str(term).strip() for term in (ban_terms or []) if str(term).strip()]
         records: List[StepRecord] = []
         config = {
             "steps": steps,
@@ -1656,6 +1660,7 @@ class DepaysementEngine:
             "max_new_tokens": max_new_tokens,
             "choose": choose,
             "prompt_style": prompt_style,
+            "ban_terms": list(ban_terms),
             "motif_jitter": self.motif_jitter,
             "select_objective": self.selector.objective,
             "selector": self.selector.to_dict(),
@@ -1690,7 +1695,7 @@ class DepaysementEngine:
                 stored_candidates = candidate_objs[:keep_candidates] if keep_candidates > 0 else []
             else:
                 motifs = self._pick_motifs(text)
-                prompt = build_depaysement_prompt(text, motifs=motifs, style=prompt_style)
+                prompt = build_depaysement_prompt(text, motifs=motifs, style=prompt_style, ban_terms=ban_terms)
                 raw = self.generator.generate(
                     prompt,
                     n=candidates_per_step,
@@ -1745,9 +1750,18 @@ class DepaysementEngine:
                 break
         return WriteRun(seed=seed.strip(), final_text=text, steps=records, config=config)
 
-    def rank(self, seed: str, n: int = 12, temperature: float = 1.05, top_p: float = 0.92, max_new_tokens: int = 120, prompt_style: str = "scene") -> List[Candidate]:
+    def rank(
+        self,
+        seed: str,
+        n: int = 12,
+        temperature: float = 1.05,
+        top_p: float = 0.92,
+        max_new_tokens: int = 120,
+        prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
+    ) -> List[Candidate]:
         motifs = self._pick_motifs(seed)
-        prompt = build_depaysement_prompt(seed, motifs=motifs, style=prompt_style)
+        prompt = build_depaysement_prompt(seed, motifs=motifs, style=prompt_style, ban_terms=ban_terms)
         raw = self.generator.generate(prompt, n=n, temperature=temperature, top_p=top_p, max_new_tokens=max_new_tokens)
         scored = [Candidate(c, self.scorer.score(c, context=seed)) for c in raw if c.strip()]
         scored.sort(key=lambda c: c.score.total, reverse=True)
@@ -2164,12 +2178,25 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
     return no_worse and strictly_better
 
 
-def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = None, style: str = "scene") -> str:
+def build_depaysement_prompt(
+    context: str,
+    motifs: Optional[Sequence[str]] = None,
+    style: str = "scene",
+    ban_terms: Optional[Sequence[str]] = None,
+) -> str:
     motifs = list(motifs or [])
+    ban_terms = [str(term).strip() for term in (ban_terms or []) if str(term).strip()]
     if motifs:
         motif_line = "Keep this motif physically present if possible: " + " / ".join(motifs) + ". Shift its domain.\n"
     else:
         motif_line = "You may keep one concrete object from the fragment; do not reset into a random new postcard.\n"
+    ban_line = ""
+    if ban_terms:
+        ban_line = (
+            "Do not use these words or phrases: "
+            + "; ".join(ban_terms)
+            + ". If that function is needed, reroute it through ordinary objects already present in the fragment.\n"
+        )
 
     if style == "legacy":
         return (
@@ -2179,6 +2206,7 @@ def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = Non
             "Make the image legible through at least one concrete relation: space, contact, possession, containment, exchange, or transformation.\n"
             "A phrase like 'in other words' is allowed only when it opens a new image, not when it explains the image.\n"
             f"{motif_line}"
+            f"{ban_line}"
             f"Fragment:\n{context.strip()}\n"
             "Continuation, one or two sentences only. Return only the continuation text; no notes, commentary, labels, or parentheses explaining the task:\n"
         )
@@ -2193,6 +2221,7 @@ def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = Non
         "Let unlike things share one concrete place. Make the image legible through space, contact, possession, containment, exchange, or transformation.\n"
         "Do not explain what anything means. Do not summarize. Do not resolve.\n"
         f"{motif_line}"
+        f"{ban_line}"
         f"Fragment:\n{context.strip()}\n"
         "Next image:\n"
     )

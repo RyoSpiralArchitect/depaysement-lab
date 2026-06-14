@@ -871,6 +871,238 @@ def compact_row(row: FrontierCandidateRow) -> Dict[str, Any]:
     }
 
 
+def frontier_exemplar_store(
+    report: FrontierAuditReport,
+    *,
+    top_k: int = 24,
+    band_ratio: float = 0.60,
+    band_width: float = 0.08,
+) -> Dict[str, Any]:
+    """Return a reader-facing store of examples near the observed frontier peak."""
+
+    rows = [row for run in report.runs for row in run.rows]
+    if not rows:
+        return {
+            "frontier_max": 0.0,
+            "frontier_band_min": 0.0,
+            "band_ratio": float(band_ratio),
+            "band_width": float(band_width),
+            "total_candidates": 0,
+            "band_candidates": 0,
+            "legend_counts": {},
+            "examples": [],
+            "notes": [
+                "No candidates were available for the frontier exemplar store.",
+            ],
+        }
+
+    max_frontier = max(float(row.readable_ontology_frontier) for row in rows)
+    if max_frontier <= 0.0:
+        band_min = 0.0
+        band_rows = sorted(rows, key=lambda row: row.readable_ontology_frontier, reverse=True)
+    else:
+        band_min = max(0.0, max_frontier * float(band_ratio), max_frontier - float(band_width))
+        band_rows = [
+            row
+            for row in rows
+            if float(row.readable_ontology_frontier) >= band_min
+        ]
+        band_rows.sort(key=lambda row: row.readable_ontology_frontier, reverse=True)
+
+    seen_texts: set[str] = set()
+    examples: List[Dict[str, Any]] = []
+    for row in band_rows:
+        text_key = re.sub(r"\s+", " ", row.text.strip().lower())
+        if not text_key or text_key in seen_texts:
+            continue
+        seen_texts.add(text_key)
+        examples.append(frontier_exemplar_row(row, len(examples) + 1))
+        if len(examples) >= max(0, int(top_k)):
+            break
+
+    legend_counts = Counter(str(ex["legend_label"]) for ex in examples)
+    return {
+        "frontier_max": float(max_frontier),
+        "frontier_band_min": float(band_min),
+        "band_ratio": float(band_ratio),
+        "band_width": float(band_width),
+        "total_candidates": len(rows),
+        "band_candidates": len(band_rows),
+        "legend_counts": dict(sorted(legend_counts.items())),
+        "examples": examples,
+        "notes": [
+            "The exemplar store selects actual generated candidates from the observed frontier-maximized band.",
+            "Legend labels are heuristic reading aids, not literary classifications.",
+        ],
+    }
+
+
+def frontier_exemplar_row(row: FrontierCandidateRow, seq: int) -> Dict[str, Any]:
+    m = row.metrics
+    identity_events = m.get("identity_melt_events", []) or []
+    affordance_events = m.get("affordance_corruption_events", []) or []
+    return {
+        "id": f"frontier_exemplar_{seq:03d}",
+        "legend_label": frontier_exemplar_label(row),
+        "run_name": row.run_name,
+        "condition": row.condition,
+        "path": row.path,
+        "step": row.step,
+        "candidate_index": row.candidate_index,
+        "picked": bool(row.picked),
+        "readable_ontology_frontier": float(row.readable_ontology_frontier),
+        "frontier_quality": float(row.frontier_quality),
+        "ontology_collapse_density": float(m.get("ontology_collapse_density", 0.0)),
+        "syntax_readability_proxy": float(m.get("syntax_readability_proxy", 0.0)),
+        "graph_integration": float(m.get("graph_integration", 0.0)),
+        "repair_pressure": float(m.get("repair_pressure", 0.0)),
+        "unfinished": float(m.get("unfinished", 0.0)),
+        "stock_prop_attractor_score": float(m.get("stock_prop_attractor_score", 0.0)),
+        "soft_style_cliche_score": float(m.get("soft_style_cliche_score", 0.0)),
+        "fantasy_prop_score": float(m.get("fantasy_prop_score", 0.0)),
+        "ordinary_anchor_retention": float(m.get("ordinary_anchor_retention", 0.0)),
+        "ordinary_anchor_hits": list(m.get("ordinary_anchor_hits", []) or []),
+        "stock_prop_attractor_hits": list(m.get("stock_prop_attractor_hits", []) or []),
+        "soft_style_cliche_hits": list(m.get("soft_style_cliche_hits", []) or []),
+        "fantasy_prop_hits": list(m.get("fantasy_prop_hits", []) or []),
+        "identity_melt_events": identity_events[:3],
+        "affordance_corruption_events": affordance_events[:3],
+        "motifs": frontier_exemplar_motifs(row),
+        "text": row.text,
+    }
+
+
+def frontier_exemplar_label(row: FrontierCandidateRow) -> str:
+    m = row.metrics
+    frontier = float(row.readable_ontology_frontier)
+    ontology = float(m.get("ontology_collapse_density", 0.0))
+    readability = float(m.get("syntax_readability_proxy", 0.0))
+    unfinished = float(m.get("unfinished", 0.0))
+    repair = float(m.get("repair_pressure", 0.0))
+    stock = float(m.get("stock_prop_attractor_score", 0.0))
+    soft = float(m.get("soft_style_cliche_score", 0.0))
+    prop = float(m.get("fantasy_prop_score", 0.0))
+    anchor = float(m.get("ordinary_anchor_retention", 0.0))
+    if unfinished > 0.05:
+        return "unfinished_frontier_edge"
+    if repair > 0.35:
+        return "repair_pressure_frontier"
+    if anchor < 0.25:
+        return "anchor_evaporation"
+    if max(stock, prop) >= 0.75:
+        return "stock_prop_attractor"
+    if soft >= 0.65:
+        return "soft_style_attractor"
+    if ontology >= 0.65 and readability >= 0.55:
+        return "high_collapse_readable_edge"
+    if ontology >= 0.35 and readability >= 0.55 and frontier > 0.0:
+        return "readable_object_metamorphosis"
+    return "mixed_frontier_candidate"
+
+
+def frontier_exemplar_motifs(row: FrontierCandidateRow) -> List[str]:
+    m = row.metrics
+    motifs: List[str] = []
+    for key in (
+        "stock_prop_attractor_hits",
+        "soft_style_cliche_hits",
+        "fantasy_prop_hits",
+        "ordinary_anchor_hits",
+    ):
+        for term in m.get(key, []) or []:
+            clean = str(term).strip().lower()
+            if clean and clean not in motifs:
+                motifs.append(clean)
+            if len(motifs) >= 8:
+                return motifs
+    return motifs
+
+
+def format_frontier_exemplar_store(store: Mapping[str, Any]) -> str:
+    lines: List[str] = [
+        "# Frontier Exemplar Store",
+        "",
+        "Actual generated candidates from the observed frontier-maximized band.",
+        "",
+        "## Band",
+        (
+            f"frontier_max={float(store.get('frontier_max', 0.0)):.3f} | "
+            f"frontier_band_min={float(store.get('frontier_band_min', 0.0)):.3f} | "
+            f"band_candidates={int(store.get('band_candidates', 0))} / "
+            f"{int(store.get('total_candidates', 0))}"
+        ),
+        "",
+    ]
+    counts = store.get("legend_counts", {})
+    if isinstance(counts, Mapping) and counts:
+        lines.extend(["## Legend Counts", ""])
+        for label, count in sorted(counts.items(), key=lambda item: (-int(item[1]), str(item[0]))):
+            lines.append(f"- {label}: {count}")
+        lines.append("")
+
+    examples = list(store.get("examples", []) or [])
+    if examples:
+        lines.extend(["## Examples", ""])
+    for ex in examples:
+        lines.extend(
+            [
+                f"### {ex.get('id')}: {ex.get('legend_label')}",
+                "",
+                " | ".join(
+                    [
+                        f"condition={ex.get('condition', '')}",
+                        f"step={ex.get('step', '')}",
+                        f"candidate={ex.get('candidate_index', '')}",
+                        f"picked={int(bool(ex.get('picked')))}",
+                    ]
+                ),
+                (
+                    f"frontier={float(ex.get('readable_ontology_frontier', 0.0)):.3f} | "
+                    f"ont={float(ex.get('ontology_collapse_density', 0.0)):.3f} | "
+                    f"read={float(ex.get('syntax_readability_proxy', 0.0)):.3f} | "
+                    f"stock={float(ex.get('stock_prop_attractor_score', 0.0)):.3f} | "
+                    f"soft={float(ex.get('soft_style_cliche_score', 0.0)):.3f} | "
+                    f"prop={float(ex.get('fantasy_prop_score', 0.0)):.3f} | "
+                    f"anchor={float(ex.get('ordinary_anchor_retention', 0.0)):.3f} | "
+                    f"unfinished={float(ex.get('unfinished', 0.0)):.3f}"
+                ),
+                "",
+            ]
+        )
+        motifs = ex.get("motifs", [])
+        if motifs:
+            lines.extend([f"motifs: {', '.join(str(m) for m in motifs)}", ""])
+        lines.extend(["```text", str(ex.get("text", "")).strip(), "```", ""])
+
+    notes = store.get("notes", [])
+    if notes:
+        lines.extend(["## Notes", ""])
+        lines.extend(f"- {note}" for note in notes)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def write_frontier_exemplar_store(
+    report: FrontierAuditReport,
+    path: str,
+    *,
+    json_path: Optional[str] = None,
+    top_k: int = 24,
+    band_ratio: float = 0.60,
+    band_width: float = 0.08,
+) -> None:
+    store = frontier_exemplar_store(report, top_k=top_k, band_ratio=band_ratio, band_width=band_width)
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if out.suffix.lower() == ".json":
+        out.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        out.write_text(format_frontier_exemplar_store(store), encoding="utf-8")
+    if json_path:
+        json_out = Path(json_path)
+        json_out.parent.mkdir(parents=True, exist_ok=True)
+        json_out.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)

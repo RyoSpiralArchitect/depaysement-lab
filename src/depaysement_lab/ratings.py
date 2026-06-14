@@ -21,6 +21,8 @@ DEFAULT_RATING_METRICS: Tuple[str, ...] = (
     "graph_integration",
     "repair_pressure",
     "cliche_attractor_score",
+    "stock_prop_attractor_score",
+    "soft_style_cliche_score",
     "fantasy_prop_score",
     "ordinary_anchor_retention",
     "unfinished",

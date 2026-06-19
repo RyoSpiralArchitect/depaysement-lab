@@ -153,9 +153,10 @@ class OllamaGenerator(BaseGenerator):
 class MLXLMGenerator(BaseGenerator):
     """Generator for mlx-lm on Apple silicon.
 
-    Activation steering is intentionally not implemented here yet. MLX generation
-    is supported; internal layer intervention should be a separate model-specific
-    module because MLX does not mirror PyTorch forward hooks exactly.
+    MLX generation is supported through ``mlx_lm.generate``.  When steering
+    vectors are supplied, generation is wrapped in ``MLXLayerPatch`` so selected
+    transformer blocks receive the experimental swap-and-restore activation
+    intervention implemented in ``mlx_intervention.py``.
     """
 
     model_name: str

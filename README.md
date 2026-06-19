@@ -70,8 +70,13 @@ Interpretation:
 - `alpha=0.75, tok=140` has the cleanest hit rate, but appears less intense on
   the picked frontier score than `0.60`.
 
-These metrics are not treated as final truth. They are instruments for finding
-samples worth human reading.
+Scope of the current claim:
+
+- This is a focused one-seed result, not a general result for the project.
+- The current best point, `alpha=0.60, tok=140`, should be treated as a
+  replication target across 3-5 seeds and then across larger instruct models.
+- These metrics are not treated as final truth. They are instruments for finding
+  samples worth human reading.
 
 ## What Is Being Measured?
 
@@ -210,6 +215,41 @@ frontier_sweep.png             scatter plot
 steer_alpha_*.json             saved generation runs with candidates
 ```
 
+## Replicate Across Seeds
+
+Before treating `alpha=0.60` as more than a local optimum, repeat the focused
+sweep over a small seed suite. Suggested first pass:
+
+```text
+A forgotten umbrella at the station
+A cracked teacup on the windowsill
+A brass key under a river stone
+A streetlamp at noon in an empty square
+A library card in a flooded kitchen
+```
+
+Example one-seed command:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors.npz \
+  --steer-layers 6-16 \
+  --seed "A cracked teacup on the windowsill" \
+  --steps 5 \
+  --alphas 0.45,0.6,0.75 \
+  --candidate-grid 12 \
+  --max-token-grid 140 \
+  --select-objective hybrid \
+  --choose best \
+  --unfinished-weight 1.10 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --out-dir experiments/frontier_sweep_seed_teacup
+```
+
 ## Collect MLX Steering Vectors
 
 If vectors are missing, collect them first:
@@ -224,6 +264,24 @@ python3 -m depaysement_lab.cli collect-mlx-vectors \
   --layers 6-16 \
   --chat-template \
   --verbose
+```
+
+The vector archive itself is a local artifact and is not tracked by default.
+Collection writes three files:
+
+```text
+experiments/depaysement_mlx_vectors.npz          vector archive
+experiments/depaysement_mlx_vectors.npz.json     metadata sidecar
+experiments/depaysement_mlx_vectors.npz.sha256   expected archive hash
+```
+
+The metadata sidecar records the model name, layer path, model depth, selected
+layers, prompt counts, token strategy, pre-normalization norms, and archive
+SHA-256. Verify the archive hash from the vector directory:
+
+```bash
+cd experiments
+shasum -a 256 -c depaysement_mlx_vectors.npz.sha256
 ```
 
 The repo does not require MLX for dummy tests, but MLX is needed to reproduce

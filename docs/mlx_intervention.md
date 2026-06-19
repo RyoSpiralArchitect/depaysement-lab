@@ -49,6 +49,28 @@ The vector archive contains arrays named `layer_0`, `layer_1`, etc. A JSON metad
 ```text
 experiments/depaysement_mlx_vectors.npz
 experiments/depaysement_mlx_vectors.npz.json
+experiments/depaysement_mlx_vectors.npz.sha256
+```
+
+The metadata sidecar records:
+
+```text
+model_name
+layer_path
+n_layers
+selected_layers
+token_strategy
+num_positive
+num_negative
+norms_before_unit_normalization
+archive_sha256
+```
+
+The `.sha256` sidecar is the expected hash of the vector archive. To verify:
+
+```bash
+cd experiments
+shasum -a 256 -c depaysement_mlx_vectors.npz.sha256
 ```
 
 ## Generation-time injection

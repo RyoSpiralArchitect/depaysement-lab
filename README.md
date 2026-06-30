@@ -93,6 +93,8 @@ The follow-up post-hoc selector lab is saved in:
 - [hard-gated research note](docs/research_notes/2026-06-13-hard-gated-mundane-reselect.md)
 - [trajectory audit report](experiments/trajectory_audit_mundane/trajectory_report.md)
 - [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
+- [lineage-aware trajectory report](experiments/trajectory_lineage_mundane/trajectory_lineage_report.md)
+- [lineage-aware trajectory research note](docs/research_notes/2026-06-30-trajectory-lineage-scoring.md)
 - [frontier noun graph report](experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md)
 - [frontier noun graph research note](docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md)
 - [matched alpha-0 hub bias smoke report](experiments/frontier_sweep_mundane_matched_alpha0_smoke/hub_bias_matched_smoke_report.md)
@@ -698,6 +700,21 @@ python3 -m depaysement_lab.cli trajectory-audit \
   --out experiments/trajectory_audit_mundane/trajectory_report.md \
   --json-out experiments/trajectory_audit_mundane/trajectory_report.json \
   --csv experiments/trajectory_audit_mundane/trajectory_runs.csv
+```
+
+The lineage-aware variant adds object-term carryover, hub revisit pressure, and
+a readable-transition AUC:
+
+```bash
+python3 -m depaysement_lab.cli trajectory-audit \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  experiments/posthoc_reselect_mundane_balanced_guard/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_hard_gate/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_dual_guard/*__banded-frontier_best.json \
+  --top-k 12 \
+  --out experiments/trajectory_lineage_mundane/trajectory_lineage_report.md \
+  --json-out experiments/trajectory_lineage_mundane/trajectory_lineage_report.json \
+  --csv experiments/trajectory_lineage_mundane/trajectory_lineage_runs.csv
 ```
 
 ## Collect MLX Steering Vectors

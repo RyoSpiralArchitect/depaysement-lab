@@ -52,6 +52,11 @@ experiments/posthoc_reselect_mundane_hard_gate/*
 experiments/trajectory_audit_mundane/*
 !experiments/trajectory_audit_mundane/trajectory_report.md
 !experiments/trajectory_audit_mundane/trajectory_runs.csv
+!experiments/trajectory_lineage_mundane/
+experiments/trajectory_lineage_mundane/*
+!experiments/trajectory_lineage_mundane/trajectory_lineage_report.md
+!experiments/trajectory_lineage_mundane/trajectory_lineage_report.json
+!experiments/trajectory_lineage_mundane/trajectory_lineage_runs.csv
 !experiments/noun_graph_mundane_seed_probe/
 experiments/noun_graph_mundane_seed_probe/*
 !experiments/noun_graph_mundane_seed_probe/noun_graph_report.md

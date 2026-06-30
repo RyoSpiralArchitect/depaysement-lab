@@ -158,11 +158,29 @@ def emit_model_policy(args: argparse.Namespace, *, stream=None) -> None:
         )
 
 
+def _parse_float_sequence(raw: Optional[str]) -> List[float]:
+    vals: List[float] = []
+    for part in str(raw or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        vals.append(float(part))
+    return vals
+
+
+def _effective_steer_alpha(args: argparse.Namespace) -> float:
+    alpha = float(getattr(args, "steer_alpha", 0.0) or 0.0)
+    schedule = _parse_float_sequence(getattr(args, "steer_schedule", None))
+    if abs(alpha) <= 1e-12 and schedule:
+        return max(schedule, key=lambda value: abs(float(value)))
+    return alpha
+
+
 def _active_steering_request(args: argparse.Namespace) -> bool:
     return (
         not bool(getattr(args, "disable_steering", False))
         and bool(getattr(args, "vectors", None))
-        and abs(float(getattr(args, "steer_alpha", 0.0) or 0.0)) > 1e-12
+        and abs(_effective_steer_alpha(args)) > 1e-12
     )
 
 
@@ -280,7 +298,7 @@ def make_generator(args: argparse.Namespace, rng: random.Random):
         layers = parse_layer_list(getattr(args, "steer_layers", None))
         steering = SteeringRuntimeConfig(
             vectors_path=None if getattr(args, "disable_steering", False) else getattr(args, "vectors", None),
-            alpha=0.0 if getattr(args, "disable_steering", False) else float(getattr(args, "steer_alpha", 0.0) or 0.0),
+            alpha=0.0 if getattr(args, "disable_steering", False) or not getattr(args, "vectors", None) else _effective_steer_alpha(args),
             layers=layers,
             position=getattr(args, "steer_position", "last"),
         )
@@ -316,7 +334,7 @@ def make_generator(args: argparse.Namespace, rng: random.Random):
         layers = parse_layer_list(getattr(args, "steer_layers", None))
         mlx_steering = MLXSteeringRuntimeConfig(
             vectors_path=None if getattr(args, "disable_steering", False) else getattr(args, "vectors", None),
-            alpha=0.0 if getattr(args, "disable_steering", False) else float(getattr(args, "steer_alpha", 0.0) or 0.0),
+            alpha=0.0 if getattr(args, "disable_steering", False) or not getattr(args, "vectors", None) else _effective_steer_alpha(args),
             layers=layers,
             position=getattr(args, "steer_position", "last"),
             apply_on=getattr(args, "mlx_steer_apply_on", "decode_only"),
@@ -422,6 +440,22 @@ def add_trajectory_stop_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--trajectory-sprawl-stop-max", type=float, default=0.65, help="stop if picked sprawl pressure exceeds this value")
 
 
+def add_trajectory_steering_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument(
+        "--steer-schedule",
+        default=None,
+        help="comma-separated per-step steering alpha values; the last value repeats after the schedule ends",
+    )
+    p.add_argument("--adaptive-steering", action="store_true", help="adapt the next step's steering alpha from picked trajectory health")
+    p.add_argument("--adaptive-steering-min-alpha", type=float, default=0.0)
+    p.add_argument("--adaptive-steering-max-alpha", type=float, default=None)
+    p.add_argument("--adaptive-steering-frontier-min", type=float, default=0.12)
+    p.add_argument("--adaptive-steering-unfinished-max", type=float, default=0.05)
+    p.add_argument("--adaptive-steering-loop-max", type=float, default=0.50)
+    p.add_argument("--adaptive-steering-boost", type=float, default=0.08)
+    p.add_argument("--adaptive-steering-dampen", type=float, default=0.12)
+
+
 def add_scorer_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--bank", default=None)
     p.add_argument("--lexicon", default=None)
@@ -472,6 +506,20 @@ def trajectory_stop_kwargs(args: argparse.Namespace) -> Dict[str, Any]:
     }
 
 
+def trajectory_steering_kwargs(args: argparse.Namespace) -> Dict[str, Any]:
+    return {
+        "steer_schedule": _parse_float_sequence(getattr(args, "steer_schedule", None)),
+        "adaptive_steering": bool(getattr(args, "adaptive_steering", False)),
+        "adaptive_steering_min_alpha": float(getattr(args, "adaptive_steering_min_alpha", 0.0)),
+        "adaptive_steering_max_alpha": getattr(args, "adaptive_steering_max_alpha", None),
+        "adaptive_steering_frontier_min": float(getattr(args, "adaptive_steering_frontier_min", 0.12)),
+        "adaptive_steering_unfinished_max": float(getattr(args, "adaptive_steering_unfinished_max", 0.05)),
+        "adaptive_steering_loop_max": float(getattr(args, "adaptive_steering_loop_max", 0.50)),
+        "adaptive_steering_boost": float(getattr(args, "adaptive_steering_boost", 0.08)),
+        "adaptive_steering_dampen": float(getattr(args, "adaptive_steering_dampen", 0.12)),
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Depaysement Lab multi-backend CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -480,6 +528,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_generation_args(w)
     add_selector_args(w)
     add_trajectory_stop_args(w)
+    add_trajectory_steering_args(w)
     w.add_argument("--seed", default="A forgotten umbrella at the station")
     w.add_argument("--mode", choices=["depaysement", "automatic"], default="depaysement")
     w.add_argument("--steps", type=int, default=5)
@@ -620,6 +669,7 @@ def build_parser() -> argparse.ArgumentParser:
     ob = sub.add_parser("observe", help="run baseline vs depaysement rerank vs steering+rerank and measure coherence-preserving displacement")
     add_common_generation_args(ob)
     add_selector_args(ob)
+    add_trajectory_steering_args(ob)
     ob.add_argument("--seed", default="A forgotten umbrella at the station")
     ob.add_argument("--steps", type=int, default=4)
     ob.add_argument("--candidates", type=int, default=8)
@@ -764,6 +814,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_generation_args(fs)
     add_selector_args(fs)
     add_trajectory_stop_args(fs)
+    add_trajectory_steering_args(fs)
     fs.add_argument("--seed", default="A forgotten umbrella at the station")
     fs.add_argument("--seed-bank", default=None, help="optional JSON/TXT seed bank; JSON may be a list or contain a 'seeds' list")
     fs.add_argument("--seed-limit", type=int, default=0, help="limit loaded seed-bank entries; 0 means use all")
@@ -858,6 +909,7 @@ def cmd_write(args: argparse.Namespace) -> None:
         keep_candidates=(args.save_candidates if args.out else 0),
         include_prompt=bool(args.include_prompt),
         **trajectory_stop_kwargs(args),
+        **trajectory_steering_kwargs(args),
     )
     print("\n=== result ===")
     print(run.final_text)
@@ -1182,7 +1234,11 @@ def cmd_observe(args: argparse.Namespace) -> None:
     if getattr(args, "_steering_preflight_note", None):
         notes.append(str(getattr(args, "_steering_preflight_note")))
 
-    steering_requested = bool(getattr(args, "_steering_preflight_usable", False)) and not bool(getattr(args, "disable_steering", False)) and float(getattr(args, "steer_alpha", 0.0) or 0.0) != 0.0
+    steering_requested = (
+        bool(getattr(args, "_steering_preflight_usable", False))
+        and not bool(getattr(args, "disable_steering", False))
+        and abs(_effective_steer_alpha(args)) > 1e-12
+    )
     if not args.skip_steered and steering_requested:
         with steering_enabled(generator, True):
             st_engine = DepaysementEngine(
@@ -1205,6 +1261,7 @@ def cmd_observe(args: argparse.Namespace) -> None:
                 prompt_style=args.prompt_style,
                 keep_candidates=args.save_candidates,
                 include_prompt=args.include_prompt,
+                **trajectory_steering_kwargs(args),
             )
             st_run.config["condition"] = "steering_plus_rerank"
         runs["steering_plus_rerank"] = run_to_observation_dict(
@@ -1620,6 +1677,7 @@ def cmd_reselect(args: argparse.Namespace) -> None:
 def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     emit_model_policy(args)
     alphas = parse_float_grid(args.alphas)
+    steer_schedule = _parse_float_sequence(getattr(args, "steer_schedule", None))
     candidate_grid = parse_int_grid(args.candidate_grid)
     token_grid = parse_int_grid(args.max_token_grid)
     seeds = load_seed_bank(args.seed_bank, args.seed, limit=int(getattr(args, "seed_limit", 0) or 0))
@@ -1630,7 +1688,8 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     # Load the model once.  If vectors are available, initialize at max alpha so
     # the backend loads vector files; individual runs overwrite steering.alpha.
     gen_args = copy.copy(args)
-    max_alpha = max(abs(a) for a in alphas) if alphas else 0.0
+    steering_alpha_values = [abs(float(a)) for a in alphas] + [abs(float(a)) for a in steer_schedule]
+    max_alpha = max(steering_alpha_values) if steering_alpha_values else 0.0
     gen_args.steer_alpha = max_alpha
     if max_alpha <= 1e-12:
         gen_args.disable_steering = True
@@ -1696,7 +1755,12 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                     break
                 for alpha in alphas:
                     steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
-                    steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
+                    trajectory_alpha_requested = any(abs(float(value)) > 1e-12 for value in steer_schedule)
+                    steering_requested = (
+                        (abs(float(alpha)) > 1e-12 or trajectory_alpha_requested)
+                        and steering_available
+                        and not bool(getattr(args, "disable_steering", False))
+                    )
                     steering = getattr(generator, "steering", None)
                     if steering is not None and hasattr(steering, "alpha"):
                         steering.alpha = float(alpha) if steering_requested else 0.0
@@ -1705,6 +1769,8 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                         if steering_requested
                         else f"selector_alpha_{safe_float_label(alpha)}"
                     )
+                    if steer_schedule:
+                        condition = f"{condition}_traj"
                     save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
                     path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}.json"
                     if args.resume and path.exists():
@@ -1742,9 +1808,11 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                             keep_candidates=save_candidates,
                             include_prompt=args.include_prompt,
                             **trajectory_stop_kwargs(args),
+                            **trajectory_steering_kwargs(args),
                         )
                     run.config["condition"] = condition
                     run.config["sweep_alpha"] = float(alpha)
+                    run.config["sweep_steer_schedule"] = list(steer_schedule)
                     run.config["candidate_count"] = int(candidates)
                     run.config["max_new_tokens"] = int(max_tokens)
                     run.config["seed_index"] = int(seed_idx)
@@ -1786,6 +1854,8 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
         "backend": args.backend,
         "model": resolve_model(args),
         "alphas": alphas,
+        "steer_schedule": list(steer_schedule),
+        "adaptive_steering": bool(getattr(args, "adaptive_steering", False)),
         "candidate_grid": candidate_grid,
         "max_token_grid": token_grid,
         "select_objective": args.select_objective,

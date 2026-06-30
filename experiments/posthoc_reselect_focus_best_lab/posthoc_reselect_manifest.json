@@ -1,0 +1,103 @@
+{
+  "created_at": "2026-05-16T13:54:19.966306+00:00",
+  "source_runs": [
+    "experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p45_c12_tok140.json",
+    "experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p6_c12_tok140.json",
+    "experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p75_c12_tok140.json"
+  ],
+  "output_runs": [
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p45_c12_tok140__depaysement_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p6_c12_tok140__depaysement_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p75_c12_tok140__depaysement_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p45_c12_tok140__frontier_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p6_c12_tok140__frontier_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p75_c12_tok140__frontier_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p45_c12_tok140__hybrid_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p6_c12_tok140__hybrid_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p75_c12_tok140__hybrid_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p45_c12_tok140__pareto_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p6_c12_tok140__pareto_best.json",
+    "experiments/posthoc_reselect_focus_best_lab/steer_alpha_0p75_c12_tok140__pareto_best.json"
+  ],
+  "objectives": [
+    "depaysement",
+    "frontier",
+    "hybrid",
+    "pareto"
+  ],
+  "choose": "best",
+  "context_policy": "recorded",
+  "include_original": true,
+  "selector": {
+    "depaysement": {
+      "objective": "depaysement",
+      "frontier_weight": 1.0,
+      "ontology_weight": 0.35,
+      "unfinished_weight": 1.1,
+      "repair_weight": 0.6,
+      "repetition_weight": 0.45,
+      "sprawl_weight": 0.3,
+      "ontology_min": 0.2,
+      "ontology_max": 0.6,
+      "readability_min": 0.55,
+      "frontier_quality_min": 0.2,
+      "repair_max": 0.45,
+      "unfinished_max": 0.5
+    },
+    "frontier": {
+      "objective": "frontier",
+      "frontier_weight": 1.0,
+      "ontology_weight": 0.35,
+      "unfinished_weight": 1.1,
+      "repair_weight": 0.6,
+      "repetition_weight": 0.45,
+      "sprawl_weight": 0.3,
+      "ontology_min": 0.2,
+      "ontology_max": 0.6,
+      "readability_min": 0.55,
+      "frontier_quality_min": 0.2,
+      "repair_max": 0.45,
+      "unfinished_max": 0.5
+    },
+    "hybrid": {
+      "objective": "hybrid",
+      "frontier_weight": 1.0,
+      "ontology_weight": 0.35,
+      "unfinished_weight": 1.1,
+      "repair_weight": 0.6,
+      "repetition_weight": 0.45,
+      "sprawl_weight": 0.3,
+      "ontology_min": 0.2,
+      "ontology_max": 0.6,
+      "readability_min": 0.55,
+      "frontier_quality_min": 0.2,
+      "repair_max": 0.45,
+      "unfinished_max": 0.5
+    },
+    "pareto": {
+      "objective": "pareto",
+      "frontier_weight": 1.0,
+      "ontology_weight": 0.35,
+      "unfinished_weight": 1.1,
+      "repair_weight": 0.6,
+      "repetition_weight": 0.45,
+      "sprawl_weight": 0.3,
+      "ontology_min": 0.2,
+      "ontology_max": 0.6,
+      "readability_min": 0.55,
+      "frontier_quality_min": 0.2,
+      "repair_max": 0.45,
+      "unfinished_max": 0.5
+    }
+  },
+  "report_md": "experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_report.md",
+  "report_json": "experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_report.json",
+  "candidate_csv": "experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_candidates.csv",
+  "plot": "experiments/posthoc_reselect_focus_best_lab/posthoc_reselect.png",
+  "texts": "experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_texts.md",
+  "notes": [
+    "Post-hoc reselection reuses saved candidate pools and performs no new generation.",
+    "With context-policy=recorded, each candidate is rescored against the context that produced its pool.",
+    "With context-policy=reselected, downstream candidate pools are still the originally saved pools."
+  ]
+}

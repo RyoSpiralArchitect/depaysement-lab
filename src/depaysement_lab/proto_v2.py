@@ -1443,7 +1443,48 @@ def extract_prompt_motifs(prompt: str) -> List[str]:
 # Steering engine
 # -----------------------------------------------------------------------------
 
-SELECT_OBJECTIVES: Tuple[str, ...] = ("depaysement", "frontier", "hybrid", "pareto")
+SELECT_OBJECTIVES: Tuple[str, ...] = ("depaysement", "frontier", "banded-frontier", "hybrid", "pareto")
+
+FANTASY_PROP_WEIGHTS: Dict[str, float] = {
+    # Targeted attractors from the mundane-seed steering probe.  Plain "clock"
+    # and "forgotten" are deliberately omitted: they can be ordinary seed
+    # material, while the phrases below usually mark a stock miniature-antique
+    # register.
+    "music box": 1.25,
+    "porcelain": 1.00,
+    "miniature": 0.80,
+    "tiny ballerina": 1.20,
+    "ballerina": 0.80,
+    "doll": 0.75,
+    "antique": 0.75,
+    "leather-bound": 1.00,
+    "leather bound": 1.00,
+    "velvet": 0.75,
+    "ornate": 0.65,
+    "crystal": 0.70,
+    "ivory": 0.60,
+    "lullaby": 0.75,
+    "filigree": 0.75,
+    "clockwork": 0.70,
+    "grandfather clock": 0.80,
+    "pocket watch": 0.80,
+    "forgotten dreams": 0.75,
+}
+
+ORDINARY_ANCHOR_STOPWORDS = {
+    "about", "above", "after", "again", "against", "along", "also", "amid", "among", "around",
+    "away", "back", "because", "before", "behind", "below", "beneath", "beside", "between",
+    "beyond", "both", "could", "down", "each", "even", "ever", "every", "from", "here", "into",
+    "itself", "like", "made", "make", "makes", "many", "more", "most", "near", "next", "only",
+    "onto", "outside", "over", "same", "should", "still", "than", "that", "their", "them", "then",
+    "there", "these", "they", "this", "those", "through", "under", "until", "upon", "very", "were",
+    "what", "when", "where", "which", "while", "with", "within", "without", "would", "your",
+    "become", "becomes", "became", "turned", "turns", "turning", "touch", "touches", "touching",
+    "rests", "rested", "resting", "leans", "leaning", "opens", "opening", "wraps", "wrapped",
+    "forgotten", "ordinary", "concrete", "visible", "possible", "random", "small", "large", "tiny",
+    "dusty", "faded", "delicate", "strange", "silent", "soft", "faint", "glowing", "golden",
+    "silver", "moonlit", "ethereal", "ghostly", "spectral", "melancholic", "mournful", "haunting",
+}
 
 
 @dataclass
@@ -1455,12 +1496,18 @@ class SelectorConfig:
     repair_weight: float = 0.60
     repetition_weight: float = 0.30
     sprawl_weight: float = 0.20
+    cliche_weight: float = 0.0
+    soft_style_cliche_weight: float = 0.0
+    fantasy_prop_weight: float = 0.0
+    ordinary_anchor_weight: float = 0.0
+    ordinary_anchor_min: float = 0.0
     ontology_min: float = 0.20
     ontology_max: float = 0.60
     readability_min: float = 0.55
     frontier_quality_min: float = 0.20
     repair_max: float = 0.45
     unfinished_max: float = 0.50
+    hard_unfinished_max: float = -1.0
 
     def __post_init__(self) -> None:
         if self.objective not in SELECT_OBJECTIVES:
@@ -1550,6 +1597,13 @@ class DepaysementEngine:
         choose: str = "softmax",
         trace: bool = False,
         prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
+        trajectory_stop: bool = False,
+        trajectory_min_steps: int = 3,
+        trajectory_frontier_drop: float = 0.08,
+        trajectory_unfinished_max: float = 0.05,
+        trajectory_repetition_max: float = 0.55,
+        trajectory_sprawl_max: float = 0.65,
     ) -> str:
         return self.write_run(
             seed=seed,
@@ -1562,7 +1616,14 @@ class DepaysementEngine:
             choose=choose,
             trace=trace,
             prompt_style=prompt_style,
+            ban_terms=ban_terms,
             keep_candidates=0,
+            trajectory_stop=trajectory_stop,
+            trajectory_min_steps=trajectory_min_steps,
+            trajectory_frontier_drop=trajectory_frontier_drop,
+            trajectory_unfinished_max=trajectory_unfinished_max,
+            trajectory_repetition_max=trajectory_repetition_max,
+            trajectory_sprawl_max=trajectory_sprawl_max,
         ).final_text
 
     def write_run(
@@ -1577,10 +1638,18 @@ class DepaysementEngine:
         choose: str = "softmax",
         trace: bool = False,
         prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
         keep_candidates: int = 0,
         include_prompt: bool = False,
+        trajectory_stop: bool = False,
+        trajectory_min_steps: int = 3,
+        trajectory_frontier_drop: float = 0.08,
+        trajectory_unfinished_max: float = 0.05,
+        trajectory_repetition_max: float = 0.55,
+        trajectory_sprawl_max: float = 0.65,
     ) -> WriteRun:
         text = seed.strip()
+        ban_terms = [str(term).strip() for term in (ban_terms or []) if str(term).strip()]
         records: List[StepRecord] = []
         config = {
             "steps": steps,
@@ -1591,11 +1660,24 @@ class DepaysementEngine:
             "max_new_tokens": max_new_tokens,
             "choose": choose,
             "prompt_style": prompt_style,
+            "ban_terms": list(ban_terms),
             "motif_jitter": self.motif_jitter,
             "select_objective": self.selector.objective,
             "selector": self.selector.to_dict(),
+            "trajectory_stop": {
+                "enabled": bool(trajectory_stop),
+                "min_steps": int(trajectory_min_steps),
+                "frontier_drop": float(trajectory_frontier_drop),
+                "unfinished_max": float(trajectory_unfinished_max),
+                "repetition_max": float(trajectory_repetition_max),
+                "sprawl_max": float(trajectory_sprawl_max),
+                "triggered": False,
+                "step": None,
+                "reason": "",
+            },
         }
         for step in range(1, steps + 1):
+            context_before_step = text
             prompt = ""
             motifs: List[str] = []
             stored_candidates: List[Candidate] = []
@@ -1613,7 +1695,7 @@ class DepaysementEngine:
                 stored_candidates = candidate_objs[:keep_candidates] if keep_candidates > 0 else []
             else:
                 motifs = self._pick_motifs(text)
-                prompt = build_depaysement_prompt(text, motifs=motifs, style=prompt_style)
+                prompt = build_depaysement_prompt(text, motifs=motifs, style=prompt_style, ban_terms=ban_terms)
                 raw = self.generator.generate(
                     prompt,
                     n=candidates_per_step,
@@ -1627,6 +1709,9 @@ class DepaysementEngine:
                 ranked = self._rank_candidates_for_selection(scored, context=text)
                 picked = self._pick(ranked, choose=choose, score_fn=self._pick_score)
                 stored_candidates = list(ranked[:keep_candidates]) if keep_candidates > 0 else []
+
+            if trajectory_stop and not picked.selector_metrics:
+                self._attach_selector_metrics(picked, context=context_before_step)
 
             if trace:
                 print(f"\n--- step {step} picked ---")
@@ -1644,11 +1729,39 @@ class DepaysementEngine:
                 )
             )
             text = join_text(text, picked.text)
+            stop_reason = self._trajectory_stop_reason(
+                records,
+                min_steps=trajectory_min_steps,
+                frontier_drop=trajectory_frontier_drop,
+                unfinished_max=trajectory_unfinished_max,
+                repetition_max=trajectory_repetition_max,
+                sprawl_max=trajectory_sprawl_max,
+            )
+            if trajectory_stop and stop_reason:
+                config["trajectory_stop"].update(
+                    {
+                        "triggered": True,
+                        "step": int(step),
+                        "reason": stop_reason,
+                    }
+                )
+                if trace:
+                    print(f"[trajectory-stop] step {step}: {stop_reason}")
+                break
         return WriteRun(seed=seed.strip(), final_text=text, steps=records, config=config)
 
-    def rank(self, seed: str, n: int = 12, temperature: float = 1.05, top_p: float = 0.92, max_new_tokens: int = 120, prompt_style: str = "scene") -> List[Candidate]:
+    def rank(
+        self,
+        seed: str,
+        n: int = 12,
+        temperature: float = 1.05,
+        top_p: float = 0.92,
+        max_new_tokens: int = 120,
+        prompt_style: str = "scene",
+        ban_terms: Optional[Sequence[str]] = None,
+    ) -> List[Candidate]:
         motifs = self._pick_motifs(seed)
-        prompt = build_depaysement_prompt(seed, motifs=motifs, style=prompt_style)
+        prompt = build_depaysement_prompt(seed, motifs=motifs, style=prompt_style, ban_terms=ban_terms)
         raw = self.generator.generate(prompt, n=n, temperature=temperature, top_p=top_p, max_new_tokens=max_new_tokens)
         scored = [Candidate(c, self.scorer.score(c, context=seed)) for c in raw if c.strip()]
         scored.sort(key=lambda c: c.score.total, reverse=True)
@@ -1683,6 +1796,16 @@ class DepaysementEngine:
         readability = float(metrics.syntax_readability_proxy)
         repair = float(metrics.repair_pressure)
         unfinished = float(metrics.unfinished)
+        cliche = float(getattr(metrics, "cliche_attractor_score", 0.0))
+        stock_prop = float(getattr(metrics, "stock_prop_attractor_score", 0.0))
+        soft_style = float(getattr(metrics, "soft_style_cliche_score", 0.0))
+        fantasy_prop, fantasy_hits = fantasy_prop_score(text)
+        ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
+            clean_context,
+            text,
+            concept_fields=self.scorer.concept_fields if self.scorer.lexicon_enabled else None,
+        )
+        ordinary_anchor_deficit = max(0.0, cfg.ordinary_anchor_min - ordinary_anchor)
         repetition = max(0.0, -_score_attr(candidate.score, "anti_repetition"))
         sprawl = max(
             float(metrics.graph_fragmentation),
@@ -1696,9 +1819,35 @@ class DepaysementEngine:
             + cfg.repair_weight * repair
             + cfg.repetition_weight * repetition
             + cfg.sprawl_weight * sprawl
+            + cfg.cliche_weight * cliche
+            + cfg.soft_style_cliche_weight * soft_style
+            + cfg.fantasy_prop_weight * fantasy_prop
+            + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
         )
         readability_deficit = max(0.0, cfg.readability_min - readability)
         frontier_quality_deficit = max(0.0, cfg.frontier_quality_min - quality)
+        ontology_below = max(0.0, cfg.ontology_min - ontology)
+        ontology_above = max(0.0, ontology - cfg.ontology_max)
+        repair_excess = max(0.0, repair - cfg.repair_max)
+        unfinished_excess = max(0.0, unfinished - cfg.unfinished_max)
+        hard_unfinished_enabled = cfg.hard_unfinished_max >= 0.0
+        hard_unfinished_failed = hard_unfinished_enabled and unfinished > cfg.hard_unfinished_max
+        hard_gate_failed = bool(hard_unfinished_failed)
+        hard_gate_penalty = 1000.0 if hard_gate_failed else 0.0
+        band_violation = (
+            1.50 * ontology_below
+            + 1.10 * ontology_above
+            + 0.90 * readability_deficit
+            + 0.70 * frontier_quality_deficit
+            + cfg.repair_weight * repair_excess
+            + cfg.unfinished_weight * unfinished_excess
+            + 0.30 * repetition
+            + 0.30 * sprawl
+            + cfg.soft_style_cliche_weight * soft_style
+            + cfg.fantasy_prop_weight * fantasy_prop
+            + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
+            + hard_gate_penalty
+        )
         hybrid_score = (
             float(candidate.score.total)
             + cfg.frontier_weight * frontier
@@ -1707,6 +1856,7 @@ class DepaysementEngine:
             - 0.50 * readability_deficit
             - 0.25 * frontier_quality_deficit
             - 0.20 * (1.0 - ontology_band)
+            - hard_gate_penalty
         )
         eligible = (
             cfg.ontology_min <= ontology <= cfg.ontology_max
@@ -1714,28 +1864,67 @@ class DepaysementEngine:
             and quality >= cfg.frontier_quality_min
             and repair <= cfg.repair_max
             and unfinished <= cfg.unfinished_max
+            and ordinary_anchor >= cfg.ordinary_anchor_min
+            and not hard_gate_failed
+        )
+        banded_frontier_score = (
+            (1.0 if eligible else 0.0)
+            + cfg.frontier_weight * frontier
+            + 0.15 * ontology_band_score
+            - band_violation
         )
 
-        selector_score = frontier if cfg.objective == "frontier" else hybrid_score
+        if cfg.objective == "frontier":
+            selector_score = frontier
+        elif cfg.objective == "banded-frontier":
+            selector_score = banded_frontier_score
+        else:
+            selector_score = hybrid_score
         candidate.selector_score = float(selector_score)
         candidate.selector_metrics = {
             "objective": cfg.objective,
             "selector_score": float(selector_score),
+            "banded_frontier_score": float(banded_frontier_score),
             "hybrid_score": float(hybrid_score),
             "depaysement_score": float(candidate.score.total),
             "readable_ontology_frontier": float(frontier),
             "frontier_quality": float(quality),
             "ontology_collapse_density": ontology,
+            "ontology_below_band": float(ontology_below),
+            "ontology_above_band": float(ontology_above),
             "ontology_bandpass": float(ontology_band),
             "ontology_band_score": float(ontology_band_score),
             "syntax_readability_proxy": readability,
+            "readability_deficit": float(readability_deficit),
+            "frontier_quality_deficit": float(frontier_quality_deficit),
             "graph_integration": float(metrics.graph_integration),
             "graph_fragmentation": float(metrics.graph_fragmentation),
             "repair_pressure": repair,
+            "repair_excess": float(repair_excess),
+            "cliche_attractor_score": cliche,
+            "cliche_penalty": float(cfg.cliche_weight * cliche),
+            "stock_prop_attractor_score": stock_prop,
+            "soft_style_cliche_score": soft_style,
+            "soft_style_cliche_penalty": float(cfg.soft_style_cliche_weight * soft_style),
+            "fantasy_prop_score": float(fantasy_prop),
+            "fantasy_prop_hits": list(fantasy_hits),
+            "fantasy_prop_penalty": float(cfg.fantasy_prop_weight * fantasy_prop),
+            "ordinary_anchor_retention": float(ordinary_anchor),
+            "ordinary_anchor_weighted": float(cfg.ordinary_anchor_weight * ordinary_anchor),
+            "ordinary_anchor_terms": list(ordinary_terms),
+            "ordinary_anchor_hits": list(ordinary_hits),
+            "ordinary_anchor_deficit": float(ordinary_anchor_deficit),
+            "ordinary_anchor_penalty": float(cfg.ordinary_anchor_weight * ordinary_anchor_deficit),
             "unfinished": unfinished,
+            "unfinished_excess": float(unfinished_excess),
+            "hard_unfinished_max": float(cfg.hard_unfinished_max),
+            "hard_unfinished_failed": bool(hard_unfinished_failed),
+            "hard_gate_failed": bool(hard_gate_failed),
+            "hard_gate_penalty": float(hard_gate_penalty),
             "repetition_pressure": float(repetition),
             "sprawl_pressure": float(sprawl),
             "selector_penalty": float(penalty),
+            "band_violation": float(band_violation),
             "selector_eligible": bool(eligible),
             "identity_melt_score": float(metrics.identity_melt_score),
             "affordance_corruption_score": float(metrics.affordance_corruption_score),
@@ -1797,6 +1986,46 @@ class DepaysementEngine:
                 return c
         return top[-1]
 
+    def _trajectory_stop_reason(
+        self,
+        records: Sequence[StepRecord],
+        *,
+        min_steps: int,
+        frontier_drop: float,
+        unfinished_max: float,
+        repetition_max: float,
+        sprawl_max: float,
+    ) -> str:
+        if len(records) < max(1, int(min_steps)):
+            return ""
+        current = records[-1].picked.selector_metrics
+        if not current:
+            return ""
+        frontiers = [
+            float(record.picked.selector_metrics.get("readable_ontology_frontier", 0.0))
+            for record in records
+            if record.picked.selector_metrics
+        ]
+        if not frontiers:
+            return ""
+        current_frontier = frontiers[-1]
+        previous_peak = max(frontiers[:-1] or [current_frontier])
+        reasons: List[str] = []
+        unfinished = float(current.get("unfinished", 0.0))
+        repetition = float(current.get("repetition_pressure", 0.0))
+        sprawl = float(current.get("sprawl_pressure", 0.0))
+        if unfinished > float(trajectory_unfinished_max := unfinished_max):
+            reasons.append(f"unfinished {unfinished:.3f}>{trajectory_unfinished_max:.3f}")
+        if current_frontier < previous_peak - float(frontier_drop) and current_frontier < 0.12:
+            reasons.append(
+                f"frontier decay {previous_peak:.3f}->{current_frontier:.3f}"
+            )
+        if repetition > float(repetition_max):
+            reasons.append(f"repetition {repetition:.3f}>{float(repetition_max):.3f}")
+        if sprawl > float(sprawl_max):
+            reasons.append(f"sprawl {sprawl:.3f}>{float(sprawl_max):.3f}")
+        return "; ".join(reasons)
+
     def _pick_motifs(self, context: str) -> List[str]:
         terms = sorted(salient_terms(context, self.scorer.concept_fields if self.scorer.lexicon_enabled else None))
         if not terms:
@@ -1827,6 +2056,84 @@ def _selector_bandpass(value: float, low: float, high: float) -> float:
     return clamp((1.0 - value) / max(1.0 - high, 1e-12), 0.0, 1.0)
 
 
+def fantasy_prop_score(text: str) -> Tuple[float, Tuple[str, ...]]:
+    hits: List[str] = []
+    weight = 0.0
+    low = text.lower()
+    for term, term_weight in FANTASY_PROP_WEIGHTS.items():
+        if anchor_in_text(term, low):
+            hits.append(term)
+            weight += float(term_weight)
+    if not hits:
+        return 0.0, ()
+    scale = max(2.0, len(rough_tokens(text)) / 45.0)
+    return clamp(weight / scale, 0.0, 1.0), tuple(sorted(hits))
+
+
+def ordinary_anchor_retention(
+    context: str,
+    text: str,
+    *,
+    concept_fields: Optional[Mapping[str, Sequence[str]]] = None,
+) -> Tuple[float, Tuple[str, ...], Tuple[str, ...]]:
+    terms = ordinary_anchor_terms(context, concept_fields=concept_fields)
+    if not terms:
+        return 1.0, (), ()
+    low = text.lower()
+    hits = tuple(term for term in terms if anchor_in_text(term, low))
+    target = max(1, min(4, len(terms)))
+    return clamp(len(hits) / target, 0.0, 1.0), hits, tuple(terms)
+
+
+def ordinary_anchor_terms(
+    context: str,
+    *,
+    concept_fields: Optional[Mapping[str, Sequence[str]]] = None,
+    limit: int = 12,
+) -> Tuple[str, ...]:
+    low = context.lower()
+    fantasy_words: set[str] = set()
+    for term in fantasy_prop_score(context)[1]:
+        fantasy_words.update(re.findall(r"[a-zA-Z]{3,}", term.lower()))
+
+    ordered: List[Tuple[int, str]] = []
+    if concept_fields:
+        for words in concept_fields.values():
+            for word in words:
+                term = word.lower()
+                if _is_ordinary_anchor_term(term, fantasy_words) and anchor_in_text(term, low):
+                    pos = low.find(term)
+                    ordered.append((pos if pos >= 0 else len(low), term))
+
+    for match in re.finditer(r"[a-zA-Z][a-zA-Z'-]{2,}", context):
+        term = match.group(0).lower().strip("'")
+        if _is_ordinary_anchor_term(term, fantasy_words):
+            ordered.append((match.start(), term))
+
+    out: List[str] = []
+    seen: set[str] = set()
+    for _pos, term in sorted(ordered, key=lambda item: (item[0], item[1])):
+        if term in seen:
+            continue
+        seen.add(term)
+        out.append(term)
+        if len(out) >= limit:
+            break
+    return tuple(out)
+
+
+def _is_ordinary_anchor_term(term: str, fantasy_words: set[str]) -> bool:
+    if not term or not is_valid_anchor(term):
+        return False
+    if term in ORDINARY_ANCHOR_STOPWORDS or term in fantasy_words:
+        return False
+    if term in FANTASY_PROP_WEIGHTS:
+        return False
+    if re.fullmatch(r"\d+", term):
+        return False
+    return True
+
+
 def _selector_dominates(left: Candidate, right: Candidate) -> bool:
     lm = left.selector_metrics
     rm = right.selector_metrics
@@ -1834,23 +2141,33 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("depaysement_score", 0.0)),
         float(lm.get("readable_ontology_frontier", 0.0)),
         float(lm.get("ontology_band_score", 0.0)),
+        float(lm.get("ordinary_anchor_weighted", 0.0)),
     )
     right_good = (
         float(rm.get("depaysement_score", 0.0)),
         float(rm.get("readable_ontology_frontier", 0.0)),
         float(rm.get("ontology_band_score", 0.0)),
+        float(rm.get("ordinary_anchor_weighted", 0.0)),
     )
     left_bad = (
         float(lm.get("unfinished", 0.0)),
         float(lm.get("repair_pressure", 0.0)),
         float(lm.get("repetition_pressure", 0.0)),
         float(lm.get("sprawl_pressure", 0.0)),
+        float(lm.get("hard_gate_penalty", 0.0)),
+        float(lm.get("soft_style_cliche_penalty", 0.0)),
+        float(lm.get("fantasy_prop_penalty", 0.0)),
+        float(lm.get("ordinary_anchor_penalty", 0.0)),
     )
     right_bad = (
         float(rm.get("unfinished", 0.0)),
         float(rm.get("repair_pressure", 0.0)),
         float(rm.get("repetition_pressure", 0.0)),
         float(rm.get("sprawl_pressure", 0.0)),
+        float(rm.get("hard_gate_penalty", 0.0)),
+        float(rm.get("soft_style_cliche_penalty", 0.0)),
+        float(rm.get("fantasy_prop_penalty", 0.0)),
+        float(rm.get("ordinary_anchor_penalty", 0.0)),
     )
     no_worse = all(left >= right for left, right in zip(left_good, right_good)) and all(
         left <= right for left, right in zip(left_bad, right_bad)
@@ -1861,12 +2178,25 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
     return no_worse and strictly_better
 
 
-def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = None, style: str = "scene") -> str:
+def build_depaysement_prompt(
+    context: str,
+    motifs: Optional[Sequence[str]] = None,
+    style: str = "scene",
+    ban_terms: Optional[Sequence[str]] = None,
+) -> str:
     motifs = list(motifs or [])
+    ban_terms = [str(term).strip() for term in (ban_terms or []) if str(term).strip()]
     if motifs:
         motif_line = "Keep this motif physically present if possible: " + " / ".join(motifs) + ". Shift its domain.\n"
     else:
         motif_line = "You may keep one concrete object from the fragment; do not reset into a random new postcard.\n"
+    ban_line = ""
+    if ban_terms:
+        ban_line = (
+            "Do not use these words or phrases: "
+            + "; ".join(ban_terms)
+            + ". If that function is needed, reroute it through ordinary objects already present in the fragment.\n"
+        )
 
     if style == "legacy":
         return (
@@ -1876,6 +2206,7 @@ def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = Non
             "Make the image legible through at least one concrete relation: space, contact, possession, containment, exchange, or transformation.\n"
             "A phrase like 'in other words' is allowed only when it opens a new image, not when it explains the image.\n"
             f"{motif_line}"
+            f"{ban_line}"
             f"Fragment:\n{context.strip()}\n"
             "Continuation, one or two sentences only. Return only the continuation text; no notes, commentary, labels, or parentheses explaining the task:\n"
         )
@@ -1890,6 +2221,7 @@ def build_depaysement_prompt(context: str, motifs: Optional[Sequence[str]] = Non
         "Let unlike things share one concrete place. Make the image legible through space, contact, possession, containment, exchange, or transformation.\n"
         "Do not explain what anything means. Do not summarize. Do not resolve.\n"
         f"{motif_line}"
+        f"{ban_line}"
         f"Fragment:\n{context.strip()}\n"
         "Next image:\n"
     )

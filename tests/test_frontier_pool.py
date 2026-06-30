@@ -1,6 +1,24 @@
+import csv
 import json
 
-from depaysement_lab.frontier import audit_frontier_pool, readable_frontier_score, write_frontier_reading_report
+from depaysement_lab.frontier import (
+    audit_frontier_pool,
+    audit_trajectory_runs,
+    format_trajectory_report,
+    frontier_exemplar_store,
+    rating_sheet_rows,
+    readable_frontier_score,
+    write_frontier_exemplar_store,
+    write_frontier_reading_report,
+    write_rating_markdown,
+    write_rating_sheet,
+)
+from depaysement_lab.noun_graph import (
+    build_noun_graph_report,
+    format_noun_graph_report,
+    write_noun_graph_json,
+    write_noun_graph_nodes_csv,
+)
 from depaysement_lab.ontology import OntologyAuditor
 
 
@@ -38,6 +56,12 @@ def test_pool_audit_computes_selection_lift_and_truncation(tmp_path):
     assert r.truncated_steps == 1
     assert r.aggregate["picked_count"] == 1
     assert "selection_lift_readable_ontology_frontier" in r.aggregate
+    assert "pool_mean_ordinary_anchor_retention" in r.aggregate
+    assert "pool_mean_fantasy_prop_score" in r.aggregate
+    assert "pool_mean_stock_prop_attractor_score" in r.aggregate
+    assert "pool_mean_soft_style_cliche_score" in r.aggregate
+    assert r.rows[0].metrics["ordinary_anchor_retention"] > 0
+    assert "station" in r.rows[0].metrics["ordinary_anchor_hits"]
     assert report.top_frontier_examples
 
 
@@ -77,3 +101,236 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     text = out.read_text(encoding="utf-8")
     assert "Picked Final Text" in text
     assert "The umbrella becomes a tiny station garden.<|eot_id|>" not in text
+
+
+def test_pool_audit_marks_only_one_duplicate_candidate_as_picked(tmp_path):
+    p = tmp_path / "run.json"
+    duplicate = 'The umbrellas, now an opera, still whisper, "Qui vive?"'
+    run = {
+        "seed": "I am a",
+        "config": {"condition": "steer", "candidates_per_step": 3},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {"text": duplicate, "score": {"total": 2.0}},
+                "candidates": [
+                    {"text": duplicate, "score": {"total": 2.0}},
+                    {"text": duplicate, "score": {"total": 2.0}},
+                    {"text": "The umbrella rests beside the platform clock.", "score": {"total": 0.1}},
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=3)
+    picked = [row for row in report.runs[0].rows if row.picked]
+    assert len(picked) == 1
+    assert picked[0].candidate_index == 1
+    assert report.runs[0].aggregate["picked_count"] == 1
+
+
+def test_frontier_exemplar_store_exports_max_band_examples(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A receipt on the counter",
+        "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 3},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The receipt, now a garden, wraps vines around the counter drawer.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The receipt, now a garden, wraps vines around the counter drawer.",
+                        "score": {"total": 2.0},
+                    },
+                    {
+                        "text": "The receipt rests on the counter.",
+                        "score": {"total": 1.0},
+                    },
+                    {
+                        "text": "A tiny antique porcelain music box glows beside the receipt.",
+                        "score": {"total": 0.5},
+                    },
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=3)
+    store = frontier_exemplar_store(report, top_k=3)
+    assert store["frontier_max"] > 0
+    assert store["examples"]
+    assert "legend_label" in store["examples"][0]
+    assert "text" in store["examples"][0]
+
+    md_out = tmp_path / "frontier_exemplars.md"
+    json_out = tmp_path / "frontier_exemplars.json"
+    write_frontier_exemplar_store(report, str(md_out), json_path=str(json_out), top_k=3)
+    assert "Frontier Exemplar Store" in md_out.read_text(encoding="utf-8")
+    payload = json.loads(json_out.read_text(encoding="utf-8"))
+    assert payload["examples"][0]["text"]
+
+
+def test_noun_graph_finds_frontier_hub_terms(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A receipt on the counter",
+        "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                        "score": {"total": 2.0},
+                    },
+                    {
+                        "text": "The receipt rests on the counter.",
+                        "score": {"total": 1.0},
+                    },
+                ],
+            },
+            {
+                "step": 2,
+                "picked": {
+                    "text": "The music box becomes a leather-bound book whose key ticks like a clock.",
+                    "score": {"total": 2.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The music box becomes a leather-bound book whose key ticks like a clock.",
+                        "score": {"total": 2.0},
+                    }
+                ],
+            },
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    frontier_report = audit_frontier_pool([str(p)], top_k=3)
+    graph = build_noun_graph_report(frontier_report, top_k=5, max_nodes=20)
+    terms = {node["term"] for node in graph.nodes}
+    assert {"music box", "key", "clock"} & terms
+    assert graph.edges
+    assert "Frontier Noun Graph" in format_noun_graph_report(graph)
+
+    json_out = tmp_path / "noun_graph.json"
+    csv_out = tmp_path / "noun_graph_nodes.csv"
+    write_noun_graph_json(graph, str(json_out))
+    write_noun_graph_nodes_csv(graph, str(csv_out))
+    assert json.loads(json_out.read_text(encoding="utf-8"))["nodes"]
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        assert list(csv.DictReader(f))
+
+
+def test_rating_sheet_exports_picked_and_top_frontier_rows(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "selector", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {"text": "The umbrella rests beside the platform clock.", "score": {"total": 2.0}},
+                "candidates": [
+                    {"text": "The umbrella rests beside the platform clock.", "score": {"total": 2.0}},
+                    {
+                        "text": "The umbrella, now a garden, wraps vines around the station clock.",
+                        "score": {"total": 1.0},
+                    },
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=2)
+    rows = rating_sheet_rows(report, top_k=1)
+    assert len(rows) == 2
+    assert {row["kind"] for row in rows} == {"picked", "top_frontier"}
+    assert all("human_score" in row for row in rows)
+
+    csv_out = tmp_path / "ratings.csv"
+    md_out = tmp_path / "ratings.md"
+    write_rating_sheet(rows, str(csv_out))
+    write_rating_markdown(rows, str(md_out))
+
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        exported = list(csv.DictReader(f))
+    assert len(exported) == 2
+    assert exported[0]["human_notes"] == ""
+    assert "ordinary_anchor_retention" in exported[0]
+    assert "fantasy_prop_score" in exported[0]
+    assert "stock_prop_attractor_score" in exported[0]
+    assert "soft_style_cliche_score" in exported[0]
+    assert "Human Rating Sheet" in md_out.read_text(encoding="utf-8")
+
+
+def test_rating_sheet_dedupes_same_step_text(tmp_path):
+    p = tmp_path / "run.json"
+    duplicate = "The umbrella, now a garden, wraps vines around the station clock."
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "selector", "candidates_per_step": 2},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {"text": duplicate, "score": {"total": 2.0}},
+                "candidates": [
+                    {"text": duplicate, "score": {"total": 2.0}},
+                    {"text": duplicate, "score": {"total": 2.0}},
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=2)
+    rows = rating_sheet_rows(report, top_k=2)
+    assert len(rows) == 1
+    assert rows[0]["picked"] == 1
+    assert set(rows[0]["kind"].split("+")) == {"picked", "top_frontier"}
+
+
+def test_trajectory_audit_scores_picked_sequence(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "steer_alpha_0p66"},
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The umbrella, now a garden, wraps vines around the station clock.",
+                    "score": {"total": 2.0, "anti_repetition": 0.0},
+                },
+            },
+            {
+                "step": 2,
+                "picked": {
+                    "text": 'The garden, now a clock, reads: "For the rain that kept waiting."',
+                    "score": {"total": 1.0, "anti_repetition": -0.2},
+                },
+            },
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_trajectory_runs([str(p)], top_k=1)
+    assert len(report.runs) == 1
+    aggregate = report.runs[0].aggregate
+    assert aggregate["trajectory_frontier_auc"] > 0
+    assert aggregate["anchor_survival"] > 0
+    assert aggregate["lineage_continuity"] > 0
+    assert aggregate["now_chain_pressure"] > 0
+    assert aggregate["inscription_pressure"] > 0
+    assert "Readable Ontology Collapse Trajectory" in format_trajectory_report(report)

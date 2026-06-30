@@ -6,6 +6,7 @@ import dataclasses
 import json
 import math
 import random
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,14 +21,28 @@ from .backends import (
 )
 from .mlx_intervention import MLXSteeringRuntimeConfig, collect_mlx_steering_vectors
 from .model_policy import default_english_system_prompt, infer_model_policy
+from .noun_graph import (
+    build_noun_graph_report,
+    format_noun_graph_report,
+    write_noun_graph_json,
+    write_noun_graph_nodes_csv,
+)
 from .ontology import audit_run_files, format_report
 from .frontier import (
     audit_frontier_pool,
+    audit_trajectory_runs,
     format_frontier_report,
+    format_trajectory_report,
+    rating_sheet_rows,
+    write_rating_markdown,
+    write_rating_sheet,
     write_frontier_csv,
+    write_frontier_exemplar_store,
     write_frontier_json,
     write_frontier_plot,
     write_frontier_reading_report,
+    write_trajectory_csv,
+    write_trajectory_json,
 )
 from .observation import (
     DisplacementObserver,
@@ -46,11 +61,21 @@ from .proto_v2 import (
     DummyGenerator,
     HFGenerator,
     PromptBank,
+    SELECT_OBJECTIVES,
     SelectorConfig,
     SteeringRuntimeConfig,
     collect_steering_vectors,
     parse_layer_list,
     print_intervention_sketch,
+)
+from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
+from .ratings import (
+    DEFAULT_RATING_METRICS,
+    analyze_rating_rows,
+    format_rating_analysis,
+    load_rating_rows,
+    merge_markdown_ratings,
+    write_rating_rows,
 )
 from .scorer_v07 import image_relation_graph, make_scorer_v07 as make_scorer
 
@@ -77,6 +102,12 @@ def resolve_system_prompt(args: argparse.Namespace) -> Optional[str]:
     if raw in {None, "auto"}:
         return default_english_system_prompt()
     return raw
+
+
+def parse_ban_terms(raw: Optional[str]) -> List[str]:
+    if not raw:
+        return []
+    return [part.strip() for part in re.split(r"[,;\n]+", raw) if part.strip()]
 
 
 def emit_model_policy(args: argparse.Namespace, *, stream=None) -> None:
@@ -317,14 +348,15 @@ def add_common_generation_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--tokenizer-config", default=None, help="MLX only: JSON tokenizer_config")
     p.add_argument("--trust-remote-code", action="store_true", help="MLX tokenizer_config trust_remote_code")
     p.add_argument("--random-seed", type=int, default=7)
+    p.add_argument("--ban-terms", default=None, help="comma/semicolon-separated words or phrases to forbid in depaysement prompts")
 
 
 def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument(
         "--select-objective",
-        choices=["depaysement", "frontier", "hybrid", "pareto"],
+        choices=list(SELECT_OBJECTIVES),
         default="depaysement",
-        help="candidate-pick objective: legacy score, readable frontier, weighted hybrid, or Pareto front",
+        help="candidate-pick objective: legacy score, readable frontier, banded frontier, weighted hybrid, or Pareto front",
     )
     p.add_argument("--frontier-weight", type=float, default=1.0, help="hybrid selector weight for readable ontology frontier")
     p.add_argument("--ontology-weight", type=float, default=0.35, help="hybrid selector weight for ontology collapse inside the target band")
@@ -332,12 +364,41 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repair-weight", type=float, default=0.60, help="hybrid selector penalty for repair/explanation pressure")
     p.add_argument("--repetition-weight", type=float, default=0.30, help="hybrid selector penalty for repetition loops")
     p.add_argument("--sprawl-weight", type=float, default=0.20, help="hybrid selector penalty for graph/sprawl fragmentation")
+    p.add_argument("--cliche-weight", type=float, default=0.0, help="optional selector penalty for generic magic-realist vocabulary attractors")
+    p.add_argument("--soft-style-cliche-weight", type=float, default=0.0, help="optional selector penalty for soft style cliche diction such as ethereal/fog/mist")
+    p.add_argument("--fantasy-prop-weight", type=float, default=0.0, help="optional selector penalty for stock antique/miniature/porcelain props")
+    p.add_argument("--ordinary-anchor-weight", type=float, default=0.0, help="optional selector penalty when candidates drop mundane context anchors")
+    p.add_argument("--ordinary-anchor-min", type=float, default=0.0, help="minimum ordinary-anchor retention when --ordinary-anchor-weight is used")
     p.add_argument("--ontology-min", type=float, default=0.20, help="frontier selector lower band for ontology collapse density")
     p.add_argument("--ontology-max", type=float, default=0.60, help="frontier selector upper band for ontology collapse density")
     p.add_argument("--selector-readability-min", type=float, default=0.55, help="frontier selector readability floor")
     p.add_argument("--selector-frontier-quality-min", type=float, default=0.20, help="frontier selector quality floor")
     p.add_argument("--selector-repair-max", type=float, default=0.45, help="frontier selector repair-pressure ceiling")
     p.add_argument("--selector-unfinished-max", type=float, default=0.50, help="frontier selector unfinished/truncation ceiling")
+    p.add_argument("--hard-unfinished-max", type=float, default=-1.0, help="hard reject candidates above this unfinished score; negative disables the gate")
+
+
+def add_trajectory_stop_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--trajectory-stop", action="store_true", help="stop a live run when the picked trajectory begins to decay")
+    p.add_argument("--trajectory-min-steps", type=int, default=3, help="minimum steps before trajectory stopping can trigger")
+    p.add_argument("--trajectory-frontier-drop", type=float, default=0.08, help="stop if frontier falls this far below the previous peak")
+    p.add_argument("--trajectory-unfinished-stop-max", type=float, default=0.05, help="stop if picked unfinished exceeds this value")
+    p.add_argument("--trajectory-repetition-stop-max", type=float, default=0.55, help="stop if picked repetition pressure exceeds this value")
+    p.add_argument("--trajectory-sprawl-stop-max", type=float, default=0.65, help="stop if picked sprawl pressure exceeds this value")
+
+
+def add_scorer_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--bank", default=None)
+    p.add_argument("--lexicon", default=None)
+    p.add_argument("--disable-lexicon", action="store_true")
+    p.add_argument("--enable-lexicon", action="store_true")
+    p.add_argument("--lexicon-prior-scale", type=float, default=None)
+    p.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    p.add_argument("--no-bank-score", action="store_true")
+    p.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    p.add_argument("--bank-weight", type=float, default=None)
+    p.add_argument("--embed-model", default=None)
+    p.add_argument("--device", default=None)
 
 
 def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
@@ -349,13 +410,30 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repair_weight=float(getattr(args, "repair_weight", 0.60)),
         repetition_weight=float(getattr(args, "repetition_weight", 0.30)),
         sprawl_weight=float(getattr(args, "sprawl_weight", 0.20)),
+        cliche_weight=float(getattr(args, "cliche_weight", 0.0)),
+        soft_style_cliche_weight=float(getattr(args, "soft_style_cliche_weight", 0.0)),
+        fantasy_prop_weight=float(getattr(args, "fantasy_prop_weight", 0.0)),
+        ordinary_anchor_weight=float(getattr(args, "ordinary_anchor_weight", 0.0)),
+        ordinary_anchor_min=float(getattr(args, "ordinary_anchor_min", 0.0)),
         ontology_min=float(getattr(args, "ontology_min", 0.20)),
         ontology_max=float(getattr(args, "ontology_max", 0.60)),
         readability_min=float(getattr(args, "selector_readability_min", 0.55)),
         frontier_quality_min=float(getattr(args, "selector_frontier_quality_min", 0.20)),
         repair_max=float(getattr(args, "selector_repair_max", 0.45)),
         unfinished_max=float(getattr(args, "selector_unfinished_max", 0.50)),
+        hard_unfinished_max=float(getattr(args, "hard_unfinished_max", -1.0)),
     )
+
+
+def trajectory_stop_kwargs(args: argparse.Namespace) -> Dict[str, Any]:
+    return {
+        "trajectory_stop": bool(getattr(args, "trajectory_stop", False)),
+        "trajectory_min_steps": int(getattr(args, "trajectory_min_steps", 3)),
+        "trajectory_frontier_drop": float(getattr(args, "trajectory_frontier_drop", 0.08)),
+        "trajectory_unfinished_max": float(getattr(args, "trajectory_unfinished_stop_max", 0.05)),
+        "trajectory_repetition_max": float(getattr(args, "trajectory_repetition_stop_max", 0.55)),
+        "trajectory_sprawl_max": float(getattr(args, "trajectory_sprawl_stop_max", 0.65)),
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -365,6 +443,7 @@ def build_parser() -> argparse.ArgumentParser:
     w = sub.add_parser("write", help="multi-step depaysement / automatic writing")
     add_common_generation_args(w)
     add_selector_args(w)
+    add_trajectory_stop_args(w)
     w.add_argument("--seed", default="A forgotten umbrella at the station")
     w.add_argument("--mode", choices=["depaysement", "automatic"], default="depaysement")
     w.add_argument("--steps", type=int, default=5)
@@ -478,6 +557,29 @@ def build_parser() -> argparse.ArgumentParser:
     ec = sub.add_parser("eval-correlate", help="compute Pearson/Spearman correlation between model_total and human_score in a JSONL eval file")
     ec.add_argument("ratings_jsonl")
 
+    hr = sub.add_parser("export-rating-sheet", help="export picked and top-frontier candidates for human taste scoring")
+    hr.add_argument("runs", nargs="+", help="saved run JSON/JSONL artifacts with candidates")
+    hr.add_argument("--out", required=True, help="write .csv or .jsonl rating sheet")
+    hr.add_argument("--markdown-out", default=None, help="optional Markdown reading view")
+    hr.add_argument("--top-k", type=int, default=3, help="top frontier candidates per run to include")
+    hr.add_argument("--no-picked", action="store_true", help="do not include picked candidates")
+    hr.add_argument("--no-top-frontier", action="store_true", help="do not include top frontier candidates")
+    hr.add_argument("--ontology-threshold", type=float, default=0.23)
+    hr.add_argument("--readability-threshold", type=float, default=0.58)
+    hr.add_argument("--repair-threshold", type=float, default=0.35)
+    add_scorer_args(hr)
+
+    ra = sub.add_parser("rating-analyze", help="analyze human_score correlations in a rating sheet")
+    ra.add_argument("rating_sheet", help="CSV or JSONL rating sheet with human_score values")
+    ra.add_argument("--markdown-ratings", default=None, help="merge scores/notes from a Markdown reading view")
+    ra.add_argument("--update-sheet", action="store_true", help="write merged Markdown ratings back to rating_sheet")
+    ra.add_argument("--out", default=None, help="write Markdown analysis report")
+    ra.add_argument("--json-out", default=None, help="write JSON analysis report")
+    ra.add_argument(
+        "--metrics",
+        default=",".join(DEFAULT_RATING_METRICS),
+        help="comma-separated numeric metric columns to correlate with human_score",
+    )
 
     ob = sub.add_parser("observe", help="run baseline vs depaysement rerank vs steering+rerank and measure coherence-preserving displacement")
     add_common_generation_args(ob)
@@ -507,6 +609,8 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--csv", default=None, help="write candidate-level CSV")
     pa.add_argument("--plot", default=None, help="write frontier scatter plot PNG; requires matplotlib")
     pa.add_argument("--texts-out", default=None, help="write markdown reading report with picked final texts and top frontier candidates")
+    pa.add_argument("--exemplars-out", default=None, help="write markdown/json store of examples from the frontier-maximized band")
+    pa.add_argument("--exemplars-json-out", default=None, help="optional JSON copy of the frontier exemplar store")
     pa.add_argument("--json", action="store_true", help="print full JSON report")
     pa.add_argument("--top-k", type=int, default=8)
     pa.add_argument("--ontology-threshold", type=float, default=0.23)
@@ -524,10 +628,81 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--embed-model", default=None)
     pa.add_argument("--device", default=None)
 
+    ng = sub.add_parser("noun-graph", help="build a heuristic noun co-occurrence graph from frontier-band candidates")
+    ng.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with saved candidates")
+    ng.add_argument("--out", default=None, help="write markdown noun graph report")
+    ng.add_argument("--json-out", default=None, help="write structured noun graph JSON")
+    ng.add_argument("--nodes-csv", default=None, help="write node-level centrality CSV")
+    ng.add_argument("--top-k", type=int, default=24)
+    ng.add_argument("--max-nodes", type=int, default=120)
+    ng.add_argument("--frontier-band-ratio", type=float, default=0.60)
+    ng.add_argument("--frontier-band-width", type=float, default=0.08)
+    ng.add_argument("--no-dedupe-texts", action="store_true", help="keep duplicate candidate texts when building the graph")
+    ng.add_argument("--ontology-threshold", type=float, default=0.23)
+    ng.add_argument("--readability-threshold", type=float, default=0.58)
+    ng.add_argument("--repair-threshold", type=float, default=0.35)
+    ng.add_argument("--bank", default=None)
+    ng.add_argument("--lexicon", default=None)
+    ng.add_argument("--disable-lexicon", action="store_true")
+    ng.add_argument("--enable-lexicon", action="store_true")
+    ng.add_argument("--lexicon-prior-scale", type=float, default=None)
+    ng.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    ng.add_argument("--no-bank-score", action="store_true")
+    ng.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    ng.add_argument("--bank-weight", type=float, default=None)
+    ng.add_argument("--embed-model", default=None)
+    ng.add_argument("--device", default=None)
+
+    ta = sub.add_parser("trajectory-audit", help="audit picked trajectories without generating new text")
+    ta.add_argument("runs", nargs="+", help="write/observe/reselect JSON or JSONL artifacts with picked steps")
+    ta.add_argument("--out", default=None, help="write markdown/text report")
+    ta.add_argument("--json-out", default=None, help="write full JSON report")
+    ta.add_argument("--csv", default=None, help="write run-level trajectory CSV")
+    ta.add_argument("--json", action="store_true", help="print full JSON report")
+    ta.add_argument("--top-k", type=int, default=8)
+    ta.add_argument("--bank", default=None)
+    ta.add_argument("--lexicon", default=None)
+    ta.add_argument("--disable-lexicon", action="store_true")
+    ta.add_argument("--enable-lexicon", action="store_true")
+    ta.add_argument("--lexicon-prior-scale", type=float, default=None)
+    ta.add_argument("--scorer-profile", choices=["structural", "aesthetic", "legacy"], default="structural")
+    ta.add_argument("--no-bank-score", action="store_true")
+    ta.add_argument("--bank-score-mode", choices=["auto", "off", "hash", "embed"], default="auto")
+    ta.add_argument("--bank-weight", type=float, default=None)
+    ta.add_argument("--embed-model", default=None)
+    ta.add_argument("--device", default=None)
+
+    rs = sub.add_parser("reselect", help="post-hoc reselect saved candidate pools without new generation")
+    add_selector_args(rs)
+    add_scorer_args(rs)
+    rs.add_argument("runs", nargs="+", help="saved write/observe/sweep JSON or JSONL artifacts with candidates")
+    rs.add_argument("--out-dir", required=True)
+    rs.add_argument(
+        "--select-objectives",
+        default=None,
+        help="comma-separated selector objectives; overrides --select-objective, e.g. depaysement,frontier,hybrid,pareto",
+    )
+    rs.add_argument("--choose", choices=["best", "softmax", "random_top3"], default="best")
+    rs.add_argument(
+        "--context-policy",
+        choices=["recorded", "reselected"],
+        default="recorded",
+        help="score each saved pool against its recorded context, or against the post-hoc reselected running context",
+    )
+    rs.add_argument("--include-original", action="store_true", help="include source runs in the comparison report")
+    rs.add_argument("--random-seed", type=int, default=7)
+    rs.add_argument("--top-k", type=int, default=12)
+    rs.add_argument("--ontology-threshold", type=float, default=0.23)
+    rs.add_argument("--readability-threshold", type=float, default=0.58)
+    rs.add_argument("--repair-threshold", type=float, default=0.35)
+
     fs = sub.add_parser("frontier-sweep", help="run alpha/candidate/token sweeps and audit the readable ontology collapse frontier")
     add_common_generation_args(fs)
     add_selector_args(fs)
+    add_trajectory_stop_args(fs)
     fs.add_argument("--seed", default="A forgotten umbrella at the station")
+    fs.add_argument("--seed-bank", default=None, help="optional JSON/TXT seed bank; JSON may be a list or contain a 'seeds' list")
+    fs.add_argument("--seed-limit", type=int, default=0, help="limit loaded seed-bank entries; 0 means use all")
     fs.add_argument("--steps", type=int, default=4)
     fs.add_argument("--alphas", default="0,0.3,0.6,0.9", help="comma-separated steering alpha values")
     fs.add_argument("--candidate-grid", default="8,12", help="comma-separated candidate counts")
@@ -539,6 +714,8 @@ def build_parser() -> argparse.ArgumentParser:
     fs.add_argument("--prompt-style", choices=["scene", "legacy"], default="scene")
     fs.add_argument("--out-dir", required=True)
     fs.add_argument("--save-candidates", type=int, default=0, help="0 means save the full candidate pool for each step")
+    fs.add_argument("--resume", action="store_true", help="skip existing run JSONs in --out-dir and include them in the final audit")
+    fs.add_argument("--run-limit", type=int, default=0, help="maximum new run JSONs to generate in this invocation; 0 means no limit")
     fs.add_argument("--include-baseline-control", action="store_true", help="also save ordinary baseline runs for each max-token setting")
     fs.add_argument("--include-prompt", action="store_true")
     fs.add_argument("--trace", action="store_true")
@@ -613,8 +790,10 @@ def cmd_write(args: argparse.Namespace) -> None:
         choose=args.choose,
         trace=args.trace,
         prompt_style=args.prompt_style,
+        ban_terms=parse_ban_terms(args.ban_terms),
         keep_candidates=(args.save_candidates if args.out else 0),
         include_prompt=bool(args.include_prompt),
+        **trajectory_stop_kwargs(args),
     )
     print("\n=== result ===")
     print(run.final_text)
@@ -628,7 +807,15 @@ def cmd_rank(args: argparse.Namespace) -> None:
     generator = make_generator(args, rng)
     scorer = make_scorer(args)
     engine = DepaysementEngine(generator=generator, scorer=scorer, rng=rng)
-    ranked = engine.rank(args.seed, n=args.candidates, temperature=args.temperature, top_p=args.top_p, max_new_tokens=args.max_new_tokens, prompt_style=args.prompt_style)
+    ranked = engine.rank(
+        args.seed,
+        n=args.candidates,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        max_new_tokens=args.max_new_tokens,
+        prompt_style=args.prompt_style,
+        ban_terms=parse_ban_terms(args.ban_terms),
+    )
     for i, c in enumerate(ranked, 1):
         print(f"\n#{i} {c.score.compact()}\n{c.text}")
 
@@ -1030,9 +1217,69 @@ def parse_int_grid(raw: str) -> List[int]:
     return vals or [1]
 
 
+def load_seed_bank(path: Optional[str], fallback_seed: str, *, limit: int = 0) -> List[str]:
+    if not path:
+        return [str(fallback_seed or "").strip()]
+    p = Path(path)
+    raw = p.read_text(encoding="utf-8")
+    seeds: List[str]
+    if p.suffix.lower() == ".json":
+        data = json.loads(raw)
+        if isinstance(data, list):
+            seeds = [str(x).strip() for x in data]
+        elif isinstance(data, dict):
+            values = data.get("seeds")
+            if values is None:
+                values = data.get("mundane_seeds")
+            if values is None:
+                values = data.get("items")
+            if values is None:
+                values = []
+                for item in data.values():
+                    if isinstance(item, list):
+                        values.extend(item)
+            seeds = [str(x).strip() for x in values]
+        else:
+            raise ValueError(f"seed bank must be a JSON list or object: {path}")
+    else:
+        seeds = [line.strip() for line in raw.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+    out: List[str] = []
+    seen = set()
+    for seed in seeds:
+        if not seed or seed in seen:
+            continue
+        seen.add(seed)
+        out.append(seed)
+        if limit and len(out) >= int(limit):
+            break
+    if not out:
+        raise ValueError(f"seed bank contained no usable seeds: {path}")
+    return out
+
+
+def parse_objective_grid(raw: Optional[str], fallback: str) -> List[str]:
+    allowed = set(SELECT_OBJECTIVES)
+    vals: List[str] = []
+    for part in str(raw or fallback or "").split(","):
+        value = part.strip()
+        if not value:
+            continue
+        if value not in allowed:
+            raise ValueError(f"unknown select objective: {value!r}")
+        if value not in vals:
+            vals.append(value)
+    return vals or [fallback]
+
+
 def safe_float_label(x: float) -> str:
     txt = f"{float(x):.3f}".rstrip("0").rstrip(".")
     return txt.replace("-", "neg").replace(".", "p") or "0"
+
+
+def safe_seed_label(seed: str, idx: int) -> str:
+    words = re.findall(r"[A-Za-z0-9]+", str(seed).lower())
+    label = "_".join(words[:7]) or "seed"
+    return f"seed{idx:02d}_{label[:72].strip('_')}"
 
 
 def cmd_pool_audit(args: argparse.Namespace) -> None:
@@ -1057,6 +1304,16 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
     if args.texts_out:
         write_frontier_reading_report(report, args.texts_out)
         print(f"Wrote frontier reading report: {args.texts_out}", file=sys.stderr)
+    if args.exemplars_out:
+        write_frontier_exemplar_store(
+            report,
+            args.exemplars_out,
+            json_path=args.exemplars_json_out,
+            top_k=max(args.top_k, 1),
+        )
+        print(f"Wrote frontier exemplar store: {args.exemplars_out}", file=sys.stderr)
+        if args.exemplars_json_out:
+            print(f"Wrote frontier exemplar JSON: {args.exemplars_json_out}", file=sys.stderr)
     if args.out:
         out = Path(args.out)
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -1068,11 +1325,197 @@ def cmd_pool_audit(args: argparse.Namespace) -> None:
         print(format_frontier_report(report, top_k=args.top_k))
 
 
+def cmd_trajectory_audit(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    report = audit_trajectory_runs(args.runs, scorer=scorer, top_k=args.top_k)
+    if args.json_out:
+        write_trajectory_json(report, args.json_out, include_steps=True)
+        print(f"Wrote trajectory JSON: {args.json_out}", file=sys.stderr)
+    if args.csv:
+        write_trajectory_csv(report, args.csv)
+        print(f"Wrote trajectory CSV: {args.csv}", file=sys.stderr)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(format_trajectory_report(report, top_k=args.top_k), encoding="utf-8")
+        print(f"Wrote trajectory report: {args.out}", file=sys.stderr)
+    if args.json and not args.out:
+        print(json.dumps(report.to_dict(include_steps=True), ensure_ascii=False, indent=2))
+    elif not args.out:
+        print(format_trajectory_report(report, top_k=args.top_k))
+
+
+def cmd_noun_graph(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    frontier_report = audit_frontier_pool(
+        args.runs,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    report = build_noun_graph_report(
+        frontier_report,
+        top_k=max(args.top_k, 1),
+        max_nodes=max(args.max_nodes, 1),
+        frontier_band_ratio=args.frontier_band_ratio,
+        frontier_band_width=args.frontier_band_width,
+        dedupe_texts=not args.no_dedupe_texts,
+    )
+    if args.json_out:
+        write_noun_graph_json(report, args.json_out)
+        print(f"Wrote noun graph JSON: {args.json_out}", file=sys.stderr)
+    if args.nodes_csv:
+        write_noun_graph_nodes_csv(report, args.nodes_csv)
+        print(f"Wrote noun graph nodes CSV: {args.nodes_csv}", file=sys.stderr)
+    rendered = format_noun_graph_report(report, top_k=args.top_k)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(rendered, encoding="utf-8")
+        print(f"Wrote noun graph report: {args.out}", file=sys.stderr)
+    else:
+        print(rendered)
+
+
+def cmd_export_rating_sheet(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    report = audit_frontier_pool(
+        args.runs,
+        scorer=scorer,
+        top_k=max(args.top_k, 1),
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+    rows = rating_sheet_rows(
+        report,
+        top_k=args.top_k,
+        include_picked=not args.no_picked,
+        include_top_frontier=not args.no_top_frontier,
+    )
+    write_rating_sheet(rows, args.out)
+    if args.markdown_out:
+        write_rating_markdown(rows, args.markdown_out)
+    print(f"Wrote rating sheet: {args.out} ({len(rows)} rows)")
+    if args.markdown_out:
+        print(f"Wrote rating reading view: {args.markdown_out}")
+
+
+def cmd_rating_analyze(args: argparse.Namespace) -> None:
+    rows, fieldnames = load_rating_rows(args.rating_sheet)
+    merged_fields = 0
+    if args.markdown_ratings:
+        merged_fields = merge_markdown_ratings(rows, args.markdown_ratings)
+        if args.update_sheet:
+            write_rating_rows(args.rating_sheet, rows, fieldnames)
+            print(f"Updated rating sheet: {args.rating_sheet} ({merged_fields} merged fields)")
+    metrics = [m.strip() for m in str(args.metrics or "").split(",") if m.strip()]
+    analysis = analyze_rating_rows(rows, metrics=metrics, source=args.rating_sheet)
+    analysis["markdown_ratings"] = args.markdown_ratings
+    analysis["merged_fields"] = merged_fields
+    markdown = format_rating_analysis(analysis)
+    if args.out:
+        out = Path(args.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(markdown, encoding="utf-8")
+        print(f"Wrote rating analysis: {out}")
+    if args.json_out:
+        out = Path(args.json_out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(analysis, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote rating analysis JSON: {out}")
+    if not args.out and not args.json_out:
+        print(markdown)
+
+
+def cmd_reselect(args: argparse.Namespace) -> None:
+    scorer = make_scorer(args)
+    objectives = parse_objective_grid(args.select_objectives, args.select_objective)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    all_results = []
+    selector_configs: Dict[str, Any] = {}
+    for objective in objectives:
+        obj_args = copy.copy(args)
+        obj_args.select_objective = objective
+        selector = make_selector_config(obj_args)
+        selector_configs[objective] = selector.to_dict()
+        all_results.extend(
+            posthoc_reselect_files(
+                args.runs,
+                scorer=scorer,
+                selector=selector,
+                choose=args.choose,
+                random_seed=args.random_seed,
+                context_policy=args.context_policy,
+            )
+        )
+
+    batch = write_posthoc_reselect_batch(all_results, str(out_dir))
+    audit_paths = list(args.runs) if args.include_original else []
+    audit_paths.extend(batch.paths)
+    report = audit_frontier_pool(
+        audit_paths,
+        scorer=scorer,
+        top_k=args.top_k,
+        ontology_threshold=args.ontology_threshold,
+        readability_threshold=args.readability_threshold,
+        repair_threshold=args.repair_threshold,
+    )
+
+    md_path = out_dir / "posthoc_reselect_report.md"
+    json_path = out_dir / "posthoc_reselect_report.json"
+    csv_path = out_dir / "posthoc_reselect_candidates.csv"
+    plot_path = out_dir / "posthoc_reselect.png"
+    texts_path = out_dir / "posthoc_reselect_texts.md"
+    md_path.write_text(format_frontier_report(report, top_k=args.top_k), encoding="utf-8")
+    write_frontier_json(report, str(json_path), include_rows=True)
+    write_frontier_csv(report, str(csv_path))
+    write_frontier_reading_report(report, str(texts_path))
+    try:
+        write_frontier_plot(report, str(plot_path))
+    except RuntimeError as e:
+        print(f"[reselect] plot skipped: {e}", file=sys.stderr)
+
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "source_runs": list(args.runs),
+        "output_runs": batch.paths,
+        "objectives": objectives,
+        "choose": args.choose,
+        "context_policy": args.context_policy,
+        "include_original": bool(args.include_original),
+        "selector": selector_configs,
+        "report_md": str(md_path),
+        "report_json": str(json_path),
+        "candidate_csv": str(csv_path),
+        "plot": str(plot_path) if plot_path.exists() else None,
+        "texts": str(texts_path),
+        "notes": [
+            "Post-hoc reselection reuses saved candidate pools and performs no new generation.",
+            "With context-policy=recorded, each candidate is rescored against the context that produced its pool.",
+            "With context-policy=reselected, downstream candidate pools are still the originally saved pools.",
+            *batch.notes,
+        ],
+    }
+    (out_dir / "posthoc_reselect_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print(format_frontier_report(report, top_k=min(args.top_k, 8)))
+    print(f"\n[reselect] wrote {out_dir}", file=sys.stderr)
+
+
 def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     emit_model_policy(args)
     alphas = parse_float_grid(args.alphas)
     candidate_grid = parse_int_grid(args.candidate_grid)
     token_grid = parse_int_grid(args.max_token_grid)
+    seeds = load_seed_bank(args.seed_bank, args.seed, limit=int(getattr(args, "seed_limit", 0) or 0))
+    ban_terms = parse_ban_terms(args.ban_terms)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1091,71 +1534,124 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     generator = make_generator(gen_args, rng)
     scorer = make_scorer(args)
     produced_paths: List[str] = []
+    new_run_limit = max(0, int(getattr(args, "run_limit", 0) or 0))
+    new_runs = 0
+    stop_sweep = False
+    total_runs = len(seeds) * len(token_grid) * len(candidate_grid) * len(alphas)
+    if args.include_baseline_control:
+        total_runs += len(seeds) * len(token_grid)
 
-    for max_tokens in token_grid:
-        if args.include_baseline_control:
-            with steering_enabled(generator, False):
-                baseline = run_baseline(
-                    generator=generator,
-                    scorer=scorer,
-                    seed=args.seed,
-                    steps=args.steps,
-                    temperature=max(0.0, min(args.temperature, 0.90)),
-                    top_p=args.top_p,
-                    max_new_tokens=max_tokens,
-                    trace=args.trace,
-                    include_prompt=args.include_prompt,
-                )
-            baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
-            bpath = out_dir / f"baseline_tokens_{max_tokens}.json"
-            write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
-            produced_paths.append(str(bpath))
+    for seed_idx, seed in enumerate(seeds, 1):
+        if stop_sweep:
+            break
+        seed_label = safe_seed_label(seed, seed_idx)
+        multi_seed_suffix = f"_{seed_label}" if len(seeds) > 1 else ""
+        for max_tokens in token_grid:
+            if stop_sweep:
+                break
+            if args.include_baseline_control:
+                bpath = out_dir / f"baseline_tokens_{max_tokens}{multi_seed_suffix}.json"
+                if args.resume and bpath.exists():
+                    produced_paths.append(str(bpath))
+                    print(f"[sweep] resume skip existing {bpath}", file=sys.stderr)
+                else:
+                    if new_run_limit and new_runs >= new_run_limit:
+                        stop_sweep = True
+                        break
+                    print(
+                        f"[sweep] running {len(produced_paths) + 1}/{total_runs}: "
+                        f"baseline_tokens_{max_tokens}{multi_seed_suffix}",
+                        file=sys.stderr,
+                    )
+                    with steering_enabled(generator, False):
+                        baseline = run_baseline(
+                            generator=generator,
+                            scorer=scorer,
+                            seed=seed,
+                            steps=args.steps,
+                            temperature=max(0.0, min(args.temperature, 0.90)),
+                            top_p=args.top_p,
+                            max_new_tokens=max_tokens,
+                            trace=args.trace,
+                            include_prompt=args.include_prompt,
+                        )
+                    baseline.config["condition"] = f"baseline_tokens_{max_tokens}"
+                    baseline.config["seed_index"] = int(seed_idx)
+                    baseline.config["seed_label"] = seed_label
+                    write_run_artifact(baseline, str(bpath), "json", include_candidates=True, include_prompt=args.include_prompt)
+                    produced_paths.append(str(bpath))
+                    new_runs += 1
+                    print(f"[sweep] wrote {bpath}", file=sys.stderr)
 
-        for candidates in candidate_grid:
-            for alpha in alphas:
-                steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
-                steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
-                steering = getattr(generator, "steering", None)
-                if steering is not None and hasattr(steering, "alpha"):
-                    steering.alpha = float(alpha) if steering_requested else 0.0
-                condition = (
-                    f"steer_alpha_{safe_float_label(alpha)}"
-                    if steering_requested
-                    else f"selector_alpha_{safe_float_label(alpha)}"
-                )
-                save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
-                with steering_enabled(generator, steering_requested):
-                    engine = DepaysementEngine(
-                        generator=generator,
-                        scorer=scorer,
-                        rng=rng,
-                        motif_jitter=args.motif_jitter,
-                        selector=make_selector_config(args),
+            for candidates in candidate_grid:
+                if stop_sweep:
+                    break
+                for alpha in alphas:
+                    steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
+                    steering_requested = abs(float(alpha)) > 1e-12 and steering_available and not bool(getattr(args, "disable_steering", False))
+                    steering = getattr(generator, "steering", None)
+                    if steering is not None and hasattr(steering, "alpha"):
+                        steering.alpha = float(alpha) if steering_requested else 0.0
+                    condition = (
+                        f"steer_alpha_{safe_float_label(alpha)}"
+                        if steering_requested
+                        else f"selector_alpha_{safe_float_label(alpha)}"
                     )
-                    run = engine.write_run(
-                        seed=args.seed,
-                        steps=args.steps,
-                        mode="depaysement",
-                        candidates_per_step=candidates,
-                        temperature=args.temperature,
-                        top_p=args.top_p,
-                        max_new_tokens=max_tokens,
-                        choose=args.choose,
-                        trace=args.trace,
-                        prompt_style=args.prompt_style,
-                        keep_candidates=save_candidates,
-                        include_prompt=args.include_prompt,
+                    save_candidates = candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), candidates)
+                    path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}.json"
+                    if args.resume and path.exists():
+                        produced_paths.append(str(path))
+                        print(f"[sweep] resume skip existing {path}", file=sys.stderr)
+                        continue
+                    if new_run_limit and new_runs >= new_run_limit:
+                        stop_sweep = True
+                        break
+                    print(
+                        f"[sweep] running {len(produced_paths) + 1}/{total_runs}: "
+                        f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}",
+                        file=sys.stderr,
                     )
-                run.config["condition"] = condition
-                run.config["sweep_alpha"] = float(alpha)
-                run.config["candidate_count"] = int(candidates)
-                run.config["max_new_tokens"] = int(max_tokens)
-                if abs(float(alpha)) > 1e-12 and not steering_requested:
-                    run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
-                path = out_dir / f"{condition}_c{candidates}_tok{max_tokens}.json"
-                write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
-                produced_paths.append(str(path))
-                print(f"[sweep] wrote {path}", file=sys.stderr)
+                    with steering_enabled(generator, steering_requested):
+                        engine = DepaysementEngine(
+                            generator=generator,
+                            scorer=scorer,
+                            rng=rng,
+                            motif_jitter=args.motif_jitter,
+                            selector=make_selector_config(args),
+                        )
+                        run = engine.write_run(
+                            seed=seed,
+                            steps=args.steps,
+                            mode="depaysement",
+                            candidates_per_step=candidates,
+                            temperature=args.temperature,
+                            top_p=args.top_p,
+                            max_new_tokens=max_tokens,
+                            choose=args.choose,
+                            trace=args.trace,
+                            prompt_style=args.prompt_style,
+                            ban_terms=ban_terms,
+                            keep_candidates=save_candidates,
+                            include_prompt=args.include_prompt,
+                            **trajectory_stop_kwargs(args),
+                        )
+                    run.config["condition"] = condition
+                    run.config["sweep_alpha"] = float(alpha)
+                    run.config["candidate_count"] = int(candidates)
+                    run.config["max_new_tokens"] = int(max_tokens)
+                    run.config["seed_index"] = int(seed_idx)
+                    run.config["seed_label"] = seed_label
+                    if abs(float(alpha)) > 1e-12 and not steering_requested:
+                        run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
+                    write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
+                    produced_paths.append(str(path))
+                    new_runs += 1
+                    print(f"[sweep] wrote {path}", file=sys.stderr)
+
+    if not produced_paths:
+        raise SystemExit("[sweep] no run artifacts were produced or found; relax --run-limit or disable --resume")
+    if stop_sweep:
+        print(f"[sweep] run limit reached after {new_runs} new run(s)", file=sys.stderr)
 
     report = audit_frontier_pool(produced_paths, scorer=scorer, top_k=12)
     md_path = out_dir / "frontier_sweep_report.md"
@@ -1163,17 +1659,22 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     csv_path = out_dir / "frontier_sweep_candidates.csv"
     plot_path = out_dir / "frontier_sweep.png"
     texts_path = out_dir / "frontier_sweep_texts.md"
+    exemplars_path = out_dir / "frontier_exemplars.md"
+    exemplars_json_path = out_dir / "frontier_exemplars.json"
     md_path.write_text(format_frontier_report(report, top_k=12), encoding="utf-8")
     write_frontier_json(report, str(json_path), include_rows=True)
     write_frontier_csv(report, str(csv_path))
     write_frontier_reading_report(report, str(texts_path))
+    write_frontier_exemplar_store(report, str(exemplars_path), json_path=str(exemplars_json_path), top_k=24)
     try:
         write_frontier_plot(report, str(plot_path))
     except RuntimeError as e:
         print(f"[sweep] plot skipped: {e}", file=sys.stderr)
     manifest = {
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "seed": args.seed,
+        "seed": args.seed if not args.seed_bank else None,
+        "seed_bank": args.seed_bank,
+        "seeds": seeds,
         "backend": args.backend,
         "model": resolve_model(args),
         "alphas": alphas,
@@ -1181,12 +1682,18 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
         "max_token_grid": token_grid,
         "select_objective": args.select_objective,
         "selector": make_selector_config(args).to_dict(),
+        "ban_terms": list(ban_terms),
+        "resume": bool(args.resume),
+        "run_limit": int(new_run_limit),
+        "new_runs": int(new_runs),
         "runs": produced_paths,
         "report_md": str(md_path),
         "report_json": str(json_path),
         "candidate_csv": str(csv_path),
         "plot": str(plot_path) if plot_path.exists() else None,
         "texts": str(texts_path),
+        "frontier_exemplars": str(exemplars_path),
+        "frontier_exemplars_json": str(exemplars_json_path),
         "notes": [getattr(gen_args, "_steering_preflight_note", None)],
     }
     (out_dir / "frontier_sweep_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -1234,10 +1741,20 @@ def main() -> None:
         cmd_export_eval_set(args)
     elif args.command == "eval-correlate":
         cmd_eval_correlate(args)
+    elif args.command == "export-rating-sheet":
+        cmd_export_rating_sheet(args)
+    elif args.command == "rating-analyze":
+        cmd_rating_analyze(args)
     elif args.command == "observe":
         cmd_observe(args)
     elif args.command == "pool-audit":
         cmd_pool_audit(args)
+    elif args.command == "noun-graph":
+        cmd_noun_graph(args)
+    elif args.command == "trajectory-audit":
+        cmd_trajectory_audit(args)
+    elif args.command == "reselect":
+        cmd_reselect(args)
     elif args.command == "frontier-sweep":
         cmd_frontier_sweep(args)
     elif args.command == "show-bank":

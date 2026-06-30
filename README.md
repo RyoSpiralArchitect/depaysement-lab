@@ -78,6 +78,97 @@ Scope of the current claim:
 - These metrics are not treated as final truth. They are instruments for finding
   samples worth human reading.
 
+The follow-up post-hoc selector lab is saved in:
+
+- [post-hoc selector directory](experiments/posthoc_reselect_focus_best_lab/)
+- [post-hoc frontier report](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_report.md)
+- [post-hoc reading report](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_texts.md)
+- [post-hoc candidate CSV](experiments/posthoc_reselect_focus_best_lab/posthoc_reselect_candidates.csv)
+- [post-hoc research note](docs/research_notes/2026-05-16-posthoc-selector-lab.md)
+- [banded-frontier selector directory](experiments/posthoc_reselect_banded_frontier_lab/)
+- [human rating sheet](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.csv)
+- [human rating reading view](experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.md)
+- [banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-rating-sheet.md)
+- [actual banded-frontier generation sweep](experiments/frontier_sweep_banded_frontier_focus/)
+- [actual banded-frontier research note](docs/research_notes/2026-05-16-banded-frontier-generation.md)
+- [hard-gated mundane reselect directory](experiments/posthoc_reselect_mundane_hard_gate/)
+- [hard-gated mundane report](experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_report.md)
+- [hard-gated generated text reading report](experiments/posthoc_reselect_mundane_hard_gate/posthoc_reselect_texts.md)
+- [hard-gated focused rating sheet](experiments/posthoc_reselect_mundane_hard_gate/human_rating_sheet_hard_gate_focus.md)
+- [hard-gated research note](docs/research_notes/2026-06-13-hard-gated-mundane-reselect.md)
+- [trajectory audit report](experiments/trajectory_audit_mundane/trajectory_report.md)
+- [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
+- [frontier noun graph report](experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md)
+- [frontier noun graph research note](docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md)
+- [matched alpha-0 hub bias smoke report](experiments/frontier_sweep_mundane_matched_alpha0_smoke/hub_bias_matched_smoke_report.md)
+- [hub ablation probe report](experiments/hub_ablation_probe_mundane/hub_ablation_report.md)
+- [hub ablation generated text reading report](experiments/frontier_sweep_mundane_hub_ablation_smoke/frontier_sweep_texts.md)
+- [hub ablation research note](docs/research_notes/2026-06-14-hub-ablation-probe.md)
+
+The post-hoc selector lab performs no generation. It reuses the saved candidate
+pools from the focused sweep and asks which selector would have picked the
+readable frontier.
+
+| source alpha | original hybrid picked frontier | depaysement reselect | frontier reselect | pareto reselect | frontier changed steps |
+|---|---:|---:|---:|---:|---:|
+| `0.45` | 0.122 | 0.015 | 0.160 | 0.155 | 2 / 5 |
+| `0.60` | 0.123 | 0.005 | 0.194 | 0.111 | 3 / 5 |
+| `0.75` | 0.102 | 0.061 | 0.110 | 0.102 | 2 / 5 |
+
+The main read: the old depaysement selector was not seeing the frontier. A pure
+frontier selector finds stronger candidates, especially at `alpha=0.60`, while
+the hybrid selector remains the more conservative readable default.
+
+The newer `banded-frontier` selector sits between those two poles: it still
+recovers frontier candidates, but penalizes candidates outside the ontology,
+readability, repair, and unfinished bands.
+
+| source alpha | hybrid | pure frontier | banded-frontier | banded ontology | banded readability | banded hit rate |
+|---|---:|---:|---:|---:|---:|---:|
+| `0.45` | 0.122 | 0.160 | 0.157 | 0.592 | 0.609 | 0.60 |
+| `0.60` | 0.123 | 0.194 | 0.156 | 0.493 | 0.650 | 0.80 |
+| `0.75` | 0.102 | 0.110 | 0.102 | 0.313 | 0.680 | 1.00 |
+
+The practical interpretation is that pure `frontier` is a good oracle for the
+upper envelope, while `banded-frontier` is the better candidate for the next real
+generation run.
+
+That next real generation run has now been executed for `alpha=0.45` and
+`alpha=0.60`:
+
+| selector | alpha | pool frontier | picked frontier | lift | picked ontology | picked readability | picked unfinished | picked hit rate |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `hybrid` | `0.45` | 0.029 | 0.122 | +0.093 | 0.485 | 0.600 | 0.160 | 0.40 |
+| `hybrid` | `0.60` | 0.046 | 0.123 | +0.078 | 0.344 | 0.695 | 0.080 | 0.60 |
+| `banded-frontier` | `0.45` | 0.039 | 0.137 | +0.098 | 0.537 | 0.587 | 0.160 | 0.60 |
+| `banded-frontier` | `0.60` | 0.038 | 0.170 | +0.132 | 0.500 | 0.745 | 0.080 | 1.00 |
+
+The best current setting is therefore:
+
+```text
+alpha = 0.60
+candidates = 12
+max_new_tokens = 140
+selector = banded-frontier
+choose = best
+```
+
+The remaining problem is not whether the selector can find frontier material.
+It can. The remaining problem is tail control: late-step continuations can still
+end in malformed or unfinished fragments.
+
+The first human taste pass for that actual generation run is now saved in:
+
+- [human taste analysis](experiments/frontier_sweep_banded_frontier_focus/human_rating_analysis.md)
+- [human-rated sheet](experiments/frontier_sweep_banded_frontier_focus/human_rating_sheet.csv)
+- [human taste research note](docs/research_notes/2026-05-17-human-taste-pass.md)
+
+The strongest early signal is that human taste is not just the frontier metric.
+The highest-rated rows include unpicked top-frontier candidates, and the notes
+prefer oddness, daydream drift, and legible distortion over highly polished or
+predictable writing. This points toward a two-stage selector: use
+`banded-frontier` to stay readable, then rerank inside that band for human taste.
+
 ## What Is Being Measured?
 
 The central audit decomposes candidate pools rather than only final outputs.
@@ -103,10 +194,23 @@ frontier_quality
 
 readable_ontology_frontier
   ontology collapse density multiplied by frontier quality
+
+cliche_attractor_score
+  audit-only density of generic magic-realist vocabulary such as antique,
+  porcelain, velvet, ethereal, music box, and moonlit terms
+
+stock_prop_attractor_score
+  audit-only subscore for stock props such as antique objects, music boxes,
+  porcelain dolls, miniatures, pocket watches, and clockwork objects
+
+soft_style_cliche_score
+  audit-only subscore for soft atmospheric diction such as ethereal, fog,
+  mist, spectral, ghostly, moonlit, soft glow, and whispering terms
 ```
 
 Failure examples are also retained: high ontology collapse with poor readability,
-truncation, repetition, repair pressure, or graph fragmentation.
+truncation, repetition, repair pressure, cliche-attractor drift, or graph
+fragmentation.
 
 ## Selector Objectives
 
@@ -116,6 +220,7 @@ different objectives:
 ```bash
 --select-objective depaysement
 --select-objective frontier
+--select-objective banded-frontier
 --select-objective hybrid
 --select-objective pareto
 ```
@@ -131,10 +236,83 @@ hybrid_score =
   - repair_weight * repair_pressure
   - repetition_weight * repetition_pressure
   - sprawl_weight * sprawl_pressure
+  - cliche_weight * cliche_attractor_score
+  - soft_style_cliche_weight * soft_style_cliche_score
+  - fantasy_prop_weight * fantasy_prop_score
+  - ordinary_anchor_weight * ordinary_anchor_deficit
+  - hard_gate_penalty
 ```
+
+`cliche_weight` defaults to `0.0`, so old runs are unchanged.  Use it when you
+want to discourage generic magic-realist diction after measuring it.
+`soft_style_cliche_weight` targets the softer "ethereal fog" register separately.
+`fantasy_prop_weight` targets stock antique/miniature/porcelain props, while
+`ordinary_anchor_weight` discourages candidates that drop mundane source anchors
+such as `receipt`, `folder`, `bus`, `spreadsheet`, or `fridge`.
+`hard_unfinished_max` is disabled by default; when set to `0.0` or `0.05`, it
+hard-rejects candidates whose unfinished score exceeds that threshold.
 
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
+
+`banded-frontier` is the more explicit version of that idea:
+
+```text
+banded_frontier_score =
+  eligible_bonus
+  + frontier_weight * readable_ontology_frontier
+  + small ontology_band_score bonus
+  - ontology/readability/repair/unfinished band violations
+  - repetition/sprawl penalties
+```
+
+## Post-hoc Selector Lab
+
+Saved candidate pools can be reselected without generating any new text:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p45_c12_tok140.json \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p6_c12_tok140.json \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_0p75_c12_tok140.json \
+  --select-objectives depaysement,frontier,banded-frontier,hybrid,pareto \
+  --choose best \
+  --include-original \
+  --unfinished-weight 1.10 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --out-dir experiments/posthoc_reselect_banded_frontier_lab
+```
+
+By default, `reselect` scores each saved step against the recorded context that
+produced that candidate pool. This makes it a selector diagnostic, not a
+counterfactual trajectory simulator: if the post-hoc pick changes at step 2, the
+step 3 pool is still the originally generated step 3 pool.
+
+The command writes:
+
+```text
+posthoc_reselect_report.md       run-level selector comparison
+posthoc_reselect_report.json     full run and candidate audit
+posthoc_reselect_candidates.csv  candidate-level table
+posthoc_reselect_texts.md        human-readable generated texts
+posthoc_reselect.png             scatter plot
+*_reselect_*.json                reselected run artifacts
+```
+
+Export a human rating sheet from the original and reselected artifacts:
+
+```bash
+python3 -m depaysement_lab.cli export-rating-sheet \
+  experiments/frontier_sweep_steered_hybrid_focus_best/steer_alpha_*.json \
+  experiments/posthoc_reselect_banded_frontier_lab/steer_alpha_*.json \
+  --top-k 2 \
+  --out experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.csv \
+  --markdown-out experiments/posthoc_reselect_banded_frontier_lab/human_rating_sheet.md
+```
+
+The sheet includes picked candidates, top frontier candidates, machine metrics,
+and blank `human_score` / `human_notes` fields.
 
 ## Install
 
@@ -211,43 +389,220 @@ frontier_sweep_report.md       run-level frontier summary
 frontier_sweep_report.json     full run and candidate audit
 frontier_sweep_candidates.csv  candidate-level table
 frontier_sweep_texts.md        human-readable generated texts
+frontier_exemplars.md          legend of actual candidates from the max-frontier band
+frontier_exemplars.json        structured exemplar store for downstream notes
 frontier_sweep.png             scatter plot
 steer_alpha_*.json             saved generation runs with candidates
 ```
 
-## Replicate Across Seeds
+The exemplar store is intentionally qualitative: it preserves real generated
+text from the frontier-maximized band and tags each sample with a lightweight
+legend label such as `readable_object_metamorphosis`,
+`stock_prop_attractor`, `unfinished_frontier_edge`, or
+`anchor_evaporation`. This keeps the sweep from becoming a purely numerical
+exercise.
 
-Before treating `alpha=0.60` as more than a local optimum, repeat the focused
-sweep over a small seed suite. Suggested first pass:
+### Multi-seed Mundane Probe
 
-```text
-A forgotten umbrella at the station
-A cracked teacup on the windowsill
-A brass key under a river stone
-A streetlamp at noon in an empty square
-A library card in a flooded kitchen
-```
-
-Example one-seed command:
+To test whether steering can move ordinary language rather than just falling
+into literary attractors, sweep a mundane seed bank:
 
 ```bash
 python3 -m depaysement_lab.cli frontier-sweep \
   --backend mlx \
   --model mlx-community/Llama-3.2-3B-Instruct-4bit \
   --chat-template \
-  --vectors experiments/depaysement_mlx_vectors.npz \
-  --steer-layers 6-16 \
-  --seed "A cracked teacup on the windowsill" \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
   --steps 5 \
-  --alphas 0.45,0.6,0.75 \
-  --candidate-grid 12 \
+  --alphas 0.66,0.72,0.77,0.82,0.88 \
+  --candidate-grid 19 \
   --max-token-grid 140 \
-  --select-objective hybrid \
+  --select-objective banded-frontier \
   --choose best \
-  --unfinished-weight 1.10 \
+  --unfinished-weight 1.05 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.15 \
+  --out-dir experiments/frontier_sweep_mundane_seed_probe
+```
+
+`--seed-bank` accepts a JSON list, a JSON object with `seeds`, or a plain text
+file with one seed per line.
+
+To inspect whether high-frontier prose is merely using stock surreal motifs or
+routing through semantic transport hubs, build a no-generation noun graph over
+the saved candidate pools:
+
+```bash
+python3 -m depaysement_lab.cli noun-graph \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --out experiments/noun_graph_mundane_seed_probe/noun_graph_report.md \
+  --json-out experiments/noun_graph_mundane_seed_probe/noun_graph_report.json \
+  --nodes-csv experiments/noun_graph_mundane_seed_probe/noun_graph_nodes.csv \
+  --top-k 30 \
+  --max-nodes 140
+```
+
+For a broader frontier-band map, relax the band:
+
+```bash
+python3 -m depaysement_lab.cli noun-graph \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --out experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md \
+  --json-out experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.json \
+  --nodes-csv experiments/noun_graph_mundane_seed_probe/noun_graph_nodes_wide.csv \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --top-k 30 \
+  --max-nodes 140
+```
+
+To separate selector bias from steering drag, compare a matched alpha-0 smoke
+against the same seed bank with hub words banned at prompt time:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
+  --steps 3 \
+  --alphas 0,0.66,0.77,0.82 \
+  --candidate-grid 8 \
+  --max-token-grid 100 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
   --repetition-weight 0.45 \
   --sprawl-weight 0.30 \
-  --out-dir experiments/frontier_sweep_seed_teacup
+  --cliche-weight 0.15 \
+  --out-dir experiments/frontier_sweep_mundane_matched_alpha0_smoke
+```
+
+Then run the soft hub ablation:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18.npz \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 8 \
+  --steps 3 \
+  --alphas 0,0.66,0.77,0.82 \
+  --candidate-grid 8 \
+  --max-token-grid 100 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --cliche-weight 0.15 \
+  --ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/frontier_sweep_mundane_hub_ablation_smoke
+```
+
+The matched smoke suggests steering drag, not just metric preference: banned
+core motifs appear in roughly 79-83% of steered non-ban candidates, but fall to
+6.8%, 8.3%, and 16.7% at alpha `0.66`, `0.77`, and `0.82` under the ban prompt.
+Readable frontier does not disappear; it reroutes through hinges such as
+`harmonica`, `typewriter`, `photograph`, `garden`, `comb`, and `teapot`.
+
+Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
+JSONs for the current invocation, while `--resume` skips existing run JSONs in
+the output directory and includes them in the refreshed audit:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18_blend_orig_softanti_lam0p2.npz \
+  --strict-steering \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --alphas 0.66,0.77,0.88 \
+  --candidate-grid 12 \
+  --max-token-grid 120 \
+  --select-objective banded-frontier \
+  --choose best \
+  --hard-unfinished-max 0.05 \
+  --soft-style-cliche-weight 0.25 \
+  --fantasy-prop-weight 1.10 \
+  --ordinary-anchor-weight 0.45 \
+  --ordinary-anchor-min 0.30 \
+  --trajectory-stop \
+  --trajectory-min-steps 3 \
+  --run-limit 2 \
+  --resume \
+  --out-dir experiments/frontier_sweep_mundane_live_stop_lam0p2
+```
+
+After a mundane-seed sweep, reselect saved candidate pools without regenerating:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --unfinished-weight 1.05 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.55 \
+  --fantasy-prop-weight 0.75 \
+  --ordinary-anchor-weight 0.90 \
+  --ordinary-anchor-min 0.50 \
+  --out-dir experiments/posthoc_reselect_mundane_dual_guard
+```
+
+This tests whether better taste can be recovered from existing pools by
+penalizing generic attractors and requiring the prose to retain some ordinary
+source pressure.
+
+For a stricter no-generation pass that refuses unfinished tails before ranking,
+split the cliche pressure and add a hard unfinished gate:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --selector-unfinished-max 0.50 \
+  --hard-unfinished-max 0.05 \
+  --unfinished-weight 1.40 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.60 \
+  --cliche-weight 0.0 \
+  --soft-style-cliche-weight 0.25 \
+  --fantasy-prop-weight 1.10 \
+  --ordinary-anchor-weight 0.45 \
+  --ordinary-anchor-min 0.30 \
+  --out-dir experiments/posthoc_reselect_mundane_hard_gate
+```
+
+Then audit picked runs as trajectories rather than isolated steps:
+
+```bash
+python3 -m depaysement_lab.cli trajectory-audit \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  experiments/posthoc_reselect_mundane_balanced_guard/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_hard_gate/*__banded-frontier_best.json \
+  --out experiments/trajectory_audit_mundane/trajectory_report.md \
+  --json-out experiments/trajectory_audit_mundane/trajectory_report.json \
+  --csv experiments/trajectory_audit_mundane/trajectory_runs.csv
 ```
 
 ## Collect MLX Steering Vectors
@@ -336,6 +691,7 @@ src/depaysement_lab/
   scorer_v07.py       structural depaysement scorer
   ontology.py         ontology-collapse decomposition
   frontier.py         candidate-pool frontier auditor and plots
+  reselect.py         post-hoc selector laboratory for saved candidate pools
   mlx_intervention.py MLX steering-vector collection/injection
   observation.py      coherence-preserving displacement observer
   backends.py         MLX, HF, Ollama, OpenAI-compatible adapters
@@ -348,6 +704,15 @@ docs/research_notes/
 
 experiments/frontier_sweep_steered_hybrid_focus_best/
   published focused sweep artifacts
+
+experiments/posthoc_reselect_focus_best_lab/
+  published no-generation selector comparison artifacts
+
+experiments/posthoc_reselect_banded_frontier_lab/
+  published banded-frontier comparison and human rating sheet
+
+experiments/frontier_sweep_banded_frontier_focus/
+  published actual banded-frontier generation sweep
 ```
 
 ## Development
@@ -369,6 +734,9 @@ setup. Those messages are not part of the project API.
 - `unfinished` is still a coarse detector; future work should split it into
   hard truncation, control-token leakage, comma chains, repetition loops, and
   malformed tails.
+- Post-hoc reselection reuses saved downstream candidate pools after changed
+  picks, so it diagnoses selector behavior rather than simulating new
+  trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
 

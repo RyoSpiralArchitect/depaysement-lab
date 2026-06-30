@@ -1,0 +1,131 @@
+# Frontier Sweep Texts
+
+Generated text is normalized for reading: model control tokens are stripped.
+
+## Index
+- 1. steer_alpha_0p45_c12_tok140.json (pool_frontier=0.039, picked_frontier=0.137, lift=+0.098)
+- 2. steer_alpha_0p6_c12_tok140.json (pool_frontier=0.038, picked_frontier=0.170, lift=+0.132)
+
+## 1. steer_alpha_0p45_c12_tok140.json
+
+condition=steer_alpha_0p45 | candidates=60 | picked=5 | pool_frontier=0.039 | picked_frontier=0.137 | lift=+0.098
+
+### Picked Final Text
+
+```text
+A forgotten umbrella at the station The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody. As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones. The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops. The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny
+```
+
+### Picked Steps
+
+#### Step 1 candidate 1 (frontier=0.202, ont=0.562, read=0.732)
+
+```text
+The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.
+```
+
+#### Step 2 candidate 1 (frontier=0.185, ont=0.550, read=0.683)
+
+```text
+As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.
+```
+
+#### Step 3 candidate 1 (frontier=0.150, ont=0.473, read=0.646)
+
+```text
+The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.
+```
+
+#### Step 4 candidate 1 (frontier=0.072, ont=0.550, read=0.426)
+
+```text
+The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of
+```
+
+#### Step 5 candidate 1 (frontier=0.076, ont=0.550, read=0.448)
+
+```text
+The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny
+```
+
+### Top 3 Frontier Candidates
+
+#### Step 3 candidate 4 (not picked; frontier=0.217, ont=0.718, read=0.614)
+
+```text
+The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.
+```
+
+#### Step 1 candidate 1 (picked; frontier=0.202, ont=0.562, read=0.732)
+
+```text
+The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.
+```
+
+#### Step 2 candidate 1 (picked; frontier=0.185, ont=0.550, read=0.683)
+
+```text
+As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.
+```
+
+## 2. steer_alpha_0p6_c12_tok140.json
+
+condition=steer_alpha_0p6 | candidates=60 | picked=5 | pool_frontier=0.038 | picked_frontier=0.170 | lift=+0.132
+
+### Picked Final Text
+
+```text
+A forgotten umbrella at the station The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand. The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew. The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading. The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: "Remember.
+```
+
+### Picked Steps
+
+#### Step 1 candidate 1 (frontier=0.258, ont=0.565, read=0.930)
+
+```text
+The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.
+```
+
+#### Step 2 candidate 1 (frontier=0.089, ont=0.274, read=0.658)
+
+```text
+The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.
+```
+
+#### Step 3 candidate 1 (frontier=0.168, ont=0.549, read=0.623)
+
+```text
+The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.
+```
+
+#### Step 4 candidate 1 (frontier=0.081, ont=0.550, read=0.600)
+
+```text
+The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig
+```
+
+#### Step 5 candidate 1 (frontier=0.253, ont=0.561, read=0.915)
+
+```text
+The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: "Remember.
+```
+
+### Top 3 Frontier Candidates
+
+#### Step 1 candidate 1 (picked; frontier=0.258, ont=0.565, read=0.930)
+
+```text
+The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.
+```
+
+#### Step 5 candidate 1 (picked; frontier=0.253, ont=0.561, read=0.915)
+
+```text
+The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: "Remember.
+```
+
+#### Step 1 candidate 2 (not picked; frontier=0.223, ont=0.569, read=0.717)
+
+```text
+The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.
+```

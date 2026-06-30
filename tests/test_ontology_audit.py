@@ -16,6 +16,26 @@ def test_repair_pressure_detects_explanation():
     assert repaired.repair_pressure > image.repair_pressure
 
 
+def test_cliche_attractor_detects_generic_magic_realist_vocab():
+    auditor = OntologyAuditor()
+    cliche = auditor.audit_text(
+        "The antique music box glowed with an ethereal mist beside a porcelain doll."
+    )
+    plain = auditor.audit_text("The plastic folder rested beside the printer tray.")
+    assert cliche.cliche_attractor_score > plain.cliche_attractor_score
+    assert "music box" in cliche.cliche_attractor_hits
+
+
+def test_cliche_attractor_splits_stock_props_from_soft_style():
+    auditor = OntologyAuditor()
+    stock = auditor.audit_text("The antique music box opened beside a porcelain doll.")
+    soft = auditor.audit_text("The fog became an ethereal mist with a soft glow.")
+    assert stock.stock_prop_attractor_score > stock.soft_style_cliche_score
+    assert soft.soft_style_cliche_score > soft.stock_prop_attractor_score
+    assert "music box" in stock.stock_prop_attractor_hits
+    assert "ethereal" in soft.soft_style_cliche_hits
+
+
 def test_audit_run_files_accepts_write_run_json(tmp_path):
     p = tmp_path / "run.json"
     p.write_text(

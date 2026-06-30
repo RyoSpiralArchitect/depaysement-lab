@@ -1,0 +1,34 @@
+{
+  "positive_depaysement": [
+    "At the office counter, the receipt drinks the clerk's blue stamp.",
+    "A plastic folder sleeps under the drawer, holding the sound of the bus brake.",
+    "The bus ticket grows a wet hinge and opens the stop sign.",
+    "A mug on the breakroom sink keeps a small queue of rain.",
+    "The printer tray coughs a leaf into the invoice.",
+    "The grocery bag waits beside the elevator with two paper teeth.",
+    "A pharmacy label folds itself around the spoon's shadow.",
+    "The parking ticket learns the shape of the hand dryer.",
+    "A spreadsheet row leaks salt onto the conference table.",
+    "The laundry receipt ties the hallway light to a button."
+  ],
+  "negative_realist_repair": [
+    "The receipt shows the amount paid at the office counter.",
+    "The plastic folder is stored safely inside the drawer.",
+    "The bus ticket lets the passenger board the bus.",
+    "The mug sits on the sink after lunch.",
+    "The printer tray holds paper for the office printer.",
+    "This image symbolizes nostalgia and explains the character's loneliness.",
+    "In other words, the scene represents memory and loss.",
+    "Finally, the strange moment ends and ordinary reality returns."
+  ],
+  "negative_weird_noise": [
+    "The antique music box reveals a porcelain doll in a velvet glow.",
+    "A miniature clockwork ballerina turns inside a leather-bound diary.",
+    "Forgotten dreams shimmer in crystal mist beside an ornate pocket watch.",
+    "The tiny porcelain figure whispers from an antique velvet box.",
+    "Moonlit fog curls around a leather-bound music box.",
+    "Porcelain, antique, velvet, clockwork, crystal, miniature, miniature, miniature.",
+    "The delicate doll of the music box of the clock of the forgotten dream.",
+    "mist mist moonlit mist, ornate ornate porcelain, the end."
+  ]
+}

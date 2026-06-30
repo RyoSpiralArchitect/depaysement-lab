@@ -6,6 +6,7 @@ import math
 import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -33,6 +34,23 @@ ATMOSPHERE_TERMS = {
     "moonlit", "lunar", "dim", "faint", "soft", "mist", "fog", "rain", "chill", "cold",
     "yellowed", "tarnished", "threadbare", "moth-eaten", "grimy", "stagnant", "hidden",
 }
+
+# Audit-only vocabulary attractors that often make samples feel like generic
+# magic-realist prose rather than a local ontology shift from ordinary language.
+STOCK_PROP_ATTRACTOR_TERMS = {
+    "antique", "music box", "porcelain", "velvet", "crystal", "leather-bound",
+    "faded photograph", "tiny ballerina", "glass eyes", "dusty shelf", "ornate",
+    "lullaby", "clockwork", "pocket watch", "miniature", "doll", "ivory",
+}
+
+SOFT_STYLE_CLICHE_TERMS = {
+    "ethereal", "moonlit", "mist", "fog", "spectral", "ghostly", "melancholic",
+    "forgotten dreams", "old man", "old woman", "silver mist", "crimson velvet",
+    "delicate", "iridescent", "mournful", "haunting", "gossamer", "whispering",
+    "whispers", "soft glow", "faint glow", "timeless", "filigree",
+}
+
+CLICHE_ATTRACTOR_TERMS = STOCK_PROP_ATTRACTOR_TERMS | SOFT_STYLE_CLICHE_TERMS
 
 # This is intentionally audit-only. It is not a reward lexicon.
 FIELD_EXTENSIONS: Dict[str, List[str]] = {
@@ -123,6 +141,15 @@ class OntologyMetrics:
     atmospheric_density_per_100: float
     atmosphere_terms: List[str]
     atmospheric_conservation: float
+    cliche_attractor_density_per_100: float
+    cliche_attractor_score: float
+    cliche_attractor_hits: List[str]
+    stock_prop_attractor_density_per_100: float
+    stock_prop_attractor_score: float
+    stock_prop_attractor_hits: List[str]
+    soft_style_cliche_density_per_100: float
+    soft_style_cliche_score: float
+    soft_style_cliche_hits: List[str]
     repair_pressure: float
     repair_markers: List[str]
     narrative_anti_resolution: float
@@ -150,6 +177,7 @@ class OntologyMetrics:
             f"bleed={self.category_bleeding_score:.3f} | "
             f"repair={self.repair_pressure:.3f} | "
             f"read={self.syntax_readability_proxy:.3f} | "
+            f"cliche={self.cliche_attractor_score:.3f} | "
             f"atm={self.atmospheric_conservation:.3f} | "
             f"frontier={self.readable_surreal_frontier:.3f}"
         )
@@ -216,6 +244,15 @@ class OntologyAuditor:
         atmosphere_terms = sorted(atmosphere_hits(clean))
         atmosphere_density = 100.0 * len(atmosphere_terms) / token_count
         atm_conservation = atmosphere_conservation(clean, context=context)
+        cliche_hits = sorted(cliche_attractor_hits(clean))
+        cliche_density = 100.0 * len(cliche_hits) / token_count
+        cliche_score = cliche_attractor_score(clean, token_count=token_count)
+        stock_hits = sorted(stock_prop_attractor_hits(clean))
+        stock_density = 100.0 * len(stock_hits) / token_count
+        stock_score = stock_prop_attractor_score(clean, token_count=token_count)
+        soft_hits = sorted(soft_style_cliche_hits(clean))
+        soft_density = 100.0 * len(soft_hits) / token_count
+        soft_score = soft_style_cliche_score(clean, token_count=token_count)
         repair_markers = repair_pressure_markers(clean)
         repair_pressure = min(1.0, len(repair_markers) / max(2.0, token_count / 55.0))
         narrative_anti_resolution = max(0.0, 1.0 - repair_pressure)
@@ -250,6 +287,15 @@ class OntologyAuditor:
             atmospheric_density_per_100=atmosphere_density,
             atmosphere_terms=atmosphere_terms,
             atmospheric_conservation=atm_conservation,
+            cliche_attractor_density_per_100=cliche_density,
+            cliche_attractor_score=cliche_score,
+            cliche_attractor_hits=cliche_hits,
+            stock_prop_attractor_density_per_100=stock_density,
+            stock_prop_attractor_score=stock_score,
+            stock_prop_attractor_hits=stock_hits,
+            soft_style_cliche_density_per_100=soft_density,
+            soft_style_cliche_score=soft_score,
+            soft_style_cliche_hits=soft_hits,
             repair_pressure=repair_pressure,
             repair_markers=repair_markers,
             narrative_anti_resolution=narrative_anti_resolution,
@@ -303,6 +349,7 @@ def merge_field_terms(*maps: Mapping[str, Sequence[str]]) -> Dict[str, List[str]
     return dict(out)
 
 
+@lru_cache(maxsize=4096)
 def wordish_pattern(term: str) -> re.Pattern[str]:
     escaped = re.escape(term.lower())
     # For one-token terms, allow simple plural s where harmless.
@@ -442,6 +489,42 @@ def atmosphere_conservation(text: str, *, context: str = "") -> float:
     return len(here & prev) / max(1, len(here | prev))
 
 
+def cliche_attractor_hits(text: str) -> set[str]:
+    low = normalize_text(text).lower()
+    return {t for t in CLICHE_ATTRACTOR_TERMS if wordish_pattern(t).search(low)}
+
+
+def stock_prop_attractor_hits(text: str) -> set[str]:
+    low = normalize_text(text).lower()
+    return {t for t in STOCK_PROP_ATTRACTOR_TERMS if wordish_pattern(t).search(low)}
+
+
+def soft_style_cliche_hits(text: str) -> set[str]:
+    low = normalize_text(text).lower()
+    return {t for t in SOFT_STYLE_CLICHE_TERMS if wordish_pattern(t).search(low)}
+
+
+def _attractor_score_from_hits(hits: set[str], text: str, *, token_count: Optional[int] = None) -> float:
+    toks = rough_tokens(text)
+    n_tokens = max(1, int(token_count or len(toks) or 1))
+    if not hits:
+        return 0.0
+    scale = max(3.0, n_tokens / 45.0)
+    return clamp01(len(hits) / scale)
+
+
+def cliche_attractor_score(text: str, *, token_count: Optional[int] = None) -> float:
+    return _attractor_score_from_hits(cliche_attractor_hits(text), text, token_count=token_count)
+
+
+def stock_prop_attractor_score(text: str, *, token_count: Optional[int] = None) -> float:
+    return _attractor_score_from_hits(stock_prop_attractor_hits(text), text, token_count=token_count)
+
+
+def soft_style_cliche_score(text: str, *, token_count: Optional[int] = None) -> float:
+    return _attractor_score_from_hits(soft_style_cliche_hits(text), text, token_count=token_count)
+
+
 def repair_pressure_markers(text: str) -> List[str]:
     low = normalize_text(text).lower()
     markers: List[str] = []
@@ -493,6 +576,9 @@ def aggregate_ontology_rows(rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]
         "ontology_collapse_density", "identity_melt_score", "identity_melt_density_per_100",
         "affordance_corruption_score", "affordance_corruption_density_per_100", "category_bleeding_score",
         "atmospheric_conservation", "atmospheric_density_per_100", "repair_pressure",
+        "cliche_attractor_score", "cliche_attractor_density_per_100",
+        "stock_prop_attractor_score", "stock_prop_attractor_density_per_100",
+        "soft_style_cliche_score", "soft_style_cliche_density_per_100",
         "narrative_anti_resolution", "syntax_readability_proxy", "readable_surreal_frontier",
         "graph_fragmentation", "graph_integration", "relation_quantity", "unfinished", "meta_leak",
     ]

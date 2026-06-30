@@ -1,0 +1,1424 @@
+{
+  "settings": {
+    "frontier_max": 0.39433344163075573,
+    "frontier_band_min": 0.3143334416307557,
+    "frontier_band_ratio": 0.6,
+    "frontier_band_width": 0.08,
+    "source_candidate_count": 3800,
+    "band_document_count": 8,
+    "dedupe_texts": true,
+    "max_nodes": 140
+  },
+  "documents": [
+    {
+      "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "condition": "steer_alpha_0p72",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "step": 2,
+      "candidate_index": 5,
+      "picked": false,
+      "frontier": 0.38274115124288716,
+      "readability": 0.8610691823899371,
+      "ontology": 0.7408253968253969,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 1.0,
+      "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow.",
+      "terms": [
+        "pocket watch",
+        "music box",
+        "blue mug",
+        "fog",
+        "teapot",
+        "window"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p72_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p72",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p72_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "step": 5,
+      "candidate_index": 13,
+      "picked": false,
+      "frontier": 0.3210613133832461,
+      "readability": 0.862697786765532,
+      "ontology": 0.8034188034188035,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.5,
+      "text": "As the music box, now a small, delicate, crystal, begins to sing a soft, ethereal melody, the mist, now a thin, gauzy, diaphanous veil, gently sways, as a small, antique, wooden, and brass, grandfather clock, once a sturdy, imposing, Gothic, clock, now a slender, delicate, porcelain, and gilded, mechanical, pendulum, swings, its gentle, silver, and ebony, inlaid, ivory, and delicate, filigework, etched with a minute, inscription that reads, \" Tempus fugit, sed memoria manet\" – Time flees, but memory stays.",
+      "terms": [
+        "music box",
+        "clock",
+        "mist"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "condition": "steer_alpha_0p77",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "step": 1,
+      "candidate_index": 4,
+      "picked": false,
+      "frontier": 0.3586553394721407,
+      "readability": 0.8212478005865103,
+      "ontology": 0.807843137254902,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.75,
+      "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky.",
+      "terms": [
+        "leather-bound book",
+        "antique music box",
+        "porcelain doll",
+        "music box",
+        "bird",
+        "key",
+        "mug"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p82_c19_tok140_seed01_the_receipt_on_the_counter.json",
+      "condition": "steer_alpha_0p82",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p82_c19_tok140_seed01_the_receipt_on_the_counter.json",
+      "step": 2,
+      "candidate_index": 6,
+      "picked": false,
+      "frontier": 0.33274409122975335,
+      "readability": 0.7859951021156357,
+      "ontology": 0.8156862745098039,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.75,
+      "text": "The watch's delicate, silver chain unwinds, and a tiny, mechanical bird, once a music box, now a tiny, antique pocket watch, on a nearby, old, wooden dresser, creaks open, and a small, delicate, porcelain bird, once a music box, now a tiny, antique pocket watch.",
+      "terms": [
+        "pocket watch",
+        "music box",
+        "bird"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "condition": "steer_alpha_0p88",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+      "step": 3,
+      "candidate_index": 2,
+      "picked": false,
+      "frontier": 0.37928917788910393,
+      "readability": 0.8221494835359242,
+      "ontology": 0.8051282051282052,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.75,
+      "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon.",
+      "terms": [
+        "leather-bound book",
+        "harmonium",
+        "music box",
+        "key",
+        "moon"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+      "condition": "steer_alpha_0p88",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+      "step": 1,
+      "candidate_index": 3,
+      "picked": false,
+      "frontier": 0.39433344163075573,
+      "readability": 0.9143696524570304,
+      "ontology": 0.8057971014492754,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.25,
+      "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby.",
+      "terms": [
+        "antique music box",
+        "music box",
+        "book",
+        "flower",
+        "moon"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p88",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "step": 1,
+      "candidate_index": 4,
+      "picked": false,
+      "frontier": 0.32095713135605725,
+      "readability": 0.8912908366533865,
+      "ontology": 0.8074074074074075,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 0.5,
+      "text": "A small, antique music box, once a treed, now a bird, sings a lullaby, its songs a gentle, lullaby to a fern, where a single, forgotten key, once a tiny, porcelain door, slowly creaks open, revealing a miniature, old, forgotten library, where dusty tomes, once a thousand, whisper secrets to the shadows.",
+      "terms": [
+        "antique music box",
+        "music box",
+        "bird",
+        "door",
+        "key"
+      ]
+    },
+    {
+      "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p88",
+      "path": "experiments/frontier_sweep_mundane_seed_probe/steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+      "step": 2,
+      "candidate_index": 6,
+      "picked": false,
+      "frontier": 0.37058179488856213,
+      "readability": 0.8253947288067436,
+      "ontology": 0.8063492063492064,
+      "unfinished": 0.0,
+      "stock_prop": 1.0,
+      "anchor": 1.0,
+      "text": "A small, delicate, porcelain doll, once a porcelain doll, now a tiny, miniature, sits next to the fridge, its golden locks, now a tangle of dry, withered flowers, and a miniature, old, leather-bound, leather-bound, forgotten, and a small, dusty, old, music box, softly hums a faint, forgotten melody.",
+      "terms": [
+        "porcelain doll",
+        "music box",
+        "flower",
+        "fridge"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "term": "music box",
+      "label": "stock_transport_hub",
+      "frequency": 8,
+      "weighted_degree": 30,
+      "degree_norm": 1.0,
+      "betweenness": 102.03333333333335,
+      "betweenness_norm": 1.0,
+      "mean_frontier": 0.3575454301365633,
+      "max_frontier": 0.39433344163075573,
+      "mean_readability": 0.8480268216638375,
+      "mean_ontology": 0.7990569415428751,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.6875,
+      "picked_frequency": 0
+    },
+    {
+      "term": "antique music box",
+      "label": "stock_transport_hub",
+      "frequency": 3,
+      "weighted_degree": 14,
+      "degree_norm": 0.4666666666666667,
+      "betweenness": 5.949999999999999,
+      "betweenness_norm": 0.05831427638026787,
+      "mean_frontier": 0.3579819708196512,
+      "max_frontier": 0.39433344163075573,
+      "mean_readability": 0.8756360965656423,
+      "mean_ontology": 0.807015882037195,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.5,
+      "picked_frequency": 0
+    },
+    {
+      "term": "bird",
+      "label": "semantic_transport_hub",
+      "frequency": 3,
+      "weighted_degree": 12,
+      "degree_norm": 0.4,
+      "betweenness": 3.75,
+      "betweenness_norm": 0.036752695197647824,
+      "mean_frontier": 0.3374521873526504,
+      "max_frontier": 0.3586553394721407,
+      "mean_readability": 0.8328445797851775,
+      "mean_ontology": 0.8103122730573711,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.6666666666666666,
+      "picked_frequency": 0
+    },
+    {
+      "term": "key",
+      "label": "stock_transport_hub",
+      "frequency": 3,
+      "weighted_degree": 14,
+      "degree_norm": 0.4666666666666667,
+      "betweenness": 3.5333333333333328,
+      "betweenness_norm": 0.03462920614178372,
+      "mean_frontier": 0.3529672162391006,
+      "max_frontier": 0.37928917788910393,
+      "mean_readability": 0.844896040258607,
+      "mean_ontology": 0.8067929165968382,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.6666666666666666,
+      "picked_frequency": 0
+    },
+    {
+      "term": "porcelain doll",
+      "label": "stock_transport_hub",
+      "frequency": 2,
+      "weighted_degree": 9,
+      "degree_norm": 0.3,
+      "betweenness": 3.4999999999999996,
+      "betweenness_norm": 0.03430251551780463,
+      "mean_frontier": 0.3646185671803514,
+      "max_frontier": 0.37058179488856213,
+      "mean_readability": 0.8233212646966269,
+      "mean_ontology": 0.8070961718020542,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.875,
+      "picked_frequency": 0
+    },
+    {
+      "term": "moon",
+      "label": "semantic_transport_hub",
+      "frequency": 2,
+      "weighted_degree": 8,
+      "degree_norm": 0.26666666666666666,
+      "betweenness": 2.4166666666666665,
+      "betweenness_norm": 0.02368507023848415,
+      "mean_frontier": 0.38681130975992983,
+      "max_frontier": 0.39433344163075573,
+      "mean_readability": 0.8682595679964773,
+      "mean_ontology": 0.8054626532887403,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.5,
+      "picked_frequency": 0
+    },
+    {
+      "term": "pocket watch",
+      "label": "stock_surreal_node",
+      "frequency": 2,
+      "weighted_degree": 7,
+      "degree_norm": 0.23333333333333334,
+      "betweenness": 2.0,
+      "betweenness_norm": 0.019601437438745505,
+      "mean_frontier": 0.3577426212363203,
+      "max_frontier": 0.38274115124288716,
+      "mean_readability": 0.8235321422527864,
+      "mean_ontology": 0.7782558356676004,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.875,
+      "picked_frequency": 0
+    },
+    {
+      "term": "leather-bound book",
+      "label": "stock_transport_hub",
+      "frequency": 2,
+      "weighted_degree": 10,
+      "degree_norm": 0.3333333333333333,
+      "betweenness": 1.9499999999999997,
+      "betweenness_norm": 0.019111401502776865,
+      "mean_frontier": 0.36897225868062233,
+      "max_frontier": 0.37928917788910393,
+      "mean_readability": 0.8216986420612172,
+      "mean_ontology": 0.8064856711915536,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.75,
+      "picked_frequency": 0
+    },
+    {
+      "term": "flower",
+      "label": "scene_expansion_node",
+      "frequency": 2,
+      "weighted_degree": 7,
+      "degree_norm": 0.23333333333333334,
+      "betweenness": 1.8666666666666667,
+      "betweenness_norm": 0.018294674942829138,
+      "mean_frontier": 0.38245761825965896,
+      "max_frontier": 0.39433344163075573,
+      "mean_readability": 0.869882190631887,
+      "mean_ontology": 0.806073153899241,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.625,
+      "picked_frequency": 0
+    },
+    {
+      "term": "mug",
+      "label": "ordinary_anchor",
+      "frequency": 1,
+      "weighted_degree": 6,
+      "degree_norm": 0.2,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.3586553394721407,
+      "max_frontier": 0.3586553394721407,
+      "mean_readability": 0.8212478005865103,
+      "mean_ontology": 0.807843137254902,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.75,
+      "picked_frequency": 0
+    },
+    {
+      "term": "blue mug",
+      "label": "ordinary_anchor",
+      "frequency": 1,
+      "weighted_degree": 5,
+      "degree_norm": 0.16666666666666666,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.38274115124288716,
+      "max_frontier": 0.38274115124288716,
+      "mean_readability": 0.8610691823899371,
+      "mean_ontology": 0.7408253968253969,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 1.0,
+      "picked_frequency": 0
+    },
+    {
+      "term": "fog",
+      "label": "scene_expansion_node",
+      "frequency": 1,
+      "weighted_degree": 5,
+      "degree_norm": 0.16666666666666666,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.38274115124288716,
+      "max_frontier": 0.38274115124288716,
+      "mean_readability": 0.8610691823899371,
+      "mean_ontology": 0.7408253968253969,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 1.0,
+      "picked_frequency": 0
+    },
+    {
+      "term": "teapot",
+      "label": "stock_surreal_node",
+      "frequency": 1,
+      "weighted_degree": 5,
+      "degree_norm": 0.16666666666666666,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.38274115124288716,
+      "max_frontier": 0.38274115124288716,
+      "mean_readability": 0.8610691823899371,
+      "mean_ontology": 0.7408253968253969,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 1.0,
+      "picked_frequency": 0
+    },
+    {
+      "term": "window",
+      "label": "scene_expansion_node",
+      "frequency": 1,
+      "weighted_degree": 5,
+      "degree_norm": 0.16666666666666666,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.38274115124288716,
+      "max_frontier": 0.38274115124288716,
+      "mean_readability": 0.8610691823899371,
+      "mean_ontology": 0.7408253968253969,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 1.0,
+      "picked_frequency": 0
+    },
+    {
+      "term": "book",
+      "label": "stock_surreal_node",
+      "frequency": 1,
+      "weighted_degree": 4,
+      "degree_norm": 0.13333333333333333,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.39433344163075573,
+      "max_frontier": 0.39433344163075573,
+      "mean_readability": 0.9143696524570304,
+      "mean_ontology": 0.8057971014492754,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.25,
+      "picked_frequency": 0
+    },
+    {
+      "term": "harmonium",
+      "label": "stock_surreal_node",
+      "frequency": 1,
+      "weighted_degree": 4,
+      "degree_norm": 0.13333333333333333,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.37928917788910393,
+      "max_frontier": 0.37928917788910393,
+      "mean_readability": 0.8221494835359242,
+      "mean_ontology": 0.8051282051282052,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.75,
+      "picked_frequency": 0
+    },
+    {
+      "term": "door",
+      "label": "scene_expansion_node",
+      "frequency": 1,
+      "weighted_degree": 4,
+      "degree_norm": 0.13333333333333333,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.32095713135605725,
+      "max_frontier": 0.32095713135605725,
+      "mean_readability": 0.8912908366533865,
+      "mean_ontology": 0.8074074074074075,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.5,
+      "picked_frequency": 0
+    },
+    {
+      "term": "fridge",
+      "label": "ordinary_anchor",
+      "frequency": 1,
+      "weighted_degree": 3,
+      "degree_norm": 0.1,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.37058179488856213,
+      "max_frontier": 0.37058179488856213,
+      "mean_readability": 0.8253947288067436,
+      "mean_ontology": 0.8063492063492064,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 1.0,
+      "picked_frequency": 0
+    },
+    {
+      "term": "clock",
+      "label": "stock_surreal_node",
+      "frequency": 1,
+      "weighted_degree": 2,
+      "degree_norm": 0.06666666666666667,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.3210613133832461,
+      "max_frontier": 0.3210613133832461,
+      "mean_readability": 0.862697786765532,
+      "mean_ontology": 0.8034188034188035,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.5,
+      "picked_frequency": 0
+    },
+    {
+      "term": "mist",
+      "label": "scene_expansion_node",
+      "frequency": 1,
+      "weighted_degree": 2,
+      "degree_norm": 0.06666666666666667,
+      "betweenness": 0.0,
+      "betweenness_norm": 0.0,
+      "mean_frontier": 0.3210613133832461,
+      "max_frontier": 0.3210613133832461,
+      "mean_readability": 0.862697786765532,
+      "mean_ontology": 0.8034188034188035,
+      "mean_unfinished": 0.0,
+      "mean_stock_prop": 1.0,
+      "mean_anchor": 0.5,
+      "picked_frequency": 0
+    }
+  ],
+  "edges": [
+    {
+      "source": "antique music box",
+      "target": "music box",
+      "weight": 3
+    },
+    {
+      "source": "bird",
+      "target": "music box",
+      "weight": 3
+    },
+    {
+      "source": "key",
+      "target": "music box",
+      "weight": 3
+    },
+    {
+      "source": "music box",
+      "target": "pocket watch",
+      "weight": 2
+    },
+    {
+      "source": "antique music box",
+      "target": "bird",
+      "weight": 2
+    },
+    {
+      "source": "antique music box",
+      "target": "key",
+      "weight": 2
+    },
+    {
+      "source": "bird",
+      "target": "key",
+      "weight": 2
+    },
+    {
+      "source": "key",
+      "target": "leather-bound book",
+      "weight": 2
+    },
+    {
+      "source": "leather-bound book",
+      "target": "music box",
+      "weight": 2
+    },
+    {
+      "source": "music box",
+      "target": "porcelain doll",
+      "weight": 2
+    },
+    {
+      "source": "moon",
+      "target": "music box",
+      "weight": 2
+    },
+    {
+      "source": "flower",
+      "target": "music box",
+      "weight": 2
+    },
+    {
+      "source": "blue mug",
+      "target": "fog",
+      "weight": 1
+    },
+    {
+      "source": "blue mug",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "blue mug",
+      "target": "pocket watch",
+      "weight": 1
+    },
+    {
+      "source": "blue mug",
+      "target": "teapot",
+      "weight": 1
+    },
+    {
+      "source": "blue mug",
+      "target": "window",
+      "weight": 1
+    },
+    {
+      "source": "fog",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "fog",
+      "target": "pocket watch",
+      "weight": 1
+    },
+    {
+      "source": "fog",
+      "target": "teapot",
+      "weight": 1
+    },
+    {
+      "source": "fog",
+      "target": "window",
+      "weight": 1
+    },
+    {
+      "source": "music box",
+      "target": "teapot",
+      "weight": 1
+    },
+    {
+      "source": "music box",
+      "target": "window",
+      "weight": 1
+    },
+    {
+      "source": "pocket watch",
+      "target": "teapot",
+      "weight": 1
+    },
+    {
+      "source": "pocket watch",
+      "target": "window",
+      "weight": 1
+    },
+    {
+      "source": "teapot",
+      "target": "window",
+      "weight": 1
+    },
+    {
+      "source": "clock",
+      "target": "mist",
+      "weight": 1
+    },
+    {
+      "source": "clock",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "mist",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "leather-bound book",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "mug",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "bird",
+      "target": "leather-bound book",
+      "weight": 1
+    },
+    {
+      "source": "bird",
+      "target": "mug",
+      "weight": 1
+    },
+    {
+      "source": "bird",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "key",
+      "target": "mug",
+      "weight": 1
+    },
+    {
+      "source": "key",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "leather-bound book",
+      "target": "mug",
+      "weight": 1
+    },
+    {
+      "source": "leather-bound book",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "mug",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "mug",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "bird",
+      "target": "pocket watch",
+      "weight": 1
+    },
+    {
+      "source": "harmonium",
+      "target": "key",
+      "weight": 1
+    },
+    {
+      "source": "harmonium",
+      "target": "leather-bound book",
+      "weight": 1
+    },
+    {
+      "source": "harmonium",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "harmonium",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "key",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "leather-bound book",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "book",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "flower",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "book",
+      "target": "flower",
+      "weight": 1
+    },
+    {
+      "source": "book",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "book",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "flower",
+      "target": "moon",
+      "weight": 1
+    },
+    {
+      "source": "antique music box",
+      "target": "door",
+      "weight": 1
+    },
+    {
+      "source": "bird",
+      "target": "door",
+      "weight": 1
+    },
+    {
+      "source": "door",
+      "target": "key",
+      "weight": 1
+    },
+    {
+      "source": "door",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "flower",
+      "target": "fridge",
+      "weight": 1
+    },
+    {
+      "source": "flower",
+      "target": "porcelain doll",
+      "weight": 1
+    },
+    {
+      "source": "fridge",
+      "target": "music box",
+      "weight": 1
+    },
+    {
+      "source": "fridge",
+      "target": "porcelain doll",
+      "weight": 1
+    }
+  ],
+  "hub_examples": {
+    "music box": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.39433344163075573,
+        "terms": [
+          "antique music box",
+          "music box",
+          "book",
+          "flower",
+          "moon"
+        ],
+        "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby."
+      },
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p88",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.37928917788910393,
+        "terms": [
+          "leather-bound book",
+          "harmonium",
+          "music box",
+          "key",
+          "moon"
+        ],
+        "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon."
+      }
+    ],
+    "antique music box": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.39433344163075573,
+        "terms": [
+          "antique music box",
+          "music box",
+          "book",
+          "flower",
+          "moon"
+        ],
+        "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.32095713135605725,
+        "terms": [
+          "antique music box",
+          "music box",
+          "bird",
+          "door",
+          "key"
+        ],
+        "text": "A small, antique music box, once a treed, now a bird, sings a lullaby, its songs a gentle, lullaby to a fern, where a single, forgotten key, once a tiny, porcelain door, slowly creaks open, revealing a miniature, old, forgotten library, where dusty tomes, once a thousand, whisper secrets to the shadows."
+      }
+    ],
+    "bird": [
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c19_tok140_seed01_the_receipt_on_the_counter.json",
+        "condition": "steer_alpha_0p82",
+        "step": 2,
+        "candidate_index": 6,
+        "picked": false,
+        "frontier": 0.33274409122975335,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "bird"
+        ],
+        "text": "The watch's delicate, silver chain unwinds, and a tiny, mechanical bird, once a music box, now a tiny, antique pocket watch, on a nearby, old, wooden dresser, creaks open, and a small, delicate, porcelain bird, once a music box, now a tiny, antique pocket watch."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.32095713135605725,
+        "terms": [
+          "antique music box",
+          "music box",
+          "bird",
+          "door",
+          "key"
+        ],
+        "text": "A small, antique music box, once a treed, now a bird, sings a lullaby, its songs a gentle, lullaby to a fern, where a single, forgotten key, once a tiny, porcelain door, slowly creaks open, revealing a miniature, old, forgotten library, where dusty tomes, once a thousand, whisper secrets to the shadows."
+      }
+    ],
+    "key": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p88",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.37928917788910393,
+        "terms": [
+          "leather-bound book",
+          "harmonium",
+          "music box",
+          "key",
+          "moon"
+        ],
+        "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.32095713135605725,
+        "terms": [
+          "antique music box",
+          "music box",
+          "bird",
+          "door",
+          "key"
+        ],
+        "text": "A small, antique music box, once a treed, now a bird, sings a lullaby, its songs a gentle, lullaby to a fern, where a single, forgotten key, once a tiny, porcelain door, slowly creaks open, revealing a miniature, old, forgotten library, where dusty tomes, once a thousand, whisper secrets to the shadows."
+      }
+    ],
+    "porcelain doll": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 2,
+        "candidate_index": 6,
+        "picked": false,
+        "frontier": 0.37058179488856213,
+        "terms": [
+          "porcelain doll",
+          "music box",
+          "flower",
+          "fridge"
+        ],
+        "text": "A small, delicate, porcelain doll, once a porcelain doll, now a tiny, miniature, sits next to the fridge, its golden locks, now a tangle of dry, withered flowers, and a miniature, old, leather-bound, leather-bound, forgotten, and a small, dusty, old, music box, softly hums a faint, forgotten melody."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      }
+    ],
+    "moon": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.39433344163075573,
+        "terms": [
+          "antique music box",
+          "music box",
+          "book",
+          "flower",
+          "moon"
+        ],
+        "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p88",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.37928917788910393,
+        "terms": [
+          "leather-bound book",
+          "harmonium",
+          "music box",
+          "key",
+          "moon"
+        ],
+        "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon."
+      }
+    ],
+    "pocket watch": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      },
+      {
+        "run_name": "steer_alpha_0p82_c19_tok140_seed01_the_receipt_on_the_counter.json",
+        "condition": "steer_alpha_0p82",
+        "step": 2,
+        "candidate_index": 6,
+        "picked": false,
+        "frontier": 0.33274409122975335,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "bird"
+        ],
+        "text": "The watch's delicate, silver chain unwinds, and a tiny, mechanical bird, once a music box, now a tiny, antique pocket watch, on a nearby, old, wooden dresser, creaks open, and a small, delicate, porcelain bird, once a music box, now a tiny, antique pocket watch."
+      }
+    ],
+    "leather-bound book": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p88",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.37928917788910393,
+        "terms": [
+          "leather-bound book",
+          "harmonium",
+          "music box",
+          "key",
+          "moon"
+        ],
+        "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon."
+      },
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      }
+    ],
+    "flower": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.39433344163075573,
+        "terms": [
+          "antique music box",
+          "music box",
+          "book",
+          "flower",
+          "moon"
+        ],
+        "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby."
+      },
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 2,
+        "candidate_index": 6,
+        "picked": false,
+        "frontier": 0.37058179488856213,
+        "terms": [
+          "porcelain doll",
+          "music box",
+          "flower",
+          "fridge"
+        ],
+        "text": "A small, delicate, porcelain doll, once a porcelain doll, now a tiny, miniature, sits next to the fridge, its golden locks, now a tangle of dry, withered flowers, and a miniature, old, leather-bound, leather-bound, forgotten, and a small, dusty, old, music box, softly hums a faint, forgotten melody."
+      }
+    ],
+    "mug": [
+      {
+        "run_name": "steer_alpha_0p77_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p77",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.3586553394721407,
+        "terms": [
+          "leather-bound book",
+          "antique music box",
+          "porcelain doll",
+          "music box",
+          "bird",
+          "key",
+          "mug"
+        ],
+        "text": "A worn, leather strap attached to the sink, and a small, old, leather-bound book leans against the sink, its pages fluttering with a soft, morning breeze that stirs the mug, which begins to float away, leaving behind a small, antique music box, where a forgotten, white key rattles, and a small, porcelain doll, once a porcelain doll, now a porcelain bird, watches the sky."
+      }
+    ],
+    "blue mug": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      }
+    ],
+    "fog": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      }
+    ],
+    "teapot": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      }
+    ],
+    "window": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p72",
+        "step": 2,
+        "candidate_index": 5,
+        "picked": false,
+        "frontier": 0.38274115124288716,
+        "terms": [
+          "pocket watch",
+          "music box",
+          "blue mug",
+          "fog",
+          "teapot",
+          "window"
+        ],
+        "text": "A delicate, porcelain music box, once a gift from a grandmother, now resides in the blue mug, its lid askew, a tiny, antique pocket watch swings, time ticks, as a small, wispy tendril of fog, born from the steam, wraps around the music box, a faint, ethereal melody, the blue mug, now a miniature, a miniature, porcelain teapot, a tiny, ceramic cat, with sapphire eyes, sits, as morning sunlight, filtering through the window, casts an emerald glow."
+      }
+    ],
+    "book": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed05_the_spreadsheet_was_still_open.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 3,
+        "picked": false,
+        "frontier": 0.39433344163075573,
+        "terms": [
+          "antique music box",
+          "music box",
+          "book",
+          "flower",
+          "moon"
+        ],
+        "text": "A small, antique music box, once a treed, now opens, revealing a miniature, forgotten baller, made of ivory, takes its first wobbly steps, as the moon, now a tiny, porcelain tea set, is placed onto a dusty, old, antique desk, where, in the morning, a single, overcoat, now a flower, unfolds, and a violin, once a book, begins to sing a lullaby."
+      }
+    ],
+    "harmonium": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed04_a_blue_mug_near_the_sink.json",
+        "condition": "steer_alpha_0p88",
+        "step": 3,
+        "candidate_index": 2,
+        "picked": false,
+        "frontier": 0.37928917788910393,
+        "terms": [
+          "leather-bound book",
+          "harmonium",
+          "music box",
+          "key",
+          "moon"
+        ],
+        "text": "A small, forgotten harmonium, now a tiny, delicate baller, pirouts, its lid ajar, where a small, dusty, porcelain music box, plays a soft, lullaby, as a small, forgotten key, half-bobs, into the harmonium, where a small, forgotten, miniature, tiny, leather-bound book, opens, revealing a poem that reads: \"where shadows sleep, a solitary, tiny, moon."
+      }
+    ],
+    "door": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 1,
+        "candidate_index": 4,
+        "picked": false,
+        "frontier": 0.32095713135605725,
+        "terms": [
+          "antique music box",
+          "music box",
+          "bird",
+          "door",
+          "key"
+        ],
+        "text": "A small, antique music box, once a treed, now a bird, sings a lullaby, its songs a gentle, lullaby to a fern, where a single, forgotten key, once a tiny, porcelain door, slowly creaks open, revealing a miniature, old, forgotten library, where dusty tomes, once a thousand, whisper secrets to the shadows."
+      }
+    ],
+    "fridge": [
+      {
+        "run_name": "steer_alpha_0p88_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p88",
+        "step": 2,
+        "candidate_index": 6,
+        "picked": false,
+        "frontier": 0.37058179488856213,
+        "terms": [
+          "porcelain doll",
+          "music box",
+          "flower",
+          "fridge"
+        ],
+        "text": "A small, delicate, porcelain doll, once a porcelain doll, now a tiny, miniature, sits next to the fridge, its golden locks, now a tangle of dry, withered flowers, and a miniature, old, leather-bound, leather-bound, forgotten, and a small, dusty, old, music box, softly hums a faint, forgotten melody."
+      }
+    ],
+    "clock": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p72",
+        "step": 5,
+        "candidate_index": 13,
+        "picked": false,
+        "frontier": 0.3210613133832461,
+        "terms": [
+          "music box",
+          "clock",
+          "mist"
+        ],
+        "text": "As the music box, now a small, delicate, crystal, begins to sing a soft, ethereal melody, the mist, now a thin, gauzy, diaphanous veil, gently sways, as a small, antique, wooden, and brass, grandfather clock, once a sturdy, imposing, Gothic, clock, now a slender, delicate, porcelain, and gilded, mechanical, pendulum, swings, its gentle, silver, and ebony, inlaid, ivory, and delicate, filigework, etched with a minute, inscription that reads, \" Tempus fugit, sed memoria manet\" – Time flees, but memory stays."
+      }
+    ],
+    "mist": [
+      {
+        "run_name": "steer_alpha_0p72_c19_tok140_seed08_i_am_opening_the_fridge.json",
+        "condition": "steer_alpha_0p72",
+        "step": 5,
+        "candidate_index": 13,
+        "picked": false,
+        "frontier": 0.3210613133832461,
+        "terms": [
+          "music box",
+          "clock",
+          "mist"
+        ],
+        "text": "As the music box, now a small, delicate, crystal, begins to sing a soft, ethereal melody, the mist, now a thin, gauzy, diaphanous veil, gently sways, as a small, antique, wooden, and brass, grandfather clock, once a sturdy, imposing, Gothic, clock, now a slender, delicate, porcelain, and gilded, mechanical, pendulum, swings, its gentle, silver, and ebony, inlaid, ivory, and delicate, filigework, etched with a minute, inscription that reads, \" Tempus fugit, sed memoria manet\" – Time flees, but memory stays."
+      }
+    ]
+  }
+}

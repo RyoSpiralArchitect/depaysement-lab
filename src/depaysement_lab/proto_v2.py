@@ -1577,6 +1577,82 @@ class WriteRun:
         }
 
 
+def steering_alpha_supported(generator: Any) -> bool:
+    steering = getattr(generator, "steering", None)
+    if steering is None or not hasattr(steering, "alpha"):
+        return False
+    if hasattr(steering, "vectors_path") and not getattr(steering, "vectors_path"):
+        return False
+    return True
+
+
+def current_generator_steer_alpha(generator: Any) -> float:
+    steering = getattr(generator, "steering", None)
+    if steering is None or not hasattr(steering, "alpha"):
+        return 0.0
+    return float(getattr(steering, "alpha", 0.0) or 0.0)
+
+
+def set_generator_steer_alpha(generator: Any, alpha: float) -> bool:
+    steering = getattr(generator, "steering", None)
+    if steering is None or not hasattr(steering, "alpha"):
+        return False
+    steering.alpha = float(alpha)
+    return True
+
+
+def trajectory_step_alpha(
+    *,
+    step: int,
+    base_alpha: float,
+    schedule: Sequence[float],
+    adaptive_alpha: Optional[float],
+    min_alpha: float,
+    max_alpha: float,
+) -> float:
+    if adaptive_alpha is not None:
+        raw = float(adaptive_alpha)
+    elif schedule:
+        idx = min(max(0, int(step) - 1), len(schedule) - 1)
+        raw = float(schedule[idx])
+    else:
+        raw = float(base_alpha)
+    return clamp(raw, float(min_alpha), float(max_alpha))
+
+
+def adaptive_trajectory_steer_alpha(
+    *,
+    current_alpha: float,
+    metrics: Mapping[str, Any],
+    min_alpha: float,
+    max_alpha: float,
+    frontier_min: float,
+    unfinished_max: float,
+    loop_max: float,
+    boost: float,
+    dampen: float,
+) -> Tuple[float, str]:
+    frontier = float(metrics.get("readable_ontology_frontier", 0.0) or 0.0)
+    unfinished = float(metrics.get("unfinished", 0.0) or 0.0)
+    repetition = float(metrics.get("repetition_pressure", 0.0) or 0.0)
+    sprawl = float(metrics.get("sprawl_pressure", 0.0) or 0.0)
+    loop_pressure = max(repetition, sprawl)
+    alpha = float(current_alpha)
+    reasons: List[str] = []
+    if unfinished > float(unfinished_max):
+        alpha -= float(dampen)
+        reasons.append(f"unfinished {unfinished:.3f}>{float(unfinished_max):.3f}")
+    if loop_pressure > float(loop_max):
+        alpha -= float(dampen)
+        reasons.append(f"loop {loop_pressure:.3f}>{float(loop_max):.3f}")
+    if frontier < float(frontier_min) and unfinished <= float(unfinished_max) and loop_pressure <= float(loop_max):
+        alpha += float(boost)
+        reasons.append(f"frontier {frontier:.3f}<{float(frontier_min):.3f}")
+    if not reasons:
+        reasons.append("hold")
+    return clamp(alpha, float(min_alpha), float(max_alpha)), "; ".join(reasons)
+
+
 @dataclass
 class DepaysementEngine:
     generator: BaseGenerator
@@ -1605,6 +1681,15 @@ class DepaysementEngine:
         trajectory_unfinished_max: float = 0.05,
         trajectory_repetition_max: float = 0.55,
         trajectory_sprawl_max: float = 0.65,
+        steer_schedule: Optional[Sequence[float]] = None,
+        adaptive_steering: bool = False,
+        adaptive_steering_min_alpha: float = 0.0,
+        adaptive_steering_max_alpha: Optional[float] = None,
+        adaptive_steering_frontier_min: float = 0.12,
+        adaptive_steering_unfinished_max: float = 0.05,
+        adaptive_steering_loop_max: float = 0.50,
+        adaptive_steering_boost: float = 0.08,
+        adaptive_steering_dampen: float = 0.12,
     ) -> str:
         return self.write_run(
             seed=seed,
@@ -1625,6 +1710,15 @@ class DepaysementEngine:
             trajectory_unfinished_max=trajectory_unfinished_max,
             trajectory_repetition_max=trajectory_repetition_max,
             trajectory_sprawl_max=trajectory_sprawl_max,
+            steer_schedule=steer_schedule,
+            adaptive_steering=adaptive_steering,
+            adaptive_steering_min_alpha=adaptive_steering_min_alpha,
+            adaptive_steering_max_alpha=adaptive_steering_max_alpha,
+            adaptive_steering_frontier_min=adaptive_steering_frontier_min,
+            adaptive_steering_unfinished_max=adaptive_steering_unfinished_max,
+            adaptive_steering_loop_max=adaptive_steering_loop_max,
+            adaptive_steering_boost=adaptive_steering_boost,
+            adaptive_steering_dampen=adaptive_steering_dampen,
         ).final_text
 
     def write_run(
@@ -1648,10 +1742,39 @@ class DepaysementEngine:
         trajectory_unfinished_max: float = 0.05,
         trajectory_repetition_max: float = 0.55,
         trajectory_sprawl_max: float = 0.65,
+        steer_schedule: Optional[Sequence[float]] = None,
+        adaptive_steering: bool = False,
+        adaptive_steering_min_alpha: float = 0.0,
+        adaptive_steering_max_alpha: Optional[float] = None,
+        adaptive_steering_frontier_min: float = 0.12,
+        adaptive_steering_unfinished_max: float = 0.05,
+        adaptive_steering_loop_max: float = 0.50,
+        adaptive_steering_boost: float = 0.08,
+        adaptive_steering_dampen: float = 0.12,
     ) -> WriteRun:
         text = seed.strip()
         ban_terms = [str(term).strip() for term in (ban_terms or []) if str(term).strip()]
         records: List[StepRecord] = []
+        steering_supported = steering_alpha_supported(self.generator)
+        base_steer_alpha = current_generator_steer_alpha(self.generator)
+        schedule = [float(value) for value in (steer_schedule or [])]
+        schedule_enabled = bool(schedule and steering_supported)
+        adaptive_enabled = bool(adaptive_steering and steering_supported)
+        adaptive_max = (
+            float(adaptive_steering_max_alpha)
+            if adaptive_steering_max_alpha is not None
+            else max(
+                [
+                    abs(float(base_steer_alpha)),
+                    float(adaptive_steering_min_alpha),
+                    1.0,
+                    *[abs(float(value)) for value in schedule],
+                ]
+            )
+        )
+        adaptive_max = max(float(adaptive_max), float(adaptive_steering_min_alpha))
+        next_adaptive_alpha: Optional[float] = None
+        steering_trace: List[Dict[str, Any]] = []
         config = {
             "steps": steps,
             "mode": mode,
@@ -1676,9 +1799,44 @@ class DepaysementEngine:
                 "step": None,
                 "reason": "",
             },
+            "trajectory_steering": {
+                "supported": bool(steering_supported),
+                "enabled": bool(schedule_enabled or adaptive_enabled),
+                "schedule": list(schedule),
+                "adaptive": bool(adaptive_enabled),
+                "base_alpha": float(base_steer_alpha),
+                "min_alpha": float(adaptive_steering_min_alpha),
+                "max_alpha": float(adaptive_max),
+                "frontier_min": float(adaptive_steering_frontier_min),
+                "unfinished_max": float(adaptive_steering_unfinished_max),
+                "loop_max": float(adaptive_steering_loop_max),
+                "boost": float(adaptive_steering_boost),
+                "dampen": float(adaptive_steering_dampen),
+                "trace": steering_trace,
+            },
         }
         for step in range(1, steps + 1):
             context_before_step = text
+            step_alpha = trajectory_step_alpha(
+                step=step,
+                base_alpha=base_steer_alpha,
+                schedule=schedule,
+                adaptive_alpha=next_adaptive_alpha,
+                min_alpha=float(adaptive_steering_min_alpha),
+                max_alpha=float(adaptive_max),
+            )
+            if schedule_enabled or adaptive_enabled:
+                applied = set_generator_steer_alpha(self.generator, step_alpha)
+                steering_trace.append(
+                    {
+                        "step": int(step),
+                        "alpha": float(step_alpha),
+                        "applied": bool(applied),
+                        "source": "adaptive" if next_adaptive_alpha is not None else ("schedule" if schedule_enabled else "base"),
+                    }
+                )
+                if trace:
+                    print(f"[trajectory-steering] step {step}: alpha={step_alpha:.3f}")
             prompt = ""
             motifs: List[str] = []
             stored_candidates: List[Candidate] = []
@@ -1711,8 +1869,26 @@ class DepaysementEngine:
                 picked = self._pick(ranked, choose=choose, score_fn=self._pick_score)
                 stored_candidates = list(ranked[:keep_candidates]) if keep_candidates > 0 else []
 
-            if trajectory_stop and not picked.selector_metrics:
+            if (trajectory_stop or adaptive_enabled) and not picked.selector_metrics:
                 self._attach_selector_metrics(picked, context=context_before_step)
+
+            if adaptive_enabled:
+                next_adaptive_alpha, steering_reason = adaptive_trajectory_steer_alpha(
+                    current_alpha=step_alpha,
+                    metrics=picked.selector_metrics,
+                    min_alpha=float(adaptive_steering_min_alpha),
+                    max_alpha=float(adaptive_max),
+                    frontier_min=float(adaptive_steering_frontier_min),
+                    unfinished_max=float(adaptive_steering_unfinished_max),
+                    loop_max=float(adaptive_steering_loop_max),
+                    boost=float(adaptive_steering_boost),
+                    dampen=float(adaptive_steering_dampen),
+                )
+                if steering_trace:
+                    steering_trace[-1]["next_alpha"] = float(next_adaptive_alpha)
+                    steering_trace[-1]["reason"] = steering_reason
+                if trace:
+                    print(f"[trajectory-steering] next alpha={next_adaptive_alpha:.3f}: {steering_reason}")
 
             if trace:
                 print(f"\n--- step {step} picked ---")
@@ -1749,6 +1925,8 @@ class DepaysementEngine:
                 if trace:
                     print(f"[trajectory-stop] step {step}: {stop_reason}")
                 break
+        if schedule_enabled or adaptive_enabled:
+            set_generator_steer_alpha(self.generator, base_steer_alpha)
         return WriteRun(seed=seed.strip(), final_text=text, steps=records, config=config)
 
     def rank(

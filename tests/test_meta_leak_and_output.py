@@ -28,6 +28,18 @@ class SequentialGenerator:
         return batch[:n]
 
 
+class SteeringTraceGenerator(SequentialGenerator):
+    def __init__(self, batches, alpha=0.0):
+        super().__init__(batches)
+        self.steering = type("Steering", (), {})()
+        self.steering.alpha = float(alpha)
+        self.alphas = []
+
+    def generate(self, prompt, n, temperature, top_p, max_new_tokens):
+        self.alphas.append(float(self.steering.alpha))
+        return super().generate(prompt, n, temperature, top_p, max_new_tokens)
+
+
 def test_meta_leak_is_cut_from_cleanup():
     text = "A plastic bag flaps beside the nest. (Note: I've tried to continue the fragment as per the instructions.)"
     assert cleanup_continuation(text) == "A plastic bag flaps beside the nest."
@@ -262,3 +274,59 @@ def test_trajectory_stop_halts_after_unfinished_pick():
     assert run.config["trajectory_stop"]["triggered"] is True
     assert run.config["trajectory_stop"]["step"] == 3
     assert "unfinished" in run.config["trajectory_stop"]["reason"]
+
+
+def test_steer_schedule_applies_per_step_and_restores_alpha():
+    rng = random.Random(0)
+    generator = SteeringTraceGenerator(
+        [
+            ["The umbrella becomes a garden that grips the station sign."],
+            ["The garden folds into a paper ticket beside the turnstile."],
+            ["The ticket grows a small window over the platform rain."],
+        ],
+        alpha=0.6,
+    )
+    engine = DepaysementEngine(generator, rng=rng)
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=3,
+        candidates_per_step=1,
+        choose="best",
+        steer_schedule=[0.2, 0.4],
+    )
+
+    assert generator.alphas == [0.2, 0.4, 0.4]
+    assert generator.steering.alpha == 0.6
+    trace = run.config["trajectory_steering"]["trace"]
+    assert [row["alpha"] for row in trace] == [0.2, 0.4, 0.4]
+    assert trace[2]["source"] == "schedule"
+
+
+def test_adaptive_steering_boosts_next_step_from_picked_metrics():
+    rng = random.Random(0)
+    generator = SteeringTraceGenerator(
+        [
+            ["The umbrella rests beside the station bench."],
+            ["The bench becomes a paper garden around the platform sign."],
+        ],
+        alpha=0.5,
+    )
+    engine = DepaysementEngine(generator, rng=rng)
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=2,
+        candidates_per_step=1,
+        choose="best",
+        adaptive_steering=True,
+        adaptive_steering_max_alpha=0.8,
+        adaptive_steering_frontier_min=2.0,
+        adaptive_steering_unfinished_max=1.0,
+        adaptive_steering_loop_max=10.0,
+        adaptive_steering_boost=0.1,
+    )
+
+    assert [round(value, 3) for value in generator.alphas] == [0.5, 0.6]
+    assert generator.steering.alpha == 0.5
+    trace = run.config["trajectory_steering"]["trace"]
+    assert round(trace[0]["next_alpha"], 3) == 0.6
+    assert "frontier" in trace[0]["reason"]

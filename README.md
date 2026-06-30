@@ -95,6 +95,7 @@ The follow-up post-hoc selector lab is saved in:
 - [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
 - [lineage-aware trajectory report](experiments/trajectory_lineage_mundane/trajectory_lineage_report.md)
 - [lineage-aware trajectory research note](docs/research_notes/2026-06-30-trajectory-lineage-scoring.md)
+- [trajectory-aware steering research note](docs/research_notes/2026-06-30-trajectory-aware-steering.md)
 - [frontier noun graph report](experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md)
 - [frontier noun graph research note](docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md)
 - [matched alpha-0 hub bias smoke report](experiments/frontier_sweep_mundane_matched_alpha0_smoke/hub_bias_matched_smoke_report.md)
@@ -644,6 +645,43 @@ python3 -m depaysement_lab.cli frontier-sweep \
   --resume \
   --out-dir experiments/frontier_sweep_mundane_live_stop_lam0p2
 ```
+
+Trajectory-aware steering can vary alpha across the picked trajectory instead
+of holding one global dose. A schedule applies explicit per-step alpha values
+and repeats the last value; adaptive steering then adjusts the next step from
+the picked continuation's frontier, unfinished, and loop pressure:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18_blend_orig_softanti_lam0p2.npz \
+  --strict-steering \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --alphas 0.66,0.77 \
+  --steer-schedule 0.55,0.72,0.72,0.58,0.45 \
+  --adaptive-steering \
+  --adaptive-steering-frontier-min 0.14 \
+  --adaptive-steering-unfinished-max 0.05 \
+  --adaptive-steering-loop-max 0.55 \
+  --adaptive-steering-boost 0.06 \
+  --adaptive-steering-dampen 0.10 \
+  --candidate-grid 12 \
+  --max-token-grid 120 \
+  --select-objective banded-frontier \
+  --choose best \
+  --hard-unfinished-max 0.05 \
+  --trajectory-stop \
+  --trajectory-min-steps 3 \
+  --out-dir experiments/frontier_sweep_mundane_trajectory_steering
+```
+
+Each run JSON stores `config.trajectory_steering.trace`, so the audit can show
+which alpha was applied at each step and why the adaptive controller moved next.
 
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 

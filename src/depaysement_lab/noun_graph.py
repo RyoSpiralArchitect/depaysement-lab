@@ -259,6 +259,28 @@ AFFORDANCE_CLASSES: Dict[str, Tuple[str, ...]] = {
 AFFORDANCE_CLASS_ORDER: Tuple[str, ...] = tuple(AFFORDANCE_CLASSES)
 
 
+def affordance_terms_for_classes(class_names: Sequence[str]) -> List[str]:
+    terms: List[str] = []
+    seen: set[str] = set()
+    unknown: List[str] = []
+    for raw_name in class_names:
+        name = str(raw_name).strip()
+        if not name:
+            continue
+        if name not in AFFORDANCE_CLASSES:
+            unknown.append(name)
+            continue
+        for term in AFFORDANCE_CLASSES[name]:
+            if term not in seen:
+                seen.add(term)
+                terms.append(term)
+    if unknown:
+        known = ", ".join(AFFORDANCE_CLASS_ORDER)
+        bad = ", ".join(unknown)
+        raise ValueError(f"unknown affordance class(es): {bad}. Known classes: {known}")
+    return terms
+
+
 @dataclass
 class NounGraphDocument:
     run_name: str

@@ -22,6 +22,8 @@ from .backends import (
 from .mlx_intervention import MLXSteeringRuntimeConfig, collect_mlx_steering_vectors
 from .model_policy import default_english_system_prompt, infer_model_policy
 from .noun_graph import (
+    AFFORDANCE_CLASS_ORDER,
+    affordance_terms_for_classes,
     build_affordance_reroute_report,
     build_noun_graph_report,
     format_affordance_reroute_report,
@@ -112,6 +114,26 @@ def parse_ban_terms(raw: Optional[str]) -> List[str]:
     if not raw:
         return []
     return [part.strip() for part in re.split(r"[,;\n]+", raw) if part.strip()]
+
+
+def parse_affordance_classes(raw: Optional[str]) -> List[str]:
+    if not raw:
+        return []
+    return [part.strip() for part in re.split(r"[,;\n]+", raw) if part.strip()]
+
+
+def selector_hard_ban_terms(args: argparse.Namespace) -> List[str]:
+    terms = parse_ban_terms(getattr(args, "hard_ban_terms", None))
+    class_terms = affordance_terms_for_classes(
+        parse_affordance_classes(getattr(args, "hard_ban_affordance_classes", None))
+    )
+    out: List[str] = []
+    seen: set[str] = set()
+    for term in [*terms, *class_terms]:
+        if term not in seen:
+            seen.add(term)
+            out.append(term)
+    return out
 
 
 def emit_model_policy(args: argparse.Namespace, *, stream=None) -> None:
@@ -381,6 +403,14 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--selector-unfinished-max", type=float, default=0.50, help="frontier selector unfinished/truncation ceiling")
     p.add_argument("--hard-unfinished-max", type=float, default=-1.0, help="hard reject candidates above this unfinished score; negative disables the gate")
     p.add_argument("--hard-ban-terms", default=None, help="comma/semicolon-separated terms to hard-reject during candidate selection")
+    p.add_argument(
+        "--hard-ban-affordance-classes",
+        default=None,
+        help=(
+            "comma/semicolon-separated affordance classes to expand into hard-ban terms; "
+            f"known: {', '.join(AFFORDANCE_CLASS_ORDER)}"
+        ),
+    )
 
 
 def add_trajectory_stop_args(p: argparse.ArgumentParser) -> None:
@@ -427,7 +457,7 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repair_max=float(getattr(args, "selector_repair_max", 0.45)),
         unfinished_max=float(getattr(args, "selector_unfinished_max", 0.50)),
         hard_unfinished_max=float(getattr(args, "hard_unfinished_max", -1.0)),
-        hard_ban_terms=tuple(parse_ban_terms(getattr(args, "hard_ban_terms", None))),
+        hard_ban_terms=tuple(selector_hard_ban_terms(args)),
     )
 
 

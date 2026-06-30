@@ -505,8 +505,12 @@ def test_trajectory_audit_scores_picked_sequence(tmp_path):
     assert len(report.runs) == 1
     aggregate = report.runs[0].aggregate
     assert aggregate["trajectory_frontier_auc"] > 0
+    assert aggregate["readable_transition_auc"] > 0
     assert aggregate["anchor_survival"] > 0
     assert aggregate["lineage_continuity"] > 0
+    assert aggregate["object_lineage_continuity"] > 0
+    assert aggregate["hub_revisit_rate"] > 0
+    assert aggregate["motif_loop_penalty"] > 0
     assert aggregate["now_chain_pressure"] > 0
     assert aggregate["inscription_pressure"] > 0
     assert "Readable Ontology Collapse Trajectory" in format_trajectory_report(report)

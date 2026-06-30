@@ -12,12 +12,13 @@ The module is intentionally conservative:
 * vector collection runs one prompt at a time, avoiding padding/masking ambiguity;
 * generation-time injection defaults to ``decode_only`` so the prompt prefill is
   not rewritten unless explicitly requested;
-* vector files are MLX/NumPy-style ``.npz`` archives with a JSON sidecar for
-	  metadata.
+* vector files are MLX/NumPy-style ``.npz`` archives with JSON metadata and
+  SHA-256 checksum sidecars.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -600,6 +601,18 @@ def _metadata_path(npz_path: Path) -> Path:
     return Path(str(npz_path) + ".json")
 
 
+def _checksum_path(npz_path: Path) -> Path:
+    return Path(str(npz_path) + ".sha256")
+
+
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def save_mlx_steering_vectors(
     path: str | Path,
     vectors: Mapping[int, Any],
@@ -615,10 +628,13 @@ def save_mlx_steering_vectors(
     if not arrays:
         raise ValueError("No MLX steering vectors to save")
     mx.savez(str(out), **arrays)
+    archive_sha256 = _sha256_file(out)
     meta = dict(metadata or {})
     meta.setdefault("format", "depaysement_lab.mlx_steering_vectors.v1")
-    meta.setdefault("vector_keys", sorted(arrays))
+    meta["vector_keys"] = sorted(arrays)
+    meta["archive_sha256"] = archive_sha256
     _metadata_path(out).write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    _checksum_path(out).write_text(f"{archive_sha256}  {out.name}\n", encoding="utf-8")
     return out
 
 

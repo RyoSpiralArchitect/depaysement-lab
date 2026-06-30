@@ -70,8 +70,13 @@ Interpretation:
 - `alpha=0.75, tok=140` has the cleanest hit rate, but appears less intense on
   the picked frontier score than `0.60`.
 
-These metrics are not treated as final truth. They are instruments for finding
-samples worth human reading.
+Scope of the current claim:
+
+- This is a focused one-seed result, not a general result for the project.
+- The current best point, `alpha=0.60, tok=140`, should be treated as a
+  replication target across 3-5 seeds and then across larger instruct models.
+- These metrics are not treated as final truth. They are instruments for finding
+  samples worth human reading.
 
 The follow-up post-hoc selector lab is saved in:
 
@@ -614,6 +619,24 @@ python3 -m depaysement_lab.cli collect-mlx-vectors \
   --layers 6-16 \
   --chat-template \
   --verbose
+```
+
+The vector archive itself is a local artifact and is not tracked by default.
+Collection writes three files:
+
+```text
+experiments/depaysement_mlx_vectors.npz          vector archive
+experiments/depaysement_mlx_vectors.npz.json     metadata sidecar
+experiments/depaysement_mlx_vectors.npz.sha256   expected archive hash
+```
+
+The metadata sidecar records the model name, layer path, model depth, selected
+layers, prompt counts, token strategy, pre-normalization norms, and archive
+SHA-256. Verify the archive hash from the vector directory:
+
+```bash
+cd experiments
+shasum -a 256 -c depaysement_mlx_vectors.npz.sha256
 ```
 
 The repo does not require MLX for dummy tests, but MLX is needed to reproduce

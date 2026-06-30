@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Documented the focused frontier sweep as a one-seed result and added a 3-5
+  seed replication path.
+- MLX vector collection now writes a `.sha256` sidecar and records the archive
+  SHA-256 in the metadata JSON.
+- Updated the MLX backend docstring to match the implemented layer-wrapper
+  steering path.
+
 ## v1.0.0
 
 - Added `pool-audit` for saved candidate-pool geometry under the **Readable Ontology Collapse Frontier**.

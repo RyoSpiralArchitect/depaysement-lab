@@ -1,4 +1,10 @@
-from depaysement_lab.mlx_intervention import MLXCaptureStore, MLXLayerPatch, find_mlx_layer_sequence
+from depaysement_lab.mlx_intervention import (
+    MLXCaptureStore,
+    MLXLayerPatch,
+    _checksum_path,
+    _sha256_file,
+    find_mlx_layer_sequence,
+)
 
 
 class FakeLayer:
@@ -42,3 +48,12 @@ def test_layer_patch_captures_and_restores():
         assert out == [0, 1, 2]
         assert collector.captures[1] == [0, 1]
     assert model.model.layers == original
+
+
+def test_checksum_helpers_are_npz_sidecars(tmp_path):
+    path = tmp_path / "vectors.npz"
+    path.write_bytes(b"depaysement-vector-bytes")
+    expected = "10f4bb9591cf081c1c8a989c142829d844376571beccb154a544c059d4aaf4cd"
+
+    assert _sha256_file(path) == expected
+    assert _checksum_path(path) == tmp_path / "vectors.npz.sha256"

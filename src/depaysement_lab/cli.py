@@ -874,6 +874,7 @@ def cmd_collect_mlx_vectors(args: argparse.Namespace) -> None:
     )
     print(f"Wrote MLX steering vectors: {out}")
     print(f"Wrote MLX steering metadata: {out}.json")
+    print(f"Wrote MLX steering checksum: {out}.sha256")
 
 
 def _pearson(xs: List[float], ys: List[float]) -> float:

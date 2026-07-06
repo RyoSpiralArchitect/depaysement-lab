@@ -1,0 +1,115 @@
+{
+  "frontier_max": 0.44432406896551724,
+  "frontier_band_min": 0.3643240689655172,
+  "band_ratio": 0.6,
+  "band_width": 0.08,
+  "total_candidates": 304,
+  "band_candidates": 2,
+  "legend_counts": {
+    "readable_object_metamorphosis": 2
+  },
+  "examples": [
+    {
+      "id": "frontier_exemplar_001",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_mistral7b_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "step": 2,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.44432406896551724,
+      "frontier_quality": 0.8786896551724137,
+      "ontology_collapse_density": 0.6166666666666667,
+      "syntax_readability_proxy": 0.9448275862068966,
+      "graph_integration": 0.8599999999999999,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 0.75,
+      "ordinary_anchor_hits": [
+        "the",
+        "printer",
+        "words"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The printer's words become a book",
+          "source": "printer's words",
+          "target": "book",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "printer",
+        "words"
+      ],
+      "text": "The printer's words become a book."
+    },
+    {
+      "id": "frontier_exemplar_002",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_mistral7b_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.4147502820007759,
+      "frontier_quality": 0.8508667741069029,
+      "ontology_collapse_density": 0.5944444444444444,
+      "syntax_readability_proxy": 0.8508667741069029,
+      "graph_integration": 1.0,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "printer",
+        "ink",
+        "spills",
+        "words",
+        "printer's",
+        "book"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The printer's words become a book",
+          "source": "printer's words",
+          "target": "book",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "printer",
+        "ink",
+        "spills",
+        "words",
+        "printer's",
+        "book"
+      ],
+      "text": "The book's pages rustle open, and the ink spills words. The printer's words become a book."
+    }
+  ],
+  "notes": [
+    "The exemplar store selects actual generated candidates from the observed frontier-maximized band.",
+    "Legend labels are heuristic reading aids, not literary classifications."
+  ]
+}

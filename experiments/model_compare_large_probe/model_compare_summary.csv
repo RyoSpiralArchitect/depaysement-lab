@@ -1,3 +1,4 @@
 condition,candidates,picked,top_frontier,top_ontology,top_quality,top_seed,top_picked
 Gemma push,384,48,0.188,0.550,0.417,07_a_delivery_label_on_a_cardboard_box,true
 Llama stock guard,288,36,0.239,0.800,0.365,08_i_am_opening_the_fridge,false
+Mistral local stock guard,304,38,0.444,0.617,0.879,09_i_am_waiting_for_the_printer,true

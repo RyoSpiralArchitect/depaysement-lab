@@ -1,0 +1,913 @@
+{
+  "frontier_max": 0.23920655118959067,
+  "frontier_band_min": 0.15920655118959065,
+  "band_ratio": 0.6,
+  "band_width": 0.08,
+  "total_candidates": 288,
+  "band_candidates": 17,
+  "legend_counts": {
+    "high_collapse_readable_edge": 1,
+    "readable_object_metamorphosis": 12,
+    "soft_style_attractor": 1,
+    "stock_prop_attractor": 3
+  },
+  "examples": [
+    {
+      "id": "frontier_exemplar_001",
+      "legend_label": "high_collapse_readable_edge",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "step": 2,
+      "candidate_index": 2,
+      "picked": false,
+      "readable_ontology_frontier": 0.23920655118959067,
+      "frontier_quality": 0.36464413291096137,
+      "ontology_collapse_density": 0.8,
+      "syntax_readability_proxy": 0.68800779794521,
+      "graph_integration": 0.05999999999999997,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 0.75,
+      "ordinary_anchor_hits": [
+        "the",
+        "and",
+        "ketchup"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The scattered food, now a mosaic of greasy noodles",
+          "source": "scattered food",
+          "target": "mosaic of greasy noodles",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [
+        {
+          "kind": "affordance_corruption",
+          "text": "paper, attracts",
+          "source": "paper",
+          "target": "attracts",
+          "confidence": 0.8
+        }
+      ],
+      "motifs": [
+        "the",
+        "and",
+        "ketchup"
+      ],
+      "text": "The scattered food, now a mosaic of greasy noodles, congealed meat, and ketchup-stained paper, attracts a small, dust-bunnies, and a forgotten newspaper, its headlines about a new city ordinance that prohibits outdoor dining, now yellowed and curled, like the edges of the newspaper."
+    },
+    {
+      "id": "frontier_exemplar_002",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "step": 3,
+      "candidate_index": 2,
+      "picked": false,
+      "readable_ontology_frontier": 0.22894706072060367,
+      "frontier_quality": 0.41626738312837025,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6937789718806171,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.4,
+      "ordinary_anchor_retention": 0.5,
+      "ordinary_anchor_hits": [
+        "the",
+        "its"
+      ],
+      "stock_prop_attractor_hits": [
+        "miniature"
+      ],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [
+        "miniature"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The thread of spider silk, now a thin",
+          "source": "thread of spider silk",
+          "target": "thin",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "miniature",
+        "the",
+        "its"
+      ],
+      "text": "The thread of spider silk, now a thin, glistening tendril, coils around the handle of a nearby tea kettle, where it gently wraps around a steam, releasing a soft, melodic hum, as the kettle's metal exterior begins to sweat, and tiny, dewdrop pearls form on its surface, reflecting the morning light, casting a miniature, intricate world of ripples and shadows on the countertop."
+    },
+    {
+      "id": "frontier_exemplar_003",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed11_a_grocery_list_beside_the_kettle.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed11_a_grocery_list_beside_the_kettle.json",
+      "step": 1,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.20937686081240137,
+      "frontier_quality": 0.4355665920790542,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.725944320131757,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "grocery",
+        "list",
+        "the",
+        "kettle"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "where it dissolves into a pool of soapy suds",
+          "source": "it",
+          "target": "pool of soapy suds",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "grocery",
+        "list",
+        "the",
+        "kettle"
+      ],
+      "text": "The grocery list, now soggy and crumpled, slips from the kettle and onto the cracked, worn linoleum floor, where it dissolves into a pool of soapy suds, carrying with it the promise of a long-forgotten recipe."
+    },
+    {
+      "id": "frontier_exemplar_004",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.20783790420396775,
+      "frontier_quality": 0.4084507681534872,
+      "ontology_collapse_density": 0.5944444444444444,
+      "syntax_readability_proxy": 0.680751280255812,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.3333333333333333,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "phone",
+        "charger",
+        "desk",
+        "old"
+      ],
+      "stock_prop_attractor_hits": [
+        "faded photograph"
+      ],
+      "soft_style_cliche_hits": [
+        "delicate"
+      ],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "it becomes lodged in a narrow crevice between",
+          "source": "it",
+          "target": "lodged narrow crevice between",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "faded photograph",
+        "delicate",
+        "the",
+        "phone",
+        "charger",
+        "desk",
+        "old"
+      ],
+      "text": "As the phone charger continues its journey, it becomes lodged in a narrow crevice between two old, worn armchairs, where a faded photograph of a couple in a meadow teases out of the shadows, revealing a delicate, hand-painted path that winds its way around the desk and out into the room, where it disappears behind a water-stained mirror, its path lingering on the edge of a scattered, vintage globe."
+    },
+    {
+      "id": "frontier_exemplar_005",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "step": 1,
+      "candidate_index": 4,
+      "picked": false,
+      "readable_ontology_frontier": 0.200978165518421,
+      "frontier_quality": 0.39794504498340916,
+      "ontology_collapse_density": 0.5900000000000001,
+      "syntax_readability_proxy": 0.6632417416390153,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.5,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "phone",
+        "charger",
+        "desk"
+      ],
+      "stock_prop_attractor_hits": [
+        "leather-bound"
+      ],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [
+        "leather-bound"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "where it becomes an unlikely home for a small",
+          "source": "it",
+          "target": "unlikely home for small",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "leather-bound",
+        "the",
+        "phone",
+        "charger",
+        "desk"
+      ],
+      "text": "A worn, leather-bound book sits on the edge of the desk, its worn cover creaking slightly as it leans against a small, metal lamp that casts eerie shadows on the wall, as the phone charger, once again, slips from the desk and onto the floor, where it becomes an unlikely home for a small, forgotten key."
+    },
+    {
+      "id": "frontier_exemplar_006",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "step": 1,
+      "candidate_index": 4,
+      "picked": false,
+      "readable_ontology_frontier": 0.19620376614405138,
+      "frontier_quality": 0.40816260899532214,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6802710149922035,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.3333333333333333,
+      "fantasy_prop_score": 0.375,
+      "ordinary_anchor_retention": 0.5,
+      "ordinary_anchor_hits": [
+        "the",
+        "printer"
+      ],
+      "stock_prop_attractor_hits": [
+        "antique"
+      ],
+      "soft_style_cliche_hits": [
+        "ghostly"
+      ],
+      "fantasy_prop_hits": [
+        "antique"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The printer, now a large",
+          "source": "printer",
+          "target": "large",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "antique",
+        "ghostly",
+        "the",
+        "printer"
+      ],
+      "text": "The printer, now a large, metallic spider, sits atop a Victorian-era desk, its metal legs splayed out like a mechanical spider, ink cartridges and paper rolls entwined around its belly, as a small, antique typewriter, once a faithful companion to a bygone writer, sits beside it, its keys yellowed with age, awaiting the printer's first printout of a poem, penned by a ghostly hand."
+    },
+    {
+      "id": "frontier_exemplar_007",
+      "legend_label": "stock_prop_attractor",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed05_the_spreadsheet_was_still_open.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed05_the_spreadsheet_was_still_open.json",
+      "step": 3,
+      "candidate_index": 7,
+      "picked": false,
+      "readable_ontology_frontier": 0.19498047178577982,
+      "frontier_quality": 0.4098380909842981,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6830634849738302,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.6666666666666666,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 1.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "was",
+        "open",
+        "morning"
+      ],
+      "stock_prop_attractor_hits": [
+        "leather-bound",
+        "porcelain"
+      ],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [
+        "leather-bound",
+        "porcelain"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The calculator, now a small",
+          "source": "calculator",
+          "target": "small",
+          "confidence": 1.0
+        },
+        {
+          "kind": "identity_melt",
+          "text": "electric blue, now a dull",
+          "source": "electric blue",
+          "target": "dull",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "leather-bound",
+        "porcelain",
+        "the",
+        "was",
+        "open",
+        "morning"
+      ],
+      "text": "The calculator, now a small, discarded thing, was pushed under the old, creaky desk, its metal body blending into the worn, wooden surface, where a small, leather-bound book lay open, its pages fluttering gently in the morning breeze, revealing a crumpled, forgotten resume, with a phone, once a vibrant, electric blue, now a dull, faded gray, hung from the wall, its receiver dangled, like a withered finger, above a small, porcelain sink, where a faint, sticky film of old lipstick still clung to its rim."
+    },
+    {
+      "id": "frontier_exemplar_008",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed05_the_spreadsheet_was_still_open.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed05_the_spreadsheet_was_still_open.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.19093264848869299,
+      "frontier_quality": 0.41048173815136696,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6841362302522783,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 0.75,
+      "ordinary_anchor_hits": [
+        "the",
+        "open",
+        "morning"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "once a vibrant blue, now a dull",
+          "source": "once vibrant blue",
+          "target": "dull",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "open",
+        "morning"
+      ],
+      "text": "The calculator's metal body, now half-buried in the cracked and faded carpet, its buttons still bearing faint impressions of numbers and mathematical equations, as the coffee cup, once a vibrant blue, now a dull, mottled brown, slowly began to rehydrate, its lid creaking open, releasing a faint scent of stale coffee and decay into the morning air."
+    },
+    {
+      "id": "frontier_exemplar_009",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+      "step": 3,
+      "candidate_index": 3,
+      "picked": false,
+      "readable_ontology_frontier": 0.19035819148017447,
+      "frontier_quality": 0.4010816494723501,
+      "ontology_collapse_density": 0.5215517241379312,
+      "syntax_readability_proxy": 0.6684694157872502,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.3333333333333333,
+      "fantasy_prop_score": 0.375,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "for",
+        "the",
+        "printer",
+        "now",
+        "its"
+      ],
+      "stock_prop_attractor_hits": [
+        "antique"
+      ],
+      "soft_style_cliche_hits": [
+        "delicate"
+      ],
+      "fantasy_prop_hits": [
+        "antique"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The printer, now a tiny",
+          "source": "printer",
+          "target": "tiny",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "antique",
+        "delicate",
+        "for",
+        "the",
+        "printer",
+        "now",
+        "its"
+      ],
+      "text": "The printer, now a tiny, delicate teacup, sits on a table in a cluttered, old antique shop, surrounded by vintage typewriters, dusty books, and faded photographs, as the seagull, now perched on a nearby shelf, watches with interest, its beak dipping slightly towards the teacup, where a small, steaming cup of tea, adorned with a saucer and a sugar cube, is placed, the cup bearing an inscription: \"For the printer, a new brew.\""
+    },
+    {
+      "id": "frontier_exemplar_010",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "step": 2,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.1897356085192698,
+      "frontier_quality": 0.4116632860040568,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.686105476673428,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.3333333333333333,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "laundry",
+        "basket",
+        "box"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [
+        "whispering"
+      ],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "where it becomes entwined with the soft",
+          "source": "it",
+          "target": "entwined soft",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "whispering",
+        "the",
+        "laundry",
+        "basket",
+        "box"
+      ],
+      "text": "As the sun rises, a thin thread of spider silk, glistening with dew, extends from the box, trailing across the laundry basket, where it becomes entwined with the soft, fluffy towels, their corners whispering to the basket, as if sharing a secret."
+    },
+    {
+      "id": "frontier_exemplar_011",
+      "legend_label": "stock_prop_attractor",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed02_a_plastic_folder_in_the_drawer.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed02_a_plastic_folder_in_the_drawer.json",
+      "step": 3,
+      "candidate_index": 4,
+      "picked": false,
+      "readable_ontology_frontier": 0.1833082923092754,
+      "frontier_quality": 0.42187771628239135,
+      "ontology_collapse_density": 0.5298850574712645,
+      "syntax_readability_proxy": 0.7031295271373189,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.6666666666666666,
+      "soft_style_cliche_score": 0.3333333333333333,
+      "fantasy_prop_score": 0.9,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "open",
+        "workshop",
+        "hamster"
+      ],
+      "stock_prop_attractor_hits": [
+        "leather-bound",
+        "miniature"
+      ],
+      "soft_style_cliche_hits": [
+        "delicate"
+      ],
+      "fantasy_prop_hits": [
+        "leather-bound",
+        "miniature"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "as the hamster, now a tiny",
+          "source": "hamster",
+          "target": "tiny",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "leather-bound",
+        "miniature",
+        "delicate",
+        "the",
+        "open",
+        "workshop",
+        "hamster"
+      ],
+      "text": "The parchment, unfurled, reveals a miniature, hand-drawn map of a dense, misty forest, with a small, delicate X marked in red, and a tiny, leather-bound book lying open beside it, its pages fluttering gently in the breeze that stirs through the workshop, as the hamster, now a tiny, triumphant figure, stands on its hind legs, its paws clasped behind its back, a satisfied smile spreading across its face."
+    },
+    {
+      "id": "frontier_exemplar_012",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed04_a_blue_mug_near_the_sink.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed04_a_blue_mug_near_the_sink.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.18234477225971232,
+      "frontier_quality": 0.38973661782497643,
+      "ontology_collapse_density": 0.5041666666666668,
+      "syntax_readability_proxy": 0.6495610297082941,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "blue",
+        "mug",
+        "the",
+        "sink",
+        "garden",
+        "its",
+        "green"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "forgotten teacup, now a fragile",
+          "source": "forgotten teacup",
+          "target": "fragile",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "blue",
+        "mug",
+        "the",
+        "sink",
+        "garden",
+        "its",
+        "green"
+      ],
+      "text": "The kitchen's worn, old wooden table, once a sturdy and stable presence, now appears to be slowly sinking into the same damp, moss-covered tiles that have claimed the sink and the blue mug, as if the entire kitchen is being slowly, imperceptibly, engulfed by the garden's relentless, green assault, its tendrils snaking around a nearby, forgotten teacup, now a fragile, translucent orb, half-buried in the moss."
+    },
+    {
+      "id": "frontier_exemplar_013",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "step": 2,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.18205297679297233,
+      "frontier_quality": 0.4036651370132424,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.672775228355404,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "takeout",
+        "and",
+        "ketchup",
+        "floor"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The morning light, now a pale",
+          "source": "morning light",
+          "target": "pale",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "takeout",
+        "and",
+        "ketchup",
+        "floor"
+      ],
+      "text": "The morning light, now a pale, diffused gold, pours into the kitchen, illuminating the scattered takeout and the ketchup, which has begun to congeal and harden into a strange, pinkish-brown crust on the tile floor, as I stand there, still half-asleep, my gaze fixed on the slowly spreading, dark smudge of ketchup."
+    },
+    {
+      "id": "frontier_exemplar_014",
+      "legend_label": "soft_style_attractor",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.17877770432841614,
+      "frontier_quality": 0.3964028920807453,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6606714868012422,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.6666666666666666,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "laundry",
+        "basket",
+        "its"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [
+        "delicate",
+        "ethereal"
+      ],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The thread of spider silk, now a shimmering",
+          "source": "thread of spider silk",
+          "target": "shimmering",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "delicate",
+        "ethereal",
+        "the",
+        "laundry",
+        "basket",
+        "its"
+      ],
+      "text": "The thread of spider silk, now a shimmering, silver-gray tendril, wraps around the handle of the laundry basket, as if the basket itself were a willing participant in a delicate, ethereal dance, its wicker slats creaking softly in time with the gentle morning breeze, which stirs the dry laundry, releasing a whispery murmur of forgotten conversations and long-forgotten promises."
+    },
+    {
+      "id": "frontier_exemplar_015",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "step": 3,
+      "candidate_index": 3,
+      "picked": false,
+      "readable_ontology_frontier": 0.1735987807772856,
+      "frontier_quality": 0.39669583340722553,
+      "ontology_collapse_density": 0.5336729362591432,
+      "syntax_readability_proxy": 0.6611597223453759,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.5,
+      "ordinary_anchor_retention": 0.75,
+      "ordinary_anchor_hits": [
+        "the",
+        "phone",
+        "charger"
+      ],
+      "stock_prop_attractor_hits": [
+        "leather-bound"
+      ],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [
+        "leather-bound"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "where it becomes entangled in a nest of yellowed",
+          "source": "it",
+          "target": "entangled nest of yellowed",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "leather-bound",
+        "the",
+        "phone",
+        "charger"
+      ],
+      "text": "As the phone charger continues its slow, deliberate movement, it collides with a small, leather-bound book, which opens to a page filled with intricate, hand-drawn diagrams of electrical circuits and a single, scribbled note that reads \"Do not power up.\" The phone charger pauses, its cord trailing into the pages of the book, where it becomes entangled in a nest of yellowed paper clips and a single, forgotten button."
+    },
+    {
+      "id": "frontier_exemplar_016",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.1649703521371845,
+      "frontier_quality": 0.3990413677980677,
+      "ontology_collapse_density": 0.5041666666666668,
+      "syntax_readability_proxy": 0.6650689463301128,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "chinese",
+        "takeout",
+        "and",
+        "ketchup",
+        "floor"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The dark smudge of ketchup, now a small",
+          "source": "dark smudge of ketchup",
+          "target": "small",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "chinese",
+        "takeout",
+        "and",
+        "ketchup",
+        "floor"
+      ],
+      "text": "The dark smudge of ketchup, now a small, irregular shape, slowly begins to take on the outline of a tiny, crude face, its mouth twisted into a macabre grin as it seems to be watching me, while the scattered Chinese takeout, once a vibrant mix of colors and textures, begins to blend into the tile floor, merging with the ketchup's spreading tendrils, forming a strange, amorphous mass that appears to be slowly transforming into a new, organic shape."
+    },
+    {
+      "id": "frontier_exemplar_017",
+      "legend_label": "stock_prop_attractor",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed04_a_blue_mug_near_the_sink.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_model_compare_llama_stock_guard_traj_seed12/steer_alpha_0p77_traj_c8_tok120_seed04_a_blue_mug_near_the_sink.json",
+      "step": 2,
+      "candidate_index": 7,
+      "picked": false,
+      "readable_ontology_frontier": 0.16252301427111485,
+      "frontier_quality": 0.3603614507120063,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.6799272654943515,
+      "graph_integration": 0.05999999999999997,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.3333333333333333,
+      "soft_style_cliche_score": 0.6666666666666666,
+      "fantasy_prop_score": 0.875,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "the",
+        "sink",
+        "edge",
+        "garden",
+        "its"
+      ],
+      "stock_prop_attractor_hits": [
+        "porcelain"
+      ],
+      "soft_style_cliche_hits": [
+        "delicate",
+        "filigree"
+      ],
+      "fantasy_prop_hits": [
+        "filigree",
+        "porcelain"
+      ],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The garden, now a lush and vibrant oasis",
+          "source": "garden",
+          "target": "lush and vibrant oasis",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "porcelain",
+        "delicate",
+        "filigree",
+        "the",
+        "sink",
+        "edge",
+        "garden",
+        "its"
+      ],
+      "text": "The garden, now a lush and vibrant oasis, spills onto the edge of the sink, its tendrils curling around the faucet, which now serves as a trellis, supporting a tiny, porcelain-encrusted trellis, from which a delicate, filigree-like patterned parasol materializes, its golden ribs unfolding like a tiny, metallic flower."
+    }
+  ],
+  "notes": [
+    "The exemplar store selects actual generated candidates from the observed frontier-maximized band.",
+    "Legend labels are heuristic reading aids, not literary classifications."
+  ]
+}

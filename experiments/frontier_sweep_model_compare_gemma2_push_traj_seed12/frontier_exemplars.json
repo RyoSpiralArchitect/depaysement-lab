@@ -1,0 +1,213 @@
+{
+  "frontier_max": 0.18799935,
+  "frontier_band_min": 0.11279961,
+  "band_ratio": 0.6,
+  "band_width": 0.08,
+  "total_candidates": 384,
+  "band_candidates": 4,
+  "legend_counts": {
+    "mixed_frontier_candidate": 1,
+    "readable_object_metamorphosis": 3
+  },
+  "examples": [
+    {
+      "id": "frontier_exemplar_001",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_1p05_traj_c8_tok120_seed07_a_delivery_label_on_a_cardboard_box.json",
+      "condition": "steer_alpha_1p05_traj",
+      "path": "experiments/frontier_sweep_model_compare_gemma2_push_traj_seed12/steer_alpha_1p05_traj_c8_tok120_seed07_a_delivery_label_on_a_cardboard_box.json",
+      "step": 3,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.18799935,
+      "frontier_quality": 0.41685,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.69475,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "box",
+        "the",
+        "hand",
+        "flower"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The hand, now a shadow",
+          "source": "hand",
+          "target": "shadow",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "box",
+        "the",
+        "hand",
+        "flower"
+      ],
+      "text": "The hand, now a shadow, disappears through the box, the flower blooming into the light of a streetlamp."
+    },
+    {
+      "id": "frontier_exemplar_002",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_1p05_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "condition": "steer_alpha_1p05_traj",
+      "path": "experiments/frontier_sweep_model_compare_gemma2_push_traj_seed12/steer_alpha_1p05_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+      "step": 2,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.18601567741935485,
+      "frontier_quality": 0.4124516129032258,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.8,
+      "graph_integration": 0.031129032258064487,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 0.5,
+      "ordinary_anchor_hits": [
+        "the",
+        "charger"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The charger, now a small",
+          "source": "charger",
+          "target": "small",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "charger"
+      ],
+      "text": "The charger, now a small, intricate sculpture in a glass dome."
+    },
+    {
+      "id": "frontier_exemplar_003",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_1p05_traj_c8_tok120_seed11_a_grocery_list_beside_the_kettle.json",
+      "condition": "steer_alpha_1p05_traj",
+      "path": "experiments/frontier_sweep_model_compare_gemma2_push_traj_seed12/steer_alpha_1p05_traj_c8_tok120_seed11_a_grocery_list_beside_the_kettle.json",
+      "step": 1,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.18601567741935485,
+      "frontier_quality": 0.4124516129032258,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 0.8,
+      "graph_integration": 0.031129032258064487,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 0.5,
+      "ordinary_anchor_hits": [
+        "the",
+        "kettle"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "The kettle, now a centerpiece on a dimly lit stage",
+          "source": "kettle",
+          "target": "centerpiece dimly lit stage",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "kettle"
+      ],
+      "text": "The kettle, now a centerpiece on a dimly lit stage."
+    },
+    {
+      "id": "frontier_exemplar_004",
+      "legend_label": "mixed_frontier_candidate",
+      "run_name": "steer_alpha_1p05_traj_c8_tok120_seed07_a_delivery_label_on_a_cardboard_box.json",
+      "condition": "steer_alpha_1p05_traj",
+      "path": "experiments/frontier_sweep_model_compare_gemma2_push_traj_seed12/steer_alpha_1p05_traj_c8_tok120_seed07_a_delivery_label_on_a_cardboard_box.json",
+      "step": 3,
+      "candidate_index": 2,
+      "picked": false,
+      "readable_ontology_frontier": 0.11801849999999998,
+      "frontier_quality": 0.4545,
+      "ontology_collapse_density": 0.31666666666666665,
+      "syntax_readability_proxy": 0.7575000000000001,
+      "graph_integration": 0.19999999999999998,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "ordinary_anchor_hits": [
+        "cardboard",
+        "box",
+        "the",
+        "window",
+        "hand",
+        "reaching",
+        "bright",
+        "flower"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [],
+      "affordance_corruption_events": [
+        {
+          "kind": "affordance_corruption",
+          "text": "window of a cardboard box, holds",
+          "source": "window",
+          "target": "holds",
+          "confidence": 0.8
+        },
+        {
+          "kind": "affordance_corruption",
+          "text": "box, holds",
+          "source": "box",
+          "target": "holds",
+          "confidence": 0.8
+        }
+      ],
+      "motifs": [
+        "cardboard",
+        "box",
+        "the",
+        "window",
+        "hand",
+        "reaching",
+        "bright",
+        "flower"
+      ],
+      "text": "A hand, reaching through the window of a cardboard box, holds a bright flower and a map."
+    }
+  ],
+  "notes": [
+    "The exemplar store selects actual generated candidates from the observed frontier-maximized band.",
+    "Legend labels are heuristic reading aids, not literary classifications."
+  ]
+}

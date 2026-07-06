@@ -185,6 +185,37 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     assert "The umbrella becomes a tiny station garden.<|eot_id|>" not in text
 
 
+def test_pool_audit_strips_gemma_control_tokens(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "selector", "candidates_per_step": 1},
+        "final_text": "x",
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The umbrella becomes a tiny station garden.<end_of_turn><eos>",
+                    "score": {"total": -99.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The umbrella becomes a tiny station garden.<end_of_turn><eos>",
+                        "score": {"total": -99.0},
+                    }
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=2)
+    row = report.runs[0].rows[0]
+    assert row.text == "The umbrella becomes a tiny station garden."
+    assert "<end_of_turn>" not in row.metrics["text"]
+    assert "<eos>" not in row.metrics["text"]
+
+
 def test_pool_audit_marks_only_one_duplicate_candidate_as_picked(tmp_path):
     p = tmp_path / "run.json"
     duplicate = 'The umbrellas, now an opera, still whisper, "Qui vive?"'

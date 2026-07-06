@@ -65,6 +65,7 @@ def test_write_run_serializes():
 
 def test_cleanup_removes_generated_control_tokens():
     assert cleanup_continuation("A tiny station garden.<|eot_id|>") == "A tiny station garden."
+    assert cleanup_continuation("A tiny station garden.<end_of_turn><eos>") == "A tiny station garden."
 
 
 def test_ban_terms_are_added_to_prompt_and_run_config():

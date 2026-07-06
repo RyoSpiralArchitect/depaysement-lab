@@ -2,6 +2,9 @@ import csv
 import json
 
 from depaysement_lab.frontier import (
+    FrontierAuditReport,
+    FrontierCandidateRow,
+    FrontierRunAudit,
     audit_frontier_pool,
     audit_trajectory_runs,
     format_trajectory_report,
@@ -14,8 +17,13 @@ from depaysement_lab.frontier import (
     write_rating_sheet,
 )
 from depaysement_lab.noun_graph import (
+    build_affordance_reroute_report,
     build_noun_graph_report,
+    frontier_band_documents,
+    format_affordance_reroute_report,
     format_noun_graph_report,
+    write_affordance_reroute_csv,
+    write_affordance_reroute_json,
     write_noun_graph_json,
     write_noun_graph_nodes_csv,
 )
@@ -65,6 +73,80 @@ def test_pool_audit_computes_selection_lift_and_truncation(tmp_path):
     assert report.top_frontier_examples
 
 
+def test_compliant_only_band_threshold_ignores_hard_banned_rows():
+    banned = FrontierCandidateRow(
+        run_name="run",
+        condition="steer_alpha_0p77__reselect_banded-frontier_best",
+        path="run.json",
+        step=1,
+        candidate_index=1,
+        picked=False,
+        text="The receipt, now a music box, opens with a porcelain doll and a key.",
+        context_before="receipt",
+        score_total=1.0,
+        readable_ontology_frontier=1.0,
+        frontier_quality=1.0,
+        metrics={
+            "hard_ban_failed": True,
+            "hard_ban_hits": ["music box", "porcelain", "key"],
+            "syntax_readability_proxy": 0.9,
+            "ontology_collapse_density": 0.9,
+            "unfinished": 0.0,
+            "stock_prop_attractor_score": 1.0,
+            "ordinary_anchor_retention": 0.5,
+        },
+    )
+    compliant = FrontierCandidateRow(
+        run_name="run",
+        condition="steer_alpha_0p77__reselect_banded-frontier_best",
+        path="run.json",
+        step=1,
+        candidate_index=2,
+        picked=True,
+        text="The receipt, now a mirror garden, leans toward a window of folded paper.",
+        context_before="receipt",
+        score_total=1.0,
+        readable_ontology_frontier=0.6,
+        frontier_quality=0.6,
+        metrics={
+            "hard_ban_failed": False,
+            "hard_ban_hits": [],
+            "syntax_readability_proxy": 0.8,
+            "ontology_collapse_density": 0.6,
+            "unfinished": 0.0,
+            "stock_prop_attractor_score": 0.0,
+            "ordinary_anchor_retention": 0.5,
+        },
+    )
+    report = FrontierAuditReport(
+        runs=[
+            FrontierRunAudit(
+                name="run",
+                condition="steer_alpha_0p77__reselect_banded-frontier_best",
+                path="run.json",
+                seed="receipt",
+                candidate_count=2,
+                picked_count=1,
+                steps=1,
+                truncated_steps=0,
+                aggregate={},
+                rows=[banned, compliant],
+            )
+        ]
+    )
+
+    docs = frontier_band_documents(
+        report,
+        frontier_band_ratio=0.8,
+        frontier_band_width=0.1,
+        compliant_only=True,
+    )
+
+    assert [doc.text for doc in docs] == [compliant.text]
+    assert docs[0].hard_ban_failed is False
+    assert "optical_memory" in docs[0].affordance_classes
+
+
 def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tmp_path):
     p = tmp_path / "run.json"
     run = {
@@ -101,6 +183,37 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     text = out.read_text(encoding="utf-8")
     assert "Picked Final Text" in text
     assert "The umbrella becomes a tiny station garden.<|eot_id|>" not in text
+
+
+def test_pool_audit_strips_gemma_control_tokens(tmp_path):
+    p = tmp_path / "run.json"
+    run = {
+        "seed": "A forgotten umbrella at the station",
+        "config": {"condition": "selector", "candidates_per_step": 1},
+        "final_text": "x",
+        "steps": [
+            {
+                "step": 1,
+                "picked": {
+                    "text": "The umbrella becomes a tiny station garden.<end_of_turn><eos>",
+                    "score": {"total": -99.0},
+                },
+                "candidates": [
+                    {
+                        "text": "The umbrella becomes a tiny station garden.<end_of_turn><eos>",
+                        "score": {"total": -99.0},
+                    }
+                ],
+            }
+        ],
+    }
+    p.write_text(json.dumps(run), encoding="utf-8")
+
+    report = audit_frontier_pool([str(p)], top_k=2)
+    row = report.runs[0].rows[0]
+    assert row.text == "The umbrella becomes a tiny station garden."
+    assert "<end_of_turn>" not in row.metrics["text"]
+    assert "<eos>" not in row.metrics["text"]
 
 
 def test_pool_audit_marks_only_one_duplicate_candidate_as_picked(tmp_path):
@@ -220,14 +333,108 @@ def test_noun_graph_finds_frontier_hub_terms(tmp_path):
     graph = build_noun_graph_report(frontier_report, top_k=5, max_nodes=20)
     terms = {node["term"] for node in graph.nodes}
     assert {"music box", "key", "clock"} & terms
+    assert any("canonical_stock_hub" in node["affordance_classes"] for node in graph.nodes)
     assert graph.edges
-    assert "Frontier Noun Graph" in format_noun_graph_report(graph)
+    rendered = format_noun_graph_report(graph)
+    assert "Frontier Noun Graph" in rendered
+    assert "Affordance Classes" in rendered
 
     json_out = tmp_path / "noun_graph.json"
     csv_out = tmp_path / "noun_graph_nodes.csv"
     write_noun_graph_json(graph, str(json_out))
     write_noun_graph_nodes_csv(graph, str(csv_out))
     assert json.loads(json_out.read_text(encoding="utf-8"))["nodes"]
+    with csv_out.open(encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    assert rows
+    assert "affordance_classes" in rows[0]
+
+
+def test_affordance_reroute_matrix_compares_class_shifts(tmp_path):
+    base = tmp_path / "base.json"
+    ablation = tmp_path / "ablation.json"
+    base.write_text(
+        json.dumps(
+            {
+                "seed": "A receipt on the counter",
+                "config": {
+                    "condition": "steer_alpha_0p66__reselect_banded-frontier_best",
+                    "candidates_per_step": 1,
+                },
+                "steps": [
+                    {
+                        "step": 1,
+                        "picked": {
+                            "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                            "score": {"total": 2.0},
+                        },
+                        "candidates": [
+                            {
+                                "text": "The receipt, now a music box, opens with a brass key beside a station clock.",
+                                "score": {"total": 2.0},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    ablation.write_text(
+        json.dumps(
+            {
+                "seed": "A receipt on the counter",
+                "config": {"condition": "steer_alpha_0p66", "candidates_per_step": 1},
+                "steps": [
+                    {
+                        "step": 1,
+                        "picked": {
+                            "text": "The receipt, now a typewriter, opens a paper garden beside a harmonica.",
+                            "score": {"total": 2.0},
+                        },
+                        "candidates": [
+                            {
+                                "text": "The receipt, now a typewriter, opens a paper garden beside a harmonica.",
+                                "score": {"total": 2.0},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    base_frontier = audit_frontier_pool([str(base)], top_k=2)
+    ablation_frontier = audit_frontier_pool([str(ablation)], top_k=2)
+    reroute = build_affordance_reroute_report(
+        base_frontier,
+        ablation_frontier,
+        frontier_band_ratio=0.0,
+        frontier_band_width=1.0,
+    )
+    by_class = {
+        row["affordance_class"]: row
+        for row in reroute.matrix
+        if row["condition"] == "steer_alpha_0p66"
+    }
+    diagnostic = next(row for row in reroute.diagnostics if row["condition"] == "steer_alpha_0p66")
+    assert by_class["canonical_stock_hub"]["delta"] < 0
+    assert by_class["organic_expansion"]["delta"] > 0
+    assert by_class["acoustic_mechanism"]["delta"] == 0
+    assert diagnostic["frontier_survival_rate"] == 1.0
+    assert diagnostic["canonical_drop"] > 0
+    assert "affordance_load_delta" in diagnostic
+    rendered = format_affordance_reroute_report(reroute)
+    assert "Affordance Reroute Matrix" in rendered
+    assert "Reroute Diagnostics" in rendered
+
+    json_out = tmp_path / "reroute.json"
+    csv_out = tmp_path / "reroute.csv"
+    write_affordance_reroute_json(reroute, str(json_out))
+    write_affordance_reroute_csv(reroute, str(csv_out))
+    payload = json.loads(json_out.read_text(encoding="utf-8"))
+    assert payload["matrix"]
+    assert payload["diagnostics"]
     with csv_out.open(encoding="utf-8", newline="") as f:
         assert list(csv.DictReader(f))
 
@@ -329,8 +536,12 @@ def test_trajectory_audit_scores_picked_sequence(tmp_path):
     assert len(report.runs) == 1
     aggregate = report.runs[0].aggregate
     assert aggregate["trajectory_frontier_auc"] > 0
+    assert aggregate["readable_transition_auc"] > 0
     assert aggregate["anchor_survival"] > 0
     assert aggregate["lineage_continuity"] > 0
+    assert aggregate["object_lineage_continuity"] > 0
+    assert aggregate["hub_revisit_rate"] > 0
+    assert aggregate["motif_loop_penalty"] > 0
     assert aggregate["now_chain_pressure"] > 0
     assert aggregate["inscription_pressure"] > 0
     assert "Readable Ontology Collapse Trajectory" in format_trajectory_report(report)

@@ -98,12 +98,20 @@ The follow-up post-hoc selector lab is saved in:
 - [hard-gated research note](docs/research_notes/2026-06-13-hard-gated-mundane-reselect.md)
 - [trajectory audit report](experiments/trajectory_audit_mundane/trajectory_report.md)
 - [trajectory audit research note](docs/research_notes/2026-06-14-trajectory-audit.md)
+- [lineage-aware trajectory report](experiments/trajectory_lineage_mundane/trajectory_lineage_report.md)
+- [lineage-aware trajectory research note](docs/research_notes/2026-06-30-trajectory-lineage-scoring.md)
+- [trajectory-aware steering research note](docs/research_notes/2026-06-30-trajectory-aware-steering.md)
 - [frontier noun graph report](experiments/noun_graph_mundane_seed_probe/noun_graph_report_wide.md)
 - [frontier noun graph research note](docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md)
 - [matched alpha-0 hub bias smoke report](experiments/frontier_sweep_mundane_matched_alpha0_smoke/hub_bias_matched_smoke_report.md)
 - [hub ablation probe report](experiments/hub_ablation_probe_mundane/hub_ablation_report.md)
 - [hub ablation generated text reading report](experiments/frontier_sweep_mundane_hub_ablation_smoke/frontier_sweep_texts.md)
 - [hub ablation research note](docs/research_notes/2026-06-14-hub-ablation-probe.md)
+- [affordance reroute matrix](experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md)
+- [post-hoc hard-gate affordance reroute matrix](experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md)
+- [affordance reroute research note](docs/research_notes/2026-06-14-affordance-reroute-hard-gate.md)
+- [affordance class knockout research note](docs/research_notes/2026-06-14-affordance-class-knockout.md)
+- [optical + organic knockout matrix](experiments/affordance_class_knockout_mundane/optical_organic_report.md)
 
 The post-hoc selector lab performs no generation. It reuses the saved candidate
 pools from the focused sweep and asks which selector would have picked the
@@ -516,6 +524,101 @@ core motifs appear in roughly 79-83% of steered non-ban candidates, but fall to
 Readable frontier does not disappear; it reroutes through hinges such as
 `harmonica`, `typewriter`, `photograph`, `garden`, `comb`, and `teapot`.
 
+For a hard candidate-level compliance gate, add `--hard-ban-terms`. Unlike
+`--ban-terms`, this does not ask the model to avoid words during generation; it
+rejects candidates at selection time if they contain the listed terms:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_hub_ablation_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/posthoc_reselect_hub_ablation_hard_gate
+```
+
+To inspect rerouting at the affordance-class level, compare matched control and
+ablation artifacts:
+
+```bash
+python3 -m depaysement_lab.cli affordance-reroute \
+  --base experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --ablation experiments/frontier_sweep_mundane_hub_ablation_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_hub_ablation_smoke/steer_alpha_*.json \
+  --base-label matched_control \
+  --ablation-label hub_ablation \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --out experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.md \
+  --json-out experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_report_wide.json \
+  --csv experiments/affordance_reroute_mundane_hub_ablation/affordance_reroute_matrix_wide.csv
+```
+
+The wide reroute matrix shows `canonical_stock_hub` falling sharply under
+ablation, while frontier-band candidates reroute into affordance classes such as
+`acoustic_mechanism`, `organic_expansion`, `optical_memory`,
+`threshold_container`, and `animating_mediator`.
+
+For the stricter no-generation check, run post-hoc reselection on the matched
+control pools with a hard gate, then audit only compliant candidates:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --out-dir experiments/posthoc_reselect_mundane_hub_hard_gate
+```
+
+```bash
+python3 -m depaysement_lab.cli affordance-reroute \
+  --base experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+    experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --ablation experiments/posthoc_reselect_mundane_hub_hard_gate/*__banded-frontier_best.json \
+  --base-label matched_control \
+  --ablation-label posthoc_hard_gate \
+  --frontier-band-ratio 0.40 \
+  --frontier-band-width 0.22 \
+  --compliant-only \
+  --out experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.md \
+  --json-out experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_report_wide.json \
+  --csv experiments/affordance_reroute_mundane_hard_gate/affordance_reroute_matrix_wide.csv
+```
+
+That stricter pass drives `canonical_stock_hub` to 0% in the compliant frontier
+band. Alpha `0.77` and `0.82` still retain compliant frontier examples, mainly
+through `optical_memory` and `organic_expansion`, while alpha `0.66` loses the
+frontier band under the same hard gate.
+
+To knock out whole affordance classes, use `--hard-ban-affordance-classes`.
+This expands class names such as `optical_memory` or `organic_expansion` into
+their audited term sets before hard candidate selection:
+
+```bash
+python3 -m depaysement_lab.cli reselect \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/selector_alpha_*.json \
+  experiments/frontier_sweep_mundane_matched_alpha0_smoke/steer_alpha_*.json \
+  --select-objective banded-frontier \
+  --choose best \
+  --context-policy recorded \
+  --include-original \
+  --hard-ban-terms "music box, leather-bound book, key, clock, watch, pocket watch, porcelain, doll, ballerina" \
+  --hard-ban-affordance-classes optical_memory,organic_expansion \
+  --out-dir experiments/posthoc_reselect_mundane_class_knockout_optical_organic
+```
+
+The first class-knockout smoke suggests different corridors by alpha. With
+canonical stock hubs already hard-gated, `alpha=0.77` still survives the
+`optical_memory + organic_expansion` knockout through a narrow `text_memory`
+route. `alpha=0.82` does not: the same double knockout removes its compliant
+frontier band.
+
 Long MLX sweeps can be chunked. `--run-limit` caps only newly generated run
 JSONs for the current invocation, while `--resume` skips existing run JSONs in
 the output directory and includes them in the refreshed audit:
@@ -547,6 +650,43 @@ python3 -m depaysement_lab.cli frontier-sweep \
   --resume \
   --out-dir experiments/frontier_sweep_mundane_live_stop_lam0p2
 ```
+
+Trajectory-aware steering can vary alpha across the picked trajectory instead
+of holding one global dose. A schedule applies explicit per-step alpha values
+and repeats the last value; adaptive steering then adjusts the next step from
+the picked continuation's frontier, unfinished, and loop pressure:
+
+```bash
+python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_l4_18_blend_orig_softanti_lam0p2.npz \
+  --strict-steering \
+  --steer-layers 4-18 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --alphas 0.66,0.77 \
+  --steer-schedule 0.55,0.72,0.72,0.58,0.45 \
+  --adaptive-steering \
+  --adaptive-steering-frontier-min 0.14 \
+  --adaptive-steering-unfinished-max 0.05 \
+  --adaptive-steering-loop-max 0.55 \
+  --adaptive-steering-boost 0.06 \
+  --adaptive-steering-dampen 0.10 \
+  --candidate-grid 12 \
+  --max-token-grid 120 \
+  --select-objective banded-frontier \
+  --choose best \
+  --hard-unfinished-max 0.05 \
+  --trajectory-stop \
+  --trajectory-min-steps 3 \
+  --out-dir experiments/frontier_sweep_mundane_trajectory_steering
+```
+
+Each run JSON stores `config.trajectory_steering.trace`, so the audit can show
+which alpha was applied at each step and why the adaptive controller moved next.
 
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 
@@ -603,6 +743,21 @@ python3 -m depaysement_lab.cli trajectory-audit \
   --out experiments/trajectory_audit_mundane/trajectory_report.md \
   --json-out experiments/trajectory_audit_mundane/trajectory_report.json \
   --csv experiments/trajectory_audit_mundane/trajectory_runs.csv
+```
+
+The lineage-aware variant adds object-term carryover, hub revisit pressure, and
+a readable-transition AUC:
+
+```bash
+python3 -m depaysement_lab.cli trajectory-audit \
+  experiments/frontier_sweep_mundane_seed_probe/steer_alpha_*.json \
+  experiments/posthoc_reselect_mundane_balanced_guard/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_hard_gate/*__banded-frontier_best.json \
+  experiments/posthoc_reselect_mundane_dual_guard/*__banded-frontier_best.json \
+  --top-k 12 \
+  --out experiments/trajectory_lineage_mundane/trajectory_lineage_report.md \
+  --json-out experiments/trajectory_lineage_mundane/trajectory_lineage_report.json \
+  --csv experiments/trajectory_lineage_mundane/trajectory_lineage_runs.csv
 ```
 
 ## Collect MLX Steering Vectors

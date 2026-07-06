@@ -32,6 +32,10 @@ GENERATED_SPECIAL_TOKENS: Tuple[str, ...] = (
     "<|end_of_text|>",
     "<|begin_of_text|>",
     "<|im_end|>",
+    "<end_of_turn>",
+    "<start_of_turn>",
+    "<eos>",
+    "<bos>",
     "</s>",
     "<s>",
 )
@@ -54,6 +58,9 @@ FRONTIER_METRICS: Tuple[str, ...] = (
     "ordinary_anchor_drop",
     "atmospheric_conservation",
     "unfinished",
+    "hard_ban_failed",
+    "hard_ban_hit_count",
+    "hard_gate_failed",
     "meta_leak",
     "score_total",
 )
@@ -143,6 +150,11 @@ class TrajectoryStepRow:
     repetition_pressure: float
     now_chain_pressure: float
     inscription_pressure: float
+    object_terms: List[str] = field(default_factory=list)
+    previous_object_terms: List[str] = field(default_factory=list)
+    object_lineage_overlap: float = 0.0
+    hub_terms: List[str] = field(default_factory=list)
+    hub_revisit_count: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
@@ -245,6 +257,23 @@ class FrontierAuditor:
                 frontier_score, frontier_quality = readable_frontier_score(m)
                 metrics = m.to_dict()
                 metrics.update(anchor_guard_metrics(context, text, scorer=self.scorer))
+                selector_metrics = cand.get("selector_metrics") if isinstance(cand.get("selector_metrics"), Mapping) else {}
+                metrics.update(
+                    {
+                        key: value
+                        for key, value in selector_metrics.items()
+                        if str(key).startswith("hard_")
+                        or key
+                        in {
+                            "selector_eligible",
+                            "selector_score",
+                            "banded_frontier_score",
+                            "hybrid_score",
+                            "hard_ban_terms",
+                            "hard_ban_hits",
+                        }
+                    }
+                )
                 rows.append(
                     FrontierCandidateRow(
                         run_name=name,
@@ -356,6 +385,9 @@ def audit_trajectory_runs(
         "trajectory_frontier_auc is the mean picked-step frontier score; it is not a token-level integral.",
         "anchor_survival asks whether the original seed anchors remain present somewhere in the picked trajectory.",
         "lineage_continuity asks whether each picked step carries anchors from the previous picked step.",
+        "object_lineage_continuity asks whether concrete object terms survive from one picked step to the next.",
+        "readable_transition_auc weights frontier quality by readability, completion, and object lineage.",
+        "hub_revisit_rate and motif_loop_penalty diagnose transport-hub loops rather than productive transformations.",
         "Motif entropy and stock-prop dependence diagnose stock-surreal attractors that can masquerade as frontier quality.",
     ]
     return TrajectoryAuditReport(
@@ -381,6 +413,7 @@ def audit_trajectory_run(
     condition = str(config.get("condition") or _condition_from_name(name) or Path(path).stem or name)
     running_context = seed
     previous_picked = seed
+    seen_hub_terms: set[str] = set()
     rows: List[TrajectoryStepRow] = []
     for step_idx, step in enumerate(list(run.get("steps", []) or []), 1):
         if not isinstance(step, Mapping):
@@ -402,6 +435,11 @@ def audit_trajectory_run(
         )
         score_dict = picked.get("score") if isinstance(picked.get("score"), Mapping) else {}
         repetition = max(0.0, -float(score_dict.get("anti_repetition", 0.0) or 0.0))
+        previous_terms = trajectory_object_terms(previous_picked)
+        object_terms = trajectory_object_terms(text)
+        object_overlap = object_lineage_overlap(previous_terms, object_terms)
+        hub_terms = trajectory_hub_terms(object_terms)
+        repeated_hubs = sorted(set(hub_terms) & seen_hub_terms)
         rows.append(
             TrajectoryStepRow(
                 run_name=name,
@@ -417,8 +455,14 @@ def audit_trajectory_run(
                 repetition_pressure=repetition,
                 now_chain_pressure=now_chain_pressure(text),
                 inscription_pressure=inscription_pressure(text),
+                object_terms=object_terms,
+                previous_object_terms=previous_terms,
+                object_lineage_overlap=object_overlap,
+                hub_terms=hub_terms,
+                hub_revisit_count=len(repeated_hubs),
             )
         )
+        seen_hub_terms.update(hub_terms)
         running_context = join_like(running_context, text)
         previous_picked = text
 
@@ -563,6 +607,34 @@ def row_metric(row: FrontierCandidateRow, metric: str) -> float:
     return float(row.metrics.get(metric, 0.0))
 
 
+def trajectory_object_terms(text: str) -> List[str]:
+    """Extract the noun-graph object vocabulary without creating a top-level import cycle."""
+
+    from .noun_graph import extract_noun_terms
+
+    return extract_noun_terms(text)
+
+
+def trajectory_hub_terms(terms: Sequence[str]) -> List[str]:
+    """Return object terms that carry at least one transport affordance class."""
+
+    from .noun_graph import affordance_classes_for_terms
+
+    out: List[str] = []
+    for term in terms:
+        if affordance_classes_for_terms([term]):
+            out.append(str(term))
+    return out
+
+
+def object_lineage_overlap(previous_terms: Sequence[str], current_terms: Sequence[str]) -> float:
+    previous = {str(term).strip().lower() for term in previous_terms if str(term).strip()}
+    current = {str(term).strip().lower() for term in current_terms if str(term).strip()}
+    if not previous:
+        return 0.0
+    return float(len(previous & current) / len(previous))
+
+
 def aggregate_trajectory_rows(rows: Sequence[TrajectoryStepRow], *, seed: str) -> Dict[str, Any]:
     out: Dict[str, Any] = {"picked_count": len(rows)}
     if not rows:
@@ -581,6 +653,10 @@ def aggregate_trajectory_rows(rows: Sequence[TrajectoryStepRow], *, seed: str) -
     now_pressures = [float(r.now_chain_pressure) for r in rows]
     inscription_pressures = [float(r.inscription_pressure) for r in rows]
     repetition = [float(r.repetition_pressure) for r in rows]
+    object_lineage = [float(r.object_lineage_overlap) for r in rows]
+    hub_mentions = sum(len(set(r.hub_terms)) for r in rows)
+    hub_revisits = sum(int(r.hub_revisit_count) for r in rows)
+    hub_revisit_rate = float(hub_revisits / hub_mentions) if hub_mentions else 0.0
     peak_frontier = max(frontiers)
     peak_idx = frontiers.index(peak_frontier)
     final_text = join_like("", " ".join(r.text for r in rows))
@@ -596,22 +672,47 @@ def aggregate_trajectory_rows(rows: Sequence[TrajectoryStepRow], *, seed: str) -
     terminal_unfinished = unfinished[-1]
     post_peak_decay = max(0.0, peak_frontier - terminal_frontier)
     trajectory_frontier_auc = mean(frontiers)
+    object_lineage_continuity = mean(object_lineage)
+    readable_transition_auc = mean(
+        [
+            frontiers[idx]
+            * readability[idx]
+            * (1.0 - unfinished[idx])
+            * (0.5 + 0.5 * object_lineage[idx])
+            for idx in range(len(rows))
+        ]
+    )
+    lineage_quality = mean(
+        [
+            0.55 * lineage[idx] + 0.45 * object_lineage[idx]
+            for idx in range(len(rows))
+        ]
+    )
     stock_prop_dependence = mean([max(a, b) for a, b in zip(stock, fantasy)])
+    motif_loop_penalty = clamp01(
+        0.45 * hub_revisit_rate
+        + 0.35 * motif_repetition
+        + 0.20 * mean(repetition)
+    )
     failure_pressure = clamp01(
-        0.30 * mean(unfinished)
-        + 0.18 * mean(repetition)
-        + 0.14 * mean(now_pressures)
-        + 0.14 * mean(inscription_pressures)
-        + 0.14 * stock_prop_dependence
-        + 0.10 * motif_repetition
-        + 0.15 * post_peak_decay
+        0.26 * mean(unfinished)
+        + 0.15 * mean(repetition)
+        + 0.11 * mean(now_pressures)
+        + 0.11 * mean(inscription_pressures)
+        + 0.12 * stock_prop_dependence
+        + 0.08 * motif_repetition
+        + 0.10 * post_peak_decay
+        + 0.07 * hub_revisit_rate
+        + 0.10 * motif_loop_penalty
     )
     trajectory_score = clamp01(
-        0.42 * trajectory_frontier_auc
-        + 0.18 * terminal_readability
-        + 0.14 * float(seed_anchor)
-        + 0.14 * mean(lineage)
-        + 0.08 * motif_entropy
+        0.36 * trajectory_frontier_auc
+        + 0.16 * terminal_readability
+        + 0.12 * float(seed_anchor)
+        + 0.10 * mean(lineage)
+        + 0.10 * object_lineage_continuity
+        + 0.10 * readable_transition_auc
+        + 0.06 * motif_entropy
         + 0.04 * (1.0 - post_peak_decay)
         - 0.30 * failure_pressure
     )
@@ -629,8 +730,15 @@ def aggregate_trajectory_rows(rows: Sequence[TrajectoryStepRow], *, seed: str) -
             "mean_repair_pressure": mean(repair),
             "anchor_survival": float(seed_anchor),
             "lineage_continuity": mean(lineage),
+            "object_lineage_continuity": float(object_lineage_continuity),
+            "lineage_quality": float(lineage_quality),
+            "readable_transition_auc": float(readable_transition_auc),
+            "hub_revisit_rate": float(hub_revisit_rate),
+            "hub_revisit_count": int(hub_revisits),
+            "transport_hub_mentions": int(hub_mentions),
             "motif_entropy": float(motif_entropy),
             "motif_repetition": float(motif_repetition),
+            "motif_loop_penalty": float(motif_loop_penalty),
             "stock_prop_dependence": float(stock_prop_dependence),
             "soft_style_dependence": mean(soft),
             "now_chain_pressure": mean(now_pressures),
@@ -714,11 +822,17 @@ def trajectory_label(agg: Mapping[str, Any]) -> str:
     unfin = float(agg.get("unfinished_rate", 0.0))
     stock = float(agg.get("stock_prop_dependence", 0.0))
     anchor = float(agg.get("anchor_survival", 0.0))
+    object_lineage = float(agg.get("object_lineage_continuity", 0.0))
+    loop = float(agg.get("motif_loop_penalty", 0.0))
     decay = float(agg.get("post_peak_decay", 0.0))
     if unfin > 0.45:
         return "trajectory_truncation_failure"
+    if loop > 0.48 and stock > 0.40:
+        return "motif_loop_trajectory"
     if stock > 0.75:
         return "stock_prop_attractor_trajectory"
+    if anchor < 0.35 and object_lineage < 0.20:
+        return "lineage_break_trajectory"
     if anchor < 0.25:
         return "anchor_evaporation_trajectory"
     if decay > 0.15:
@@ -731,12 +845,15 @@ def trajectory_label(agg: Mapping[str, Any]) -> str:
 def trajectory_fragility_score(run: TrajectoryRunAudit) -> float:
     a = run.aggregate
     return clamp01(
-        0.30 * float(a.get("unfinished_rate", 0.0))
-        + 0.22 * float(a.get("stock_prop_dependence", 0.0))
-        + 0.18 * float(a.get("post_peak_decay", 0.0))
-        + 0.12 * float(a.get("now_chain_pressure", 0.0))
-        + 0.10 * float(a.get("inscription_pressure", 0.0))
-        + 0.12 * (1.0 - float(a.get("anchor_survival", 0.0)))
+        0.26 * float(a.get("unfinished_rate", 0.0))
+        + 0.18 * float(a.get("stock_prop_dependence", 0.0))
+        + 0.14 * float(a.get("post_peak_decay", 0.0))
+        + 0.10 * float(a.get("now_chain_pressure", 0.0))
+        + 0.08 * float(a.get("inscription_pressure", 0.0))
+        + 0.10 * float(a.get("motif_loop_penalty", 0.0))
+        + 0.06 * float(a.get("hub_revisit_rate", 0.0))
+        + 0.08 * (1.0 - float(a.get("anchor_survival", 0.0)))
+        + 0.08 * (1.0 - float(a.get("object_lineage_continuity", 0.0)))
     )
 
 
@@ -1601,6 +1718,7 @@ TRAJECTORY_CSV_FIELDS: Tuple[str, ...] = (
     "phenomenon_label",
     "trajectory_score",
     "trajectory_frontier_auc",
+    "readable_transition_auc",
     "terminal_frontier",
     "terminal_readability",
     "terminal_unfinished",
@@ -1609,8 +1727,14 @@ TRAJECTORY_CSV_FIELDS: Tuple[str, ...] = (
     "unfinished_rate",
     "anchor_survival",
     "lineage_continuity",
+    "object_lineage_continuity",
+    "lineage_quality",
+    "hub_revisit_rate",
+    "hub_revisit_count",
+    "transport_hub_mentions",
     "motif_entropy",
     "motif_repetition",
+    "motif_loop_penalty",
     "stock_prop_dependence",
     "soft_style_dependence",
     "now_chain_pressure",
@@ -1629,15 +1753,21 @@ def compact_trajectory(run: TrajectoryRunAudit) -> Dict[str, Any]:
     a = run.aggregate
     return {
         "run": run.name,
+        "source": trajectory_source_label(run.path),
         "condition": run.condition,
         "path": run.path,
         "picked_count": run.picked_count,
         "label": a.get("phenomenon_label", ""),
         "trajectory_score": round(float(a.get("trajectory_score", 0.0)), 4),
         "frontier_auc": round(float(a.get("trajectory_frontier_auc", 0.0)), 4),
+        "readable_transition_auc": round(float(a.get("readable_transition_auc", 0.0)), 4),
         "terminal_readability": round(float(a.get("terminal_readability", 0.0)), 4),
         "anchor_survival": round(float(a.get("anchor_survival", 0.0)), 4),
         "lineage_continuity": round(float(a.get("lineage_continuity", 0.0)), 4),
+        "object_lineage_continuity": round(float(a.get("object_lineage_continuity", 0.0)), 4),
+        "lineage_quality": round(float(a.get("lineage_quality", 0.0)), 4),
+        "hub_revisit_rate": round(float(a.get("hub_revisit_rate", 0.0)), 4),
+        "motif_loop_penalty": round(float(a.get("motif_loop_penalty", 0.0)), 4),
         "stock_prop_dependence": round(float(a.get("stock_prop_dependence", 0.0)), 4),
         "soft_style_dependence": round(float(a.get("soft_style_dependence", 0.0)), 4),
         "unfinished_rate": round(float(a.get("unfinished_rate", 0.0)), 4),
@@ -1654,23 +1784,25 @@ def format_trajectory_report(report: TrajectoryAuditReport, *, top_k: int = 8) -
     if report.runs:
         lines.extend(
             [
-                "| run | label | score | auc | terminal read | anchor | lineage | stock | soft | unfinished | stop |",
-                "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+                "| source | run | label | score | read-trans | auc | terminal read | anchor | object lineage | hub revisit | loop | unfinished | stop |",
+                "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
             ]
         )
         for run in report.runs:
             a = run.aggregate
             lines.append(
-                "| {run} | {label} | {score:.3f} | {auc:.3f} | {read:.3f} | {anchor:.3f} | {lineage:.3f} | {stock:.3f} | {soft:.3f} | {unfin:.3f} | {stop} |".format(
+                "| {source} | {run} | {label} | {score:.3f} | {readtrans:.3f} | {auc:.3f} | {read:.3f} | {anchor:.3f} | {objline:.3f} | {hub:.3f} | {loop:.3f} | {unfin:.3f} | {stop} |".format(
+                    source=trajectory_source_label(run.path),
                     run=run.name,
                     label=a.get("phenomenon_label", ""),
                     score=float(a.get("trajectory_score", 0.0)),
+                    readtrans=float(a.get("readable_transition_auc", 0.0)),
                     auc=float(a.get("trajectory_frontier_auc", 0.0)),
                     read=float(a.get("terminal_readability", 0.0)),
                     anchor=float(a.get("anchor_survival", 0.0)),
-                    lineage=float(a.get("lineage_continuity", 0.0)),
-                    stock=float(a.get("stock_prop_dependence", 0.0)),
-                    soft=float(a.get("soft_style_dependence", 0.0)),
+                    objline=float(a.get("object_lineage_continuity", 0.0)),
+                    hub=float(a.get("hub_revisit_rate", 0.0)),
+                    loop=float(a.get("motif_loop_penalty", 0.0)),
                     unfin=float(a.get("unfinished_rate", 0.0)),
                     stop=a.get("suggested_stop_step") or "",
                 )
@@ -1680,9 +1812,11 @@ def format_trajectory_report(report: TrajectoryAuditReport, *, top_k: int = 8) -
         lines.append("## top trajectories")
         for ex in report.top_trajectories[:top_k]:
             lines.append(
-                f"- {ex['run']} score={ex['trajectory_score']:.3f} auc={ex['frontier_auc']:.3f} "
-                f"anchor={ex['anchor_survival']:.3f} lineage={ex['lineage_continuity']:.3f} "
-                f"stock={ex['stock_prop_dependence']:.3f} unfin={ex['unfinished_rate']:.3f} "
+                f"- {ex['source']}/{ex['run']} score={ex['trajectory_score']:.3f} "
+                f"read-trans={ex['readable_transition_auc']:.3f} "
+                f"auc={ex['frontier_auc']:.3f} anchor={ex['anchor_survival']:.3f} "
+                f"object-lineage={ex['object_lineage_continuity']:.3f} hub-revisit={ex['hub_revisit_rate']:.3f} "
+                f"loop={ex['motif_loop_penalty']:.3f} unfin={ex['unfinished_rate']:.3f} "
                 f"stop={ex.get('suggested_stop_step') or '-'}"
             )
         lines.append("")
@@ -1690,8 +1824,9 @@ def format_trajectory_report(report: TrajectoryAuditReport, *, top_k: int = 8) -
         lines.append("## fragile trajectories")
         for ex in report.fragile_trajectories[:top_k]:
             lines.append(
-                f"- {ex['run']} label={ex['label']} auc={ex['frontier_auc']:.3f} "
-                f"stock={ex['stock_prop_dependence']:.3f} soft={ex['soft_style_dependence']:.3f} "
+                f"- {ex['source']}/{ex['run']} label={ex['label']} auc={ex['frontier_auc']:.3f} "
+                f"object-lineage={ex['object_lineage_continuity']:.3f} hub-revisit={ex['hub_revisit_rate']:.3f} "
+                f"loop={ex['motif_loop_penalty']:.3f} stock={ex['stock_prop_dependence']:.3f} "
                 f"unfin={ex['unfinished_rate']:.3f} now={ex['now_chain_pressure']:.3f} "
                 f"inscription={ex['inscription_pressure']:.3f} decay={ex['post_peak_decay']:.3f}"
             )
@@ -1700,6 +1835,11 @@ def format_trajectory_report(report: TrajectoryAuditReport, *, top_k: int = 8) -
         lines.append("## notes")
         lines.extend(f"- {n}" for n in report.notes)
     return "\n".join(lines).rstrip() + "\n"
+
+
+def trajectory_source_label(path: str) -> str:
+    parent = Path(path).parent.name if path else ""
+    return parent or "unknown"
 
 
 def write_trajectory_json(report: TrajectoryAuditReport, path: str, *, include_steps: bool = True) -> None:

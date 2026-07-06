@@ -1,8 +1,9 @@
+import argparse
 import json
 import subprocess
 import sys
 
-from depaysement_lab.cli import load_seed_bank, safe_seed_label
+from depaysement_lab.cli import load_seed_bank, make_selector_config, safe_seed_label
 
 
 def test_load_seed_bank_reads_json_object_and_limits(tmp_path):
@@ -21,6 +22,22 @@ def test_load_seed_bank_reads_text_and_deduplicates(tmp_path):
 
 def test_safe_seed_label_is_filename_friendly():
     assert safe_seed_label("The receipt on the counter!", 3).startswith("seed03_the_receipt")
+
+
+def test_hard_ban_affordance_classes_expand_selector_terms():
+    cfg = make_selector_config(
+        argparse.Namespace(
+            select_objective="banded-frontier",
+            hard_ban_terms="custom hinge",
+            hard_ban_affordance_classes="acoustic_mechanism,time_mechanism",
+        )
+    )
+
+    assert "custom hinge" in cfg.hard_ban_terms
+    assert "music box" in cfg.hard_ban_terms
+    assert "harmonica" in cfg.hard_ban_terms
+    assert "clock" in cfg.hard_ban_terms
+    assert "metronome" in cfg.hard_ban_terms
 
 
 def test_frontier_sweep_resume_skips_existing_runs(tmp_path):

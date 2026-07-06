@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from .frontier import FrontierAuditReport, clean_generated_text, truncate
 
@@ -29,6 +30,7 @@ NOUN_PHRASES: Tuple[str, ...] = tuple(
             "delivery label",
             "elevator button",
             "faded photograph",
+            "grandfather clock",
             "greenhouse",
             "harmonium",
             "leather-bound book",
@@ -82,9 +84,11 @@ NOUN_TERMS: Tuple[str, ...] = tuple(
             "moon",
             "mug",
             "note",
+            "newspaper",
             "paper",
             "photograph",
             "photo",
+            "porcelain",
             "receipt",
             "register",
             "room",
@@ -99,6 +103,28 @@ NOUN_TERMS: Tuple[str, ...] = tuple(
             "vines",
             "watch",
             "window",
+            "bell",
+            "calendar",
+            "cat",
+            "comb",
+            "crack",
+            "crystal",
+            "fern",
+            "figure",
+            "gate",
+            "glass",
+            "lens",
+            "mailbox",
+            "manuscript",
+            "metronome",
+            "moss",
+            "organ",
+            "piano",
+            "poem",
+            "suitcase",
+            "telescope",
+            "typewriter",
+            "violin",
         }
     )
 )
@@ -134,6 +160,126 @@ STOCK_HUB_TERMS: Tuple[str, ...] = (
     "watch",
 )
 
+AFFORDANCE_CLASSES: Dict[str, Tuple[str, ...]] = {
+    "canonical_stock_hub": (
+        "music box",
+        "antique music box",
+        "leather-bound book",
+        "key",
+        "clock",
+        "watch",
+        "pocket watch",
+        "porcelain doll",
+        "porcelain",
+        "doll",
+        "ballerina",
+    ),
+    "acoustic_mechanism": (
+        "music box",
+        "antique music box",
+        "harmonica",
+        "harmonium",
+        "piano",
+        "organ",
+        "violin",
+        "bell",
+    ),
+    "text_memory": (
+        "book",
+        "leather-bound book",
+        "letter",
+        "receipt",
+        "label",
+        "note",
+        "paper",
+        "poem",
+        "manuscript",
+        "typewriter",
+        "spreadsheet",
+        "ticket",
+        "newspaper",
+    ),
+    "threshold_container": (
+        "box",
+        "drawer",
+        "fridge",
+        "door",
+        "gate",
+        "window",
+        "crack",
+        "cabinet",
+        "suitcase",
+        "mug",
+        "teacup",
+        "teapot",
+        "kettle",
+    ),
+    "time_mechanism": (
+        "clock",
+        "station clock",
+        "watch",
+        "pocket watch",
+        "calendar",
+        "metronome",
+    ),
+    "organic_expansion": (
+        "garden",
+        "greenhouse",
+        "moss",
+        "vine",
+        "vines",
+        "flower",
+        "fern",
+        "rose",
+        "paper flower",
+        "paper rose",
+    ),
+    "optical_memory": (
+        "photograph",
+        "photo",
+        "faded photograph",
+        "mirror",
+        "glass",
+        "crystal",
+        "lens",
+        "telescope",
+    ),
+    "animating_mediator": (
+        "bird",
+        "doll",
+        "porcelain doll",
+        "cat",
+        "hand",
+        "figure",
+        "automaton",
+        "ballerina",
+    ),
+}
+
+AFFORDANCE_CLASS_ORDER: Tuple[str, ...] = tuple(AFFORDANCE_CLASSES)
+
+
+def affordance_terms_for_classes(class_names: Sequence[str]) -> List[str]:
+    terms: List[str] = []
+    seen: set[str] = set()
+    unknown: List[str] = []
+    for raw_name in class_names:
+        name = str(raw_name).strip()
+        if not name:
+            continue
+        if name not in AFFORDANCE_CLASSES:
+            unknown.append(name)
+            continue
+        for term in AFFORDANCE_CLASSES[name]:
+            if term not in seen:
+                seen.add(term)
+                terms.append(term)
+    if unknown:
+        known = ", ".join(AFFORDANCE_CLASS_ORDER)
+        bad = ", ".join(unknown)
+        raise ValueError(f"unknown affordance class(es): {bad}. Known classes: {known}")
+    return terms
+
 
 @dataclass
 class NounGraphDocument:
@@ -151,6 +297,10 @@ class NounGraphDocument:
     anchor: float
     text: str
     terms: List[str]
+    affordance_classes: List[str] = field(default_factory=list)
+    hard_ban_observed: bool = False
+    hard_ban_failed: bool = False
+    hard_ban_hits: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -171,6 +321,24 @@ class NounGraphReport:
         }
 
 
+@dataclass
+class AffordanceRerouteReport:
+    settings: Dict[str, Any]
+    summaries: List[Dict[str, Any]]
+    matrix: List[Dict[str, Any]]
+    diagnostics: List[Dict[str, Any]] = field(default_factory=list)
+    examples: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "settings": dict(self.settings),
+            "summaries": list(self.summaries),
+            "matrix": list(self.matrix),
+            "diagnostics": list(self.diagnostics),
+            "examples": dict(self.examples),
+        }
+
+
 def build_noun_graph_report(
     frontier_report: FrontierAuditReport,
     *,
@@ -182,41 +350,14 @@ def build_noun_graph_report(
 ) -> NounGraphReport:
     rows = [row for run in frontier_report.runs for row in run.rows]
     max_frontier = max((float(row.readable_ontology_frontier) for row in rows), default=0.0)
-    band_min = 0.0
-    if max_frontier > 0.0:
-        band_min = max(0.0, max_frontier * float(frontier_band_ratio), max_frontier - float(frontier_band_width))
-
-    documents: List[NounGraphDocument] = []
-    seen_texts: set[str] = set()
-    for row in rows:
-        if float(row.readable_ontology_frontier) < band_min:
-            continue
-        text_key = re.sub(r"\s+", " ", row.text.strip().lower())
-        if dedupe_texts and text_key in seen_texts:
-            continue
-        seen_texts.add(text_key)
-        terms = extract_noun_terms(row.text)
-        if len(terms) < 2:
-            continue
-        m = row.metrics
-        documents.append(
-            NounGraphDocument(
-                run_name=row.run_name,
-                condition=row.condition,
-                path=row.path,
-                step=int(row.step),
-                candidate_index=int(row.candidate_index),
-                picked=bool(row.picked),
-                frontier=float(row.readable_ontology_frontier),
-                readability=float(m.get("syntax_readability_proxy", 0.0)),
-                ontology=float(m.get("ontology_collapse_density", 0.0)),
-                unfinished=float(m.get("unfinished", 0.0)),
-                stock_prop=float(m.get("stock_prop_attractor_score", 0.0)),
-                anchor=float(m.get("ordinary_anchor_retention", 0.0)),
-                text=row.text,
-                terms=terms,
-            )
-        )
+    band_min = frontier_band_min(max_frontier, frontier_band_ratio=frontier_band_ratio, frontier_band_width=frontier_band_width)
+    documents = frontier_band_documents(
+        frontier_report,
+        frontier_band_ratio=frontier_band_ratio,
+        frontier_band_width=frontier_band_width,
+        dedupe_texts=dedupe_texts,
+        require_multiple_terms=True,
+    )
 
     node_docs: Dict[str, List[NounGraphDocument]] = defaultdict(list)
     edge_weights: Counter[Tuple[str, str]] = Counter()
@@ -278,6 +419,7 @@ def build_noun_graph_report(
                 "mean_unfinished": mean_unfinished,
                 "mean_stock_prop": mean(doc.stock_prop for doc in docs),
                 "mean_anchor": mean_anchor,
+                "affordance_classes": affordance_classes_for_terms([term]),
                 "picked_frequency": sum(1 for doc in docs if doc.picked),
             }
         )
@@ -323,6 +465,7 @@ def build_noun_graph_report(
             "frontier_band_width": float(frontier_band_width),
             "source_candidate_count": len(rows),
             "band_document_count": len(documents),
+            "affordance_class_counts": dict(affordance_class_counts(documents)),
             "dedupe_texts": bool(dedupe_texts),
             "max_nodes": int(max_nodes),
         },
@@ -350,6 +493,97 @@ def extract_noun_terms(text: str) -> List[str]:
             seen.add(normalized)
             out.append(normalized)
     return out
+
+
+def frontier_band_min(max_frontier: float, *, frontier_band_ratio: float, frontier_band_width: float) -> float:
+    if max_frontier <= 0.0:
+        return 0.0
+    return max(0.0, float(max_frontier) * float(frontier_band_ratio), float(max_frontier) - float(frontier_band_width))
+
+
+def frontier_band_documents(
+    frontier_report: FrontierAuditReport,
+    *,
+    frontier_band_ratio: float = 0.60,
+    frontier_band_width: float = 0.08,
+    dedupe_texts: bool = True,
+    require_multiple_terms: bool = False,
+    compliant_only: bool = False,
+) -> List[NounGraphDocument]:
+    rows = [row for run in frontier_report.runs for row in run.rows]
+    if compliant_only:
+        rows = [
+            row
+            for row in rows
+            if not (
+                ("hard_ban_failed" in row.metrics or "hard_ban_hits" in row.metrics)
+                and bool(row.metrics.get("hard_ban_failed", False))
+            )
+        ]
+    max_frontier = max((float(row.readable_ontology_frontier) for row in rows), default=0.0)
+    band_min = frontier_band_min(
+        max_frontier,
+        frontier_band_ratio=frontier_band_ratio,
+        frontier_band_width=frontier_band_width,
+    )
+    documents: List[NounGraphDocument] = []
+    seen_texts: set[str] = set()
+    for row in rows:
+        if float(row.readable_ontology_frontier) < band_min:
+            continue
+        text_key = re.sub(r"\s+", " ", row.text.strip().lower())
+        if dedupe_texts and text_key in seen_texts:
+            continue
+        seen_texts.add(text_key)
+        terms = extract_noun_terms(row.text)
+        if require_multiple_terms and len(terms) < 2:
+            continue
+        if not terms:
+            continue
+        m = row.metrics
+        hard_ban_observed = "hard_ban_failed" in m or "hard_ban_hits" in m
+        hard_ban_failed = bool(m.get("hard_ban_failed", False))
+        hard_ban_hits = [str(hit) for hit in list(m.get("hard_ban_hits", []) or [])]
+        documents.append(
+            NounGraphDocument(
+                run_name=row.run_name,
+                condition=row.condition,
+                path=row.path,
+                step=int(row.step),
+                candidate_index=int(row.candidate_index),
+                picked=bool(row.picked),
+                frontier=float(row.readable_ontology_frontier),
+                readability=float(m.get("syntax_readability_proxy", 0.0)),
+                ontology=float(m.get("ontology_collapse_density", 0.0)),
+                unfinished=float(m.get("unfinished", 0.0)),
+                stock_prop=float(m.get("stock_prop_attractor_score", 0.0)),
+                anchor=float(m.get("ordinary_anchor_retention", 0.0)),
+                text=row.text,
+                terms=terms,
+                affordance_classes=affordance_classes_for_terms(terms),
+                hard_ban_observed=bool(hard_ban_observed),
+                hard_ban_failed=hard_ban_failed,
+                hard_ban_hits=hard_ban_hits,
+            )
+        )
+    return documents
+
+
+def affordance_classes_for_terms(terms: Sequence[str]) -> List[str]:
+    normalized = {singularize_noun_term(str(term).strip().lower()) for term in terms if str(term).strip()}
+    classes: List[str] = []
+    for class_name in AFFORDANCE_CLASS_ORDER:
+        class_terms = {singularize_noun_term(term) for term in AFFORDANCE_CLASSES[class_name]}
+        if normalized & class_terms:
+            classes.append(class_name)
+    return classes
+
+
+def affordance_class_counts(documents: Sequence[NounGraphDocument]) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for doc in documents:
+        counts.update(set(doc.affordance_classes))
+    return counts
 
 
 def singularize_noun_term(term: str) -> str:
@@ -429,6 +663,351 @@ def approximate_betweenness(graph: Mapping[str, Iterable[str]]) -> Dict[str, flo
     return betweenness
 
 
+def build_affordance_reroute_report(
+    base_report: FrontierAuditReport,
+    ablation_report: FrontierAuditReport,
+    *,
+    base_label: str = "base",
+    ablation_label: str = "ablation",
+    frontier_band_ratio: float = 0.60,
+    frontier_band_width: float = 0.08,
+    dedupe_texts: bool = True,
+    compliant_only: bool = False,
+    top_k: int = 12,
+) -> AffordanceRerouteReport:
+    base_docs = frontier_band_documents(
+        base_report,
+        frontier_band_ratio=frontier_band_ratio,
+        frontier_band_width=frontier_band_width,
+        dedupe_texts=dedupe_texts,
+        compliant_only=compliant_only,
+    )
+    ablation_docs = frontier_band_documents(
+        ablation_report,
+        frontier_band_ratio=frontier_band_ratio,
+        frontier_band_width=frontier_band_width,
+        dedupe_texts=dedupe_texts,
+        compliant_only=compliant_only,
+    )
+    base_summaries = summarize_affordance_documents(base_docs, source=base_label)
+    ablation_summaries = summarize_affordance_documents(ablation_docs, source=ablation_label)
+    base_by_condition = {reroute_condition_key(str(row["condition"])): row for row in base_summaries}
+    ablation_by_condition = {reroute_condition_key(str(row["condition"])): row for row in ablation_summaries}
+    conditions = sorted(set(base_by_condition) | set(ablation_by_condition))
+
+    matrix: List[Dict[str, Any]] = []
+    diagnostics: List[Dict[str, Any]] = []
+    for condition in conditions:
+        base_row = base_by_condition.get(condition, {})
+        ablation_row = ablation_by_condition.get(condition, {})
+        diagnostics.append(affordance_condition_diagnostics(condition, base_row, ablation_row))
+        for class_name in AFFORDANCE_CLASS_ORDER:
+            base_rate = float(base_row.get(f"{class_name}_rate", 0.0) or 0.0)
+            ablation_rate = float(ablation_row.get(f"{class_name}_rate", 0.0) or 0.0)
+            matrix.append(
+                {
+                    "condition": condition,
+                    "affordance_class": class_name,
+                    "base_rate": base_rate,
+                    "ablation_rate": ablation_rate,
+                    "delta": ablation_rate - base_rate,
+                    "base_count": int(base_row.get(f"{class_name}_count", 0) or 0),
+                    "ablation_count": int(ablation_row.get(f"{class_name}_count", 0) or 0),
+                    "base_documents": int(base_row.get("documents", 0) or 0),
+                    "ablation_documents": int(ablation_row.get("documents", 0) or 0),
+                }
+            )
+    matrix.sort(key=lambda row: (abs(float(row["delta"])), str(row["condition"]), str(row["affordance_class"])), reverse=True)
+
+    examples: Dict[str, List[Dict[str, Any]]] = {}
+    for class_name in AFFORDANCE_CLASS_ORDER:
+        docs = [doc for doc in ablation_docs if class_name in doc.affordance_classes]
+        docs = sorted(docs, key=lambda doc: doc.frontier, reverse=True)[: max(0, int(top_k))]
+        if docs:
+            examples[class_name] = [affordance_example(doc) for doc in docs[:3]]
+
+    return AffordanceRerouteReport(
+        settings={
+            "base_label": base_label,
+            "ablation_label": ablation_label,
+            "frontier_band_ratio": float(frontier_band_ratio),
+            "frontier_band_width": float(frontier_band_width),
+            "dedupe_texts": bool(dedupe_texts),
+            "compliant_only": bool(compliant_only),
+            "base_documents": len(base_docs),
+            "ablation_documents": len(ablation_docs),
+            "classes": list(AFFORDANCE_CLASS_ORDER),
+        },
+        summaries=[*base_summaries, *ablation_summaries],
+        matrix=matrix,
+        diagnostics=diagnostics,
+        examples=examples,
+    )
+
+
+def reroute_condition_key(condition: str) -> str:
+    return re.sub(r"__reselect_.*$", "", condition)
+
+
+def summarize_affordance_documents(documents: Sequence[NounGraphDocument], *, source: str) -> List[Dict[str, Any]]:
+    by_condition: Dict[str, List[NounGraphDocument]] = defaultdict(list)
+    for doc in documents:
+        by_condition[doc.condition].append(doc)
+    rows: List[Dict[str, Any]] = []
+    for condition, docs in sorted(by_condition.items()):
+        total = len(docs)
+        row: Dict[str, Any] = {
+            "source": source,
+            "condition": condition,
+            "documents": total,
+            "mean_frontier": mean(doc.frontier for doc in docs),
+            "mean_readability": mean(doc.readability for doc in docs),
+            "mean_ontology": mean(doc.ontology for doc in docs),
+            "mean_unfinished": mean(doc.unfinished for doc in docs),
+            "affordance_load": mean(len(set(doc.affordance_classes)) for doc in docs),
+            "reroute_entropy": normalized_entropy(affordance_class_counts(docs), ignore={"canonical_stock_hub"}),
+            "class_entropy": normalized_entropy(affordance_class_counts(docs)),
+            "hard_ban_observed_documents": sum(1 for doc in docs if doc.hard_ban_observed),
+            "hard_ban_failed_documents": sum(1 for doc in docs if doc.hard_ban_failed),
+        }
+        row["hard_compliance_rate"] = (
+            1.0 - float(row["hard_ban_failed_documents"]) / float(row["hard_ban_observed_documents"])
+            if row["hard_ban_observed_documents"]
+            else 0.0
+        )
+        counts = affordance_class_counts(docs)
+        for class_name in AFFORDANCE_CLASS_ORDER:
+            count = int(counts.get(class_name, 0))
+            row[f"{class_name}_count"] = count
+            row[f"{class_name}_rate"] = float(count / total) if total else 0.0
+        rows.append(row)
+    return rows
+
+
+def affordance_example(doc: NounGraphDocument) -> Dict[str, Any]:
+    return {
+        "run_name": doc.run_name,
+        "condition": doc.condition,
+        "step": doc.step,
+        "candidate_index": doc.candidate_index,
+        "picked": doc.picked,
+        "frontier": doc.frontier,
+        "terms": list(doc.terms),
+        "affordance_classes": list(doc.affordance_classes),
+        "text": doc.text,
+    }
+
+
+def affordance_condition_diagnostics(
+    condition: str,
+    base_row: Mapping[str, Any],
+    ablation_row: Mapping[str, Any],
+) -> Dict[str, Any]:
+    base_docs = int(base_row.get("documents", 0) or 0)
+    ablation_docs = int(ablation_row.get("documents", 0) or 0)
+    base_frontier = float(base_row.get("mean_frontier", 0.0) or 0.0)
+    ablation_frontier = float(ablation_row.get("mean_frontier", 0.0) or 0.0)
+    base_canonical = float(base_row.get("canonical_stock_hub_rate", 0.0) or 0.0)
+    ablation_canonical = float(ablation_row.get("canonical_stock_hub_rate", 0.0) or 0.0)
+    base_noncanonical = noncanonical_affordance_rate(base_row)
+    ablation_noncanonical = noncanonical_affordance_rate(ablation_row)
+    canonical_drop = max(0.0, base_canonical - ablation_canonical)
+    noncanonical_gain = ablation_noncanonical - base_noncanonical
+    frontier_survival_ratio = float(ablation_docs / base_docs) if base_docs else (1.0 if ablation_docs else 0.0)
+    frontier_survival_rate = min(1.0, frontier_survival_ratio)
+    hub_dependence_index = float((base_frontier - ablation_frontier) / base_frontier) if base_frontier > 0.0 else 0.0
+    return {
+        "condition": condition,
+        "base_documents": base_docs,
+        "ablation_documents": ablation_docs,
+        "frontier_survival_rate": frontier_survival_rate,
+        "frontier_survival_ratio": frontier_survival_ratio,
+        "base_frontier": base_frontier,
+        "ablation_frontier": ablation_frontier,
+        "frontier_delta": ablation_frontier - base_frontier,
+        "hub_dependence_index": hub_dependence_index,
+        "canonical_stock_hub_delta": ablation_canonical - base_canonical,
+        "canonical_drop": canonical_drop,
+        "base_noncanonical_affordance_rate": base_noncanonical,
+        "ablation_noncanonical_affordance_rate": ablation_noncanonical,
+        "noncanonical_affordance_delta": noncanonical_gain,
+        "affordance_substitution_index": canonical_drop * max(0.0, noncanonical_gain),
+        "base_reroute_entropy": float(base_row.get("reroute_entropy", 0.0) or 0.0),
+        "ablation_reroute_entropy": float(ablation_row.get("reroute_entropy", 0.0) or 0.0),
+        "reroute_entropy_delta": float(ablation_row.get("reroute_entropy", 0.0) or 0.0)
+        - float(base_row.get("reroute_entropy", 0.0) or 0.0),
+        "base_affordance_load": float(base_row.get("affordance_load", 0.0) or 0.0),
+        "ablation_affordance_load": float(ablation_row.get("affordance_load", 0.0) or 0.0),
+        "affordance_load_delta": float(ablation_row.get("affordance_load", 0.0) or 0.0)
+        - float(base_row.get("affordance_load", 0.0) or 0.0),
+        "hard_compliance_rate": float(ablation_row.get("hard_compliance_rate", 0.0) or 0.0),
+    }
+
+
+def noncanonical_affordance_rate(row: Mapping[str, Any]) -> float:
+    rates = [
+        float(row.get(f"{class_name}_rate", 0.0) or 0.0)
+        for class_name in AFFORDANCE_CLASS_ORDER
+        if class_name != "canonical_stock_hub"
+    ]
+    return max(rates, default=0.0)
+
+
+def format_affordance_reroute_report(report: AffordanceRerouteReport, *, top_k: int = 18) -> str:
+    settings = report.settings
+    lines: List[str] = [
+        "# Affordance Reroute Matrix",
+        "",
+        (
+            f"base={settings.get('base_label', 'base')} | "
+            f"ablation={settings.get('ablation_label', 'ablation')} | "
+            f"base_docs={int(settings.get('base_documents', 0))} | "
+            f"ablation_docs={int(settings.get('ablation_documents', 0))}"
+        ),
+        "",
+        "## Largest Class Deltas",
+        "",
+        "| condition | class | base | ablation | delta |",
+        "| --- | --- | ---: | ---: | ---: |",
+    ]
+    for row in report.matrix[: max(0, int(top_k))]:
+        lines.append(
+            "| {condition} | {class_name} | {base:.1%} | {ablation:.1%} | {delta:+.1%} |".format(
+                condition=row["condition"],
+                class_name=row["affordance_class"],
+                base=float(row["base_rate"]),
+                ablation=float(row["ablation_rate"]),
+                delta=float(row["delta"]),
+            )
+        )
+    lines.append("")
+
+    if report.diagnostics:
+        lines.extend(
+            [
+                "## Reroute Diagnostics",
+                "",
+                "| condition | survival | frontier delta | hub dependence | canonical drop | substitution | entropy delta | load delta | compliance |",
+                "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+            ]
+        )
+        for row in sorted(report.diagnostics, key=lambda r: str(r.get("condition", ""))):
+            lines.append(
+                "| {condition} | {survival:.2f} | {frontier_delta:+.3f} | {dependence:+.3f} | {drop:.1%} | {substitution:.3f} | {entropy:+.3f} | {load:+.2f} | {compliance:.1%} |".format(
+                    condition=row["condition"],
+                    survival=float(row["frontier_survival_rate"]),
+                    frontier_delta=float(row["frontier_delta"]),
+                    dependence=float(row["hub_dependence_index"]),
+                    drop=float(row["canonical_drop"]),
+                    substitution=float(row["affordance_substitution_index"]),
+                    entropy=float(row["reroute_entropy_delta"]),
+                    load=float(row["affordance_load_delta"]),
+                    compliance=float(row["hard_compliance_rate"]),
+                )
+            )
+        lines.append("")
+
+    if report.summaries:
+        lines.extend(["## Source Summaries", ""])
+        for row in report.summaries:
+            top_classes = sorted(
+                (
+                    (class_name, float(row.get(f"{class_name}_rate", 0.0) or 0.0))
+                    for class_name in AFFORDANCE_CLASS_ORDER
+                ),
+                key=lambda item: item[1],
+                reverse=True,
+            )[:4]
+            top = ", ".join(f"{name}={rate:.1%}" for name, rate in top_classes if rate > 0.0) or "-"
+            lines.append(
+                "- {source} {condition}: docs={docs} frontier={frontier:.3f} unfinished={unfinished:.3f} load={load:.2f} entropy={entropy:.3f} compliance={compliance:.1%} | {top}".format(
+                    source=row["source"],
+                    condition=row["condition"],
+                    docs=int(row["documents"]),
+                    frontier=float(row["mean_frontier"]),
+                    unfinished=float(row["mean_unfinished"]),
+                    load=float(row.get("affordance_load", 0.0) or 0.0),
+                    entropy=float(row.get("reroute_entropy", 0.0) or 0.0),
+                    compliance=float(row.get("hard_compliance_rate", 0.0) or 0.0),
+                    top=top,
+                )
+            )
+        lines.append("")
+
+    if report.examples:
+        lines.extend(["## Ablation Examples By Class", ""])
+        for class_name in AFFORDANCE_CLASS_ORDER:
+            examples = report.examples.get(class_name, [])
+            if not examples:
+                continue
+            lines.extend([f"### {class_name}", ""])
+            for ex in examples[:2]:
+                lines.extend(
+                    [
+                        (
+                            f"condition={ex['condition']} | step={ex['step']} | "
+                            f"candidate={ex['candidate_index']} | frontier={float(ex['frontier']):.3f} | "
+                            f"classes={','.join(ex['affordance_classes'])}"
+                        ),
+                        "",
+                        "```text",
+                        truncate(str(ex["text"]), 420),
+                        "```",
+                        "",
+                    ]
+                )
+
+    lines.extend(
+        [
+            "## Notes",
+            "- Rates are document hit rates inside the observed frontier band, not token frequencies.",
+            "- survival is ablation frontier-band documents divided by base frontier-band documents for the same condition.",
+            "- hub dependence is positive when mean frontier falls after ablation; negative values mean frontier rose.",
+            "- reroute entropy ignores canonical_stock_hub and asks whether replacement affordances spread across classes.",
+            "- Classes overlap: one candidate can count as both text_memory and threshold_container.",
+            "- Use this matrix to distinguish word-level bans from function-level rerouting.",
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def write_affordance_reroute_json(report: AffordanceRerouteReport, path: str) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def write_affordance_reroute_csv(report: AffordanceRerouteReport, path: str) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fields = [
+        "condition",
+        "affordance_class",
+        "base_rate",
+        "ablation_rate",
+        "delta",
+        "base_count",
+        "ablation_count",
+        "base_documents",
+        "ablation_documents",
+    ]
+    with out.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        for row in report.matrix:
+            writer.writerow({field: row.get(field, "") for field in fields})
+
+
+def normalized_entropy(counts: Mapping[str, int], *, ignore: Optional[set[str]] = None) -> float:
+    ignore = ignore or set()
+    vals = [float(count) for key, count in counts.items() if key not in ignore and count > 0]
+    total = sum(vals)
+    if total <= 0.0 or len(vals) <= 1:
+        return 0.0
+    entropy = -sum((value / total) * math.log(value / total) for value in vals)
+    return float(entropy / math.log(len(vals)))
+
+
 def format_noun_graph_report(report: NounGraphReport, *, top_k: int = 24) -> str:
     settings = report.settings
     lines: List[str] = [
@@ -452,17 +1031,26 @@ def format_noun_graph_report(report: NounGraphReport, *, top_k: int = 24) -> str
             lines.append(f"- {label}: {count}")
         lines.append("")
 
+    class_counts = Counter({str(name): int(count) for name, count in dict(settings.get("affordance_class_counts", {})).items()})
+    if class_counts:
+        lines.extend(["## Affordance Classes", ""])
+        for class_name, count in class_counts.most_common():
+            lines.append(f"- {class_name}: {count}")
+        lines.append("")
+
     lines.extend(["## Top Hub Candidates", ""])
     for node in report.nodes[: max(0, int(top_k))]:
+        classes = ",".join(str(name) for name in node.get("affordance_classes", []) if name) or "-"
         lines.append(
             "- {term} [{label}] freq={freq} degree={degree} between={between:.3f} "
-            "mean_frontier={frontier:.3f} max_frontier={max_frontier:.3f} "
+            "classes={classes} mean_frontier={frontier:.3f} max_frontier={max_frontier:.3f} "
             "unfinished={unfinished:.3f} anchor={anchor:.3f}".format(
                 term=node["term"],
                 label=node["label"],
                 freq=node["frequency"],
                 degree=node["weighted_degree"],
                 between=float(node["betweenness_norm"]),
+                classes=classes,
                 frontier=float(node["mean_frontier"]),
                 max_frontier=float(node["max_frontier"]),
                 unfinished=float(node["mean_unfinished"]),
@@ -534,13 +1122,16 @@ def write_noun_graph_nodes_csv(report: NounGraphReport, path: str) -> None:
         "mean_unfinished",
         "mean_stock_prop",
         "mean_anchor",
+        "affordance_classes",
         "picked_frequency",
     ]
     with out.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for node in report.nodes:
-            writer.writerow({field: node.get(field, "") for field in fields})
+            row = {field: node.get(field, "") for field in fields}
+            row["affordance_classes"] = ";".join(str(name) for name in node.get("affordance_classes", []))
+            writer.writerow(row)
 
 
 def mean(vals: Iterable[float]) -> float:

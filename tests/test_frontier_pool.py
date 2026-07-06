@@ -157,12 +157,12 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
             {
                 "step": 1,
                 "picked": {
-                    "text": "The umbrella becomes a tiny station garden.<|eot_id|>",
+                    "text": "The umbrella becomes a tiny station garden.<|eot_id|><end_of_turn><eos>",
                     "score": {"total": -99.0},
                 },
                 "candidates": [
                     {
-                        "text": "The umbrella becomes a tiny station garden.<|eot_id|>",
+                        "text": "The umbrella becomes a tiny station garden.<|eot_id|><end_of_turn><eos>",
                         "score": {"total": -99.0},
                     }
                 ],
@@ -175,6 +175,8 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     row = report.runs[0].rows[0]
     assert row.text == "The umbrella becomes a tiny station garden."
     assert "<|eot_id|>" not in row.metrics["text"]
+    assert "<end_of_turn>" not in row.metrics["text"]
+    assert "<eos>" not in row.metrics["text"]
     assert row.metrics["unfinished"] == 0.0
     assert row.score_total != -99.0
 
@@ -183,6 +185,8 @@ def test_pool_audit_strips_generated_control_tokens_and_writes_reading_report(tm
     text = out.read_text(encoding="utf-8")
     assert "Picked Final Text" in text
     assert "The umbrella becomes a tiny station garden.<|eot_id|>" not in text
+    assert "<end_of_turn>" not in text
+    assert "<eos>" not in text
 
 
 def test_pool_audit_marks_only_one_duplicate_candidate_as_picked(tmp_path):

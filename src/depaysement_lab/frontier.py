@@ -32,6 +32,10 @@ GENERATED_SPECIAL_TOKENS: Tuple[str, ...] = (
     "<|end_of_text|>",
     "<|begin_of_text|>",
     "<|im_end|>",
+    "<start_of_turn>",
+    "<end_of_turn>",
+    "<eos>",
+    "<bos>",
     "</s>",
     "<s>",
 )

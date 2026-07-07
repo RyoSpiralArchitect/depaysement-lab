@@ -1,10 +1,13 @@
 from depaysement_lab.proto_v2 import (
+    Candidate,
     DepaysementScorer,
     DepaysementEngine,
     DummyGenerator,
+    ScoreBreakdown,
     SelectorConfig,
     build_depaysement_prompt,
     cleanup_continuation,
+    semantic_transport_metrics,
 )
 import random
 
@@ -181,6 +184,61 @@ def test_anchor_guard_steers_selector_away_from_stock_fantasy_props():
     assert fantasy.selector_metrics["fantasy_prop_score"] > picked.selector_metrics["fantasy_prop_score"]
     assert picked.selector_metrics["ordinary_anchor_retention"] >= 0.5
     assert "umbrella" in picked.selector_metrics["ordinary_anchor_hits"]
+
+
+def test_semantic_transport_metrics_detect_object_cycle():
+    context = "I am waiting for the printer in the hallway."
+    loop = (
+        "The printer spills words across the tray. The words become a book, "
+        "the book opens into pages, and the pages spill words back into the printer."
+    )
+    transport = (
+        "The delivery label peels into a greenhouse floor where a butterfly "
+        "dries its wings beside a cracked birdbath."
+    )
+
+    loop_metrics = semantic_transport_metrics(context, loop)
+    transport_metrics = semantic_transport_metrics(context, transport)
+
+    assert loop_metrics["semantic_loop_pressure"] > 0.55
+    assert loop_metrics["semantic_loop_pressure"] > transport_metrics["semantic_loop_pressure"] + 0.35
+    assert "word" in loop_metrics["semantic_loop_terms"]
+    assert transport_metrics["lineage_diversity"] >= 0.80
+
+
+def test_semantic_loop_weight_debuffs_closed_candidate_cycle():
+    context = "I am waiting for the printer in the hallway."
+    loop = Candidate(
+        "The printer spills words across the tray. The words become a book, "
+        "the book opens into pages, and the pages spill words back into the printer.",
+        ScoreBreakdown(total=1.0),
+    )
+    transport = Candidate(
+        "The delivery label peels into a greenhouse floor where a butterfly dries its wings beside a cracked birdbath.",
+        ScoreBreakdown(total=1.0),
+    )
+    engine = DepaysementEngine(
+        DummyGenerator(random.Random(0)),
+        rng=random.Random(0),
+        selector=SelectorConfig(
+            objective="hybrid",
+            frontier_weight=0.0,
+            ontology_weight=0.0,
+            unfinished_weight=0.0,
+            repair_weight=0.0,
+            repetition_weight=0.0,
+            sprawl_weight=0.0,
+            semantic_loop_weight=2.0,
+            readability_min=0.0,
+            frontier_quality_min=0.0,
+        ),
+    )
+
+    engine._attach_selector_metrics(loop, context=context)
+    engine._attach_selector_metrics(transport, context=context)
+
+    assert loop.selector_metrics["semantic_loop_penalty"] > transport.selector_metrics["semantic_loop_penalty"]
+    assert loop.selector_score < transport.selector_score
 
 
 def test_hard_unfinished_gate_rejects_truncated_frontier_candidate():

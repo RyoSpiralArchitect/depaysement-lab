@@ -1500,6 +1500,9 @@ class SelectorConfig:
     repair_weight: float = 0.60
     repetition_weight: float = 0.30
     sprawl_weight: float = 0.20
+    semantic_loop_weight: float = 0.0
+    lineage_diversity_weight: float = 0.0
+    lineage_diversity_min: float = 0.25
     cliche_weight: float = 0.0
     soft_style_cliche_weight: float = 0.0
     fantasy_prop_weight: float = 0.0
@@ -1983,6 +1986,10 @@ class DepaysementEngine:
         stock_prop = float(getattr(metrics, "stock_prop_attractor_score", 0.0))
         soft_style = float(getattr(metrics, "soft_style_cliche_score", 0.0))
         fantasy_prop, fantasy_hits = fantasy_prop_score(text)
+        transport_metrics = semantic_transport_metrics(clean_context, text)
+        semantic_loop = float(transport_metrics["semantic_loop_pressure"])
+        lineage_diversity = float(transport_metrics["lineage_diversity"])
+        lineage_diversity_deficit = max(0.0, cfg.lineage_diversity_min - lineage_diversity)
         hard_ban_terms = tuple(str(term).strip() for term in cfg.hard_ban_terms if str(term).strip())
         hard_ban_hits = banned_term_hits(text, hard_ban_terms)
         ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
@@ -2004,6 +2011,8 @@ class DepaysementEngine:
             + cfg.repair_weight * repair
             + cfg.repetition_weight * repetition
             + cfg.sprawl_weight * sprawl
+            + cfg.semantic_loop_weight * semantic_loop
+            + cfg.lineage_diversity_weight * lineage_diversity_deficit
             + cfg.cliche_weight * cliche
             + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
@@ -2029,6 +2038,8 @@ class DepaysementEngine:
             + cfg.unfinished_weight * unfinished_excess
             + 0.30 * repetition
             + 0.30 * sprawl
+            + cfg.semantic_loop_weight * semantic_loop
+            + cfg.lineage_diversity_weight * lineage_diversity_deficit
             + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
             + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
@@ -2113,6 +2124,16 @@ class DepaysementEngine:
             "hard_gate_penalty": float(hard_gate_penalty),
             "repetition_pressure": float(repetition),
             "sprawl_pressure": float(sprawl),
+            "semantic_loop_pressure": semantic_loop,
+            "semantic_loop_terms": list(transport_metrics["semantic_loop_terms"]),
+            "semantic_loop_penalty": float(cfg.semantic_loop_weight * semantic_loop),
+            "lineage_diversity": lineage_diversity,
+            "lineage_diversity_min": float(cfg.lineage_diversity_min),
+            "lineage_diversity_deficit": float(lineage_diversity_deficit),
+            "lineage_revisited_terms": list(transport_metrics["lineage_revisited_terms"]),
+            "lineage_new_terms": list(transport_metrics["lineage_new_terms"]),
+            "lineage_diversity_penalty": float(cfg.lineage_diversity_weight * lineage_diversity_deficit),
+            "net_transport_score": float(transport_metrics["net_transport_score"]),
             "selector_penalty": float(penalty),
             "band_violation": float(band_violation),
             "selector_eligible": bool(eligible),
@@ -2246,6 +2267,96 @@ def _selector_bandpass(value: float, low: float, high: float) -> float:
     return clamp((1.0 - value) / max(1.0 - high, 1e-12), 0.0, 1.0)
 
 
+def _semantic_transport_term(raw: str) -> str:
+    term = str(raw or "").lower().strip("'")
+    if term.endswith("'s"):
+        term = term[:-2]
+    elif term.endswith("s'"):
+        term = term[:-1]
+    if len(term) > 4 and term.endswith("ies"):
+        term = term[:-3] + "y"
+    elif len(term) > 5 and term.endswith(("ches", "shes", "xes", "zes")):
+        term = term[:-2]
+    elif len(term) > 4 and term.endswith("s") and not term.endswith(("ss", "us", "is")):
+        term = term[:-1]
+    return term
+
+
+def semantic_transport_terms(text: str, *, limit: int = 96) -> Tuple[str, ...]:
+    """Extract content-bearing terms for loop/diversity diagnostics.
+
+    This intentionally stays lexical and transparent.  It is not a semantic
+    embedding claim; it catches the practical failure mode where a candidate
+    cycles through the same concrete concepts while still looking locally
+    well-formed.
+    """
+
+    terms: List[str] = []
+    for raw, _start, _end in _english_word_tokens(text):
+        term = _semantic_transport_term(raw)
+        if (
+            not term
+            or term in ORDINARY_ANCHOR_STOPWORDS
+            or term in RELATION_PREPOSITIONS
+            or not _is_content_anchor(term)
+        ):
+            continue
+        if re.fullmatch(r"\d+", term):
+            continue
+        terms.append(term)
+        if len(terms) >= int(limit):
+            break
+    return tuple(terms)
+
+
+def _semantic_ngram_loop_pressure(terms: Sequence[str]) -> float:
+    if len(terms) < 4:
+        return 0.0
+    pressure = 0.0
+    for n in (2, 3, 4):
+        if len(terms) < n * 2:
+            continue
+        grams = Counter(tuple(terms[i : i + n]) for i in range(0, len(terms) - n + 1))
+        repeats = sum(count - 1 for count in grams.values() if count > 1)
+        scale = max(1, len(terms) - n + 1)
+        pressure = max(pressure, clamp((repeats / scale) / 0.12, 0.0, 1.0))
+    return pressure
+
+
+def semantic_transport_metrics(context: str, text: str) -> Dict[str, Any]:
+    terms = semantic_transport_terms(text)
+    context_tail = " ".join(split_spans(context)[-4:]) if context else ""
+    context_terms = set(semantic_transport_terms(context_tail))
+    counts = Counter(terms)
+    total = sum(counts.values())
+    repeated = {term: count for term, count in counts.items() if count > 1}
+    repeat_excess = sum(count - 1 for count in repeated.values())
+    repeat_density = repeat_excess / max(total, 1)
+    repeated_coverage = sum(repeated.values()) / max(total, 1)
+    ngram_loop = _semantic_ngram_loop_pressure(terms)
+    semantic_loop = clamp(
+        0.55 * clamp(repeat_density / 0.22, 0.0, 1.0)
+        + 0.25 * repeated_coverage
+        + 0.20 * ngram_loop,
+        0.0,
+        1.0,
+    )
+    unique_terms = tuple(unique_preserve_order(terms))
+    revisited = tuple(term for term in unique_terms if term in context_terms)
+    new_terms = tuple(term for term in unique_terms if term not in context_terms)
+    lineage_diversity = len(new_terms) / max(1, len(unique_terms)) if unique_terms else 1.0
+    net_transport = clamp((1.0 - semantic_loop) * (0.50 + 0.50 * lineage_diversity), 0.0, 1.0)
+    loop_terms = sorted(repeated, key=lambda term: (-repeated[term], term))[:12]
+    return {
+        "semantic_loop_pressure": float(semantic_loop),
+        "semantic_loop_terms": tuple(loop_terms),
+        "lineage_diversity": float(lineage_diversity),
+        "lineage_revisited_terms": revisited[:12],
+        "lineage_new_terms": new_terms[:12],
+        "net_transport_score": float(net_transport),
+    }
+
+
 def banned_term_hits(text: str, terms: Sequence[str]) -> Tuple[str, ...]:
     """Return banned terms present in text using loose word/phrase boundaries."""
 
@@ -2369,6 +2480,8 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("repair_pressure", 0.0)),
         float(lm.get("repetition_pressure", 0.0)),
         float(lm.get("sprawl_pressure", 0.0)),
+        float(lm.get("semantic_loop_pressure", 0.0)),
+        float(lm.get("lineage_diversity_penalty", 0.0)),
         float(lm.get("hard_gate_penalty", 0.0)),
         float(lm.get("soft_style_cliche_penalty", 0.0)),
         float(lm.get("fantasy_prop_penalty", 0.0)),
@@ -2379,6 +2492,8 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(rm.get("repair_pressure", 0.0)),
         float(rm.get("repetition_pressure", 0.0)),
         float(rm.get("sprawl_pressure", 0.0)),
+        float(rm.get("semantic_loop_pressure", 0.0)),
+        float(rm.get("lineage_diversity_penalty", 0.0)),
         float(rm.get("hard_gate_penalty", 0.0)),
         float(rm.get("soft_style_cliche_penalty", 0.0)),
         float(rm.get("fantasy_prop_penalty", 0.0)),

@@ -408,6 +408,9 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repair-weight", type=float, default=0.60, help="hybrid selector penalty for repair/explanation pressure")
     p.add_argument("--repetition-weight", type=float, default=0.30, help="hybrid selector penalty for repetition loops")
     p.add_argument("--sprawl-weight", type=float, default=0.20, help="hybrid selector penalty for graph/sprawl fragmentation")
+    p.add_argument("--semantic-loop-weight", type=float, default=0.0, help="optional selector penalty for semantic object/concept loops")
+    p.add_argument("--lineage-diversity-weight", type=float, default=0.0, help="optional selector penalty when candidates do not introduce new content terms")
+    p.add_argument("--lineage-diversity-min", type=float, default=0.25, help="minimum content-term novelty used by --lineage-diversity-weight")
     p.add_argument("--cliche-weight", type=float, default=0.0, help="optional selector penalty for generic magic-realist vocabulary attractors")
     p.add_argument("--soft-style-cliche-weight", type=float, default=0.0, help="optional selector penalty for soft style cliche diction such as ethereal/fog/mist")
     p.add_argument("--fantasy-prop-weight", type=float, default=0.0, help="optional selector penalty for stock antique/miniature/porcelain props")
@@ -479,6 +482,9 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         repair_weight=float(getattr(args, "repair_weight", 0.60)),
         repetition_weight=float(getattr(args, "repetition_weight", 0.30)),
         sprawl_weight=float(getattr(args, "sprawl_weight", 0.20)),
+        semantic_loop_weight=float(getattr(args, "semantic_loop_weight", 0.0)),
+        lineage_diversity_weight=float(getattr(args, "lineage_diversity_weight", 0.0)),
+        lineage_diversity_min=float(getattr(args, "lineage_diversity_min", 0.25)),
         cliche_weight=float(getattr(args, "cliche_weight", 0.0)),
         soft_style_cliche_weight=float(getattr(args, "soft_style_cliche_weight", 0.0)),
         fantasy_prop_weight=float(getattr(args, "fantasy_prop_weight", 0.0)),

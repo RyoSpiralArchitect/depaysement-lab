@@ -56,6 +56,9 @@ FRONTIER_METRICS: Tuple[str, ...] = (
     "fantasy_prop_score",
     "ordinary_anchor_retention",
     "ordinary_anchor_drop",
+    "semantic_loop_pressure",
+    "lineage_diversity",
+    "net_transport_score",
     "atmospheric_conservation",
     "unfinished",
     "hard_ban_failed",
@@ -257,6 +260,9 @@ class FrontierAuditor:
                 frontier_score, frontier_quality = readable_frontier_score(m)
                 metrics = m.to_dict()
                 metrics.update(anchor_guard_metrics(context, text, scorer=self.scorer))
+                from .proto_v2 import semantic_transport_metrics
+
+                metrics.update(semantic_transport_metrics(context, text))
                 selector_metrics = cand.get("selector_metrics") if isinstance(cand.get("selector_metrics"), Mapping) else {}
                 metrics.update(
                     {
@@ -271,6 +277,16 @@ class FrontierAuditor:
                             "hybrid_score",
                             "hard_ban_terms",
                             "hard_ban_hits",
+                            "semantic_loop_pressure",
+                            "semantic_loop_terms",
+                            "semantic_loop_penalty",
+                            "lineage_diversity",
+                            "lineage_diversity_min",
+                            "lineage_diversity_deficit",
+                            "lineage_revisited_terms",
+                            "lineage_new_terms",
+                            "lineage_diversity_penalty",
+                            "net_transport_score",
                         }
                     }
                 )
@@ -909,15 +925,23 @@ def compare_frontier_runs(runs: Sequence[FrontierRunAudit]) -> List[Dict[str, An
         "pool_mean_soft_style_cliche_score",
         "pool_mean_fantasy_prop_score",
         "pool_mean_ordinary_anchor_retention",
+        "pool_mean_semantic_loop_pressure",
+        "pool_mean_lineage_diversity",
+        "pool_mean_net_transport_score",
         "pool_unfinished_rate",
         "picked_mean_readable_ontology_frontier",
         "picked_mean_ontology_collapse_density",
         "picked_mean_stock_prop_attractor_score",
         "picked_mean_soft_style_cliche_score",
         "picked_mean_ordinary_anchor_retention",
+        "picked_mean_semantic_loop_pressure",
+        "picked_mean_lineage_diversity",
+        "picked_mean_net_transport_score",
         "selection_lift_readable_ontology_frontier",
         "selection_lift_ontology_collapse_density",
         "selection_lift_ordinary_anchor_retention",
+        "selection_lift_semantic_loop_pressure",
+        "selection_lift_net_transport_score",
     )
     comps: List[Dict[str, Any]] = []
     for other in runs[1:]:
@@ -981,6 +1005,10 @@ def compact_row(row: FrontierCandidateRow) -> Dict[str, Any]:
         "soft_cliche": round(float(m.get("soft_style_cliche_score", 0.0)), 4),
         "fantasy_prop": round(float(m.get("fantasy_prop_score", 0.0)), 4),
         "anchor": round(float(m.get("ordinary_anchor_retention", 0.0)), 4),
+        "semantic_loop": round(float(m.get("semantic_loop_pressure", 0.0)), 4),
+        "lineage_diversity": round(float(m.get("lineage_diversity", 0.0)), 4),
+        "net_transport": round(float(m.get("net_transport_score", 0.0)), 4),
+        "semantic_loop_terms": list(m.get("semantic_loop_terms", []) or [])[:6],
         "unfinished": round(float(m.get("unfinished", 0.0)), 4),
         "identity_melt_events": m.get("identity_melt_events", [])[:3],
         "affordance_corruption_events": m.get("affordance_corruption_events", [])[:3],
@@ -1078,6 +1106,10 @@ def frontier_exemplar_row(row: FrontierCandidateRow, seq: int) -> Dict[str, Any]
         "soft_style_cliche_score": float(m.get("soft_style_cliche_score", 0.0)),
         "fantasy_prop_score": float(m.get("fantasy_prop_score", 0.0)),
         "ordinary_anchor_retention": float(m.get("ordinary_anchor_retention", 0.0)),
+        "semantic_loop_pressure": float(m.get("semantic_loop_pressure", 0.0)),
+        "semantic_loop_terms": list(m.get("semantic_loop_terms", []) or []),
+        "lineage_diversity": float(m.get("lineage_diversity", 0.0)),
+        "net_transport_score": float(m.get("net_transport_score", 0.0)),
         "ordinary_anchor_hits": list(m.get("ordinary_anchor_hits", []) or []),
         "stock_prop_attractor_hits": list(m.get("stock_prop_attractor_hits", []) or []),
         "soft_style_cliche_hits": list(m.get("soft_style_cliche_hits", []) or []),
@@ -1256,6 +1288,12 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
         "ordinary_anchor_drop",
         "ordinary_anchor_terms",
         "ordinary_anchor_hits",
+        "semantic_loop_pressure",
+        "semantic_loop_terms",
+        "lineage_diversity",
+        "lineage_revisited_terms",
+        "lineage_new_terms",
+        "net_transport_score",
         "atmospheric_conservation",
         "unfinished",
         "meta_leak",
@@ -1303,6 +1341,12 @@ def write_frontier_csv(report: FrontierAuditReport, path: str) -> None:
                         "ordinary_anchor_drop": m.get("ordinary_anchor_drop", 0.0),
                         "ordinary_anchor_terms": "; ".join(m.get("ordinary_anchor_terms", []) or []),
                         "ordinary_anchor_hits": "; ".join(m.get("ordinary_anchor_hits", []) or []),
+                        "semantic_loop_pressure": m.get("semantic_loop_pressure", 0.0),
+                        "semantic_loop_terms": "; ".join(m.get("semantic_loop_terms", []) or []),
+                        "lineage_diversity": m.get("lineage_diversity", 0.0),
+                        "lineage_revisited_terms": "; ".join(m.get("lineage_revisited_terms", []) or []),
+                        "lineage_new_terms": "; ".join(m.get("lineage_new_terms", []) or []),
+                        "net_transport_score": m.get("net_transport_score", 0.0),
                         "atmospheric_conservation": m.get("atmospheric_conservation", 0.0),
                         "unfinished": m.get("unfinished", 0.0),
                         "meta_leak": m.get("meta_leak", 0.0),
@@ -1647,9 +1691,13 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                     f"pool_soft={a.get('pool_mean_soft_style_cliche_score', 0.0):.3f}",
                     f"pool_prop={a.get('pool_mean_fantasy_prop_score', 0.0):.3f}",
                     f"pool_anchor={a.get('pool_mean_ordinary_anchor_retention', 0.0):.3f}",
+                    f"pool_loop={a.get('pool_mean_semantic_loop_pressure', 0.0):.3f}",
+                    f"pool_transport={a.get('pool_mean_net_transport_score', 0.0):.3f}",
                     f"pool_unfinished={a.get('pool_unfinished_rate', 0.0):.3f}",
                     f"picked_frontier={a.get('picked_mean_readable_ontology_frontier', 0.0):.3f}",
                     f"picked_anchor={a.get('picked_mean_ordinary_anchor_retention', 0.0):.3f}",
+                    f"picked_loop={a.get('picked_mean_semantic_loop_pressure', 0.0):.3f}",
+                    f"picked_transport={a.get('picked_mean_net_transport_score', 0.0):.3f}",
                     f"selection_lift={a.get('selection_lift_readable_ontology_frontier', 0.0):+.3f}",
                 ]
             )
@@ -1676,6 +1724,8 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                         f"Δsoft={float(delta.get('pool_mean_soft_style_cliche_score', 0.0)):+.3f}",
                         f"Δprop={float(delta.get('pool_mean_fantasy_prop_score', 0.0)):+.3f}",
                         f"Δanchor={float(delta.get('pool_mean_ordinary_anchor_retention', 0.0)):+.3f}",
+                        f"Δloop={float(delta.get('pool_mean_semantic_loop_pressure', 0.0)):+.3f}",
+                        f"Δtransport={float(delta.get('pool_mean_net_transport_score', 0.0)):+.3f}",
                         f"Δunfinished={float(delta.get('pool_unfinished_rate', 0.0)):+.3f}",
                     ]
                 )
@@ -1688,7 +1738,8 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                 f"- {ex['run']} step {ex['step']} cand {ex['candidate_index']} "
                 f"picked={ex['picked']} frontier={ex['frontier']:.3f} ont={ex['ontology']:.3f} read={ex['readability']:.3f} "
                 f"cliche={ex['cliche']:.3f} stock={ex['stock_prop']:.3f} soft={ex['soft_cliche']:.3f} "
-                f"prop={ex['fantasy_prop']:.3f} anchor={ex['anchor']:.3f}: "
+                f"prop={ex['fantasy_prop']:.3f} anchor={ex['anchor']:.3f} "
+                f"loop={ex['semantic_loop']:.3f} transport={ex['net_transport']:.3f}: "
                 f"{truncate(ex['text'], 230)}"
             )
         lines.append("")
@@ -1700,6 +1751,7 @@ def format_frontier_report(report: FrontierAuditReport, *, top_k: int = 8) -> st
                 f"picked={ex['picked']} ont={ex['ontology']:.3f} read={ex['readability']:.3f} "
                 f"cliche={ex['cliche']:.3f} stock={ex['stock_prop']:.3f} soft={ex['soft_cliche']:.3f} "
                 f"prop={ex['fantasy_prop']:.3f} anchor={ex['anchor']:.3f} "
+                f"loop={ex['semantic_loop']:.3f} transport={ex['net_transport']:.3f} "
                 f"repair={ex['repair']:.3f} unfinished={ex['unfinished']:.3f}: "
                 f"{truncate(ex['text'], 230)}"
             )

@@ -1,0 +1,95 @@
+{
+  "created_at": "2026-07-11T09:47:59.418729+00:00",
+  "comparison_type": "independent_live_replicates",
+  "sources": {
+    "old_live_no_loop_guard": "experiments/frontier_audit_mistral7b_stock_guard_current_metrics/frontier_sweep_report.json",
+    "live_loop_guard": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep_report.json"
+  },
+  "summary": {
+    "old_live_no_loop_guard": {
+      "runs": 12,
+      "candidates": 304,
+      "picked": 38,
+      "pool_frontier": 0.022243046533336194,
+      "picked_frontier": 0.08947848332100808,
+      "pool_ontology": 0.054623436498070686,
+      "picked_ontology": 0.19912280701754387,
+      "pool_readability": 0.7674153402124084,
+      "picked_readability": 0.8171989926880748,
+      "pool_semantic_loop": 0.30800320168121265,
+      "picked_semantic_loop": 0.25627628341444136,
+      "pool_lineage_diversity": 0.6112819022562178,
+      "picked_lineage_diversity": 0.5175400622769043,
+      "pool_net_transport": 0.5819223718916264,
+      "picked_net_transport": 0.5884526819833837,
+      "pool_sprawl": 0.5991485890619953,
+      "picked_sprawl": 0.44404311860714085,
+      "pool_anchor": 0.7620614035087719,
+      "picked_anchor": 0.7807017543859649,
+      "pool_cliche": 0.017543859649122806,
+      "picked_cliche": 0.0,
+      "pool_stock": 0.008771929824561403,
+      "picked_stock": 0.0,
+      "pool_fantasy_prop": 0.009868421052631578,
+      "picked_fantasy_prop": 0.0,
+      "pool_unfinished": 0.0,
+      "picked_unfinished": 0.0
+    },
+    "live_loop_guard": {
+      "runs": 12,
+      "candidates": 288,
+      "picked": 36,
+      "pool_frontier": 0.013115194241772111,
+      "picked_frontier": 0.051592627553175695,
+      "pool_ontology": 0.035079254698804095,
+      "picked_ontology": 0.12761202535224656,
+      "pool_readability": 0.7571564943419408,
+      "picked_readability": 0.8130249723903702,
+      "pool_semantic_loop": 0.13449191784379477,
+      "picked_semantic_loop": 0.06588220806970807,
+      "pool_lineage_diversity": 0.7439780444980716,
+      "picked_lineage_diversity": 0.703156205178264,
+      "pool_net_transport": 0.7625858306522705,
+      "picked_net_transport": 0.7979895019876637,
+      "pool_sprawl": 0.7507352791481363,
+      "picked_sprawl": 0.6499353353061988,
+      "pool_anchor": 0.6929976851851852,
+      "picked_anchor": 0.6921296296296297,
+      "pool_cliche": 0.04398148148148148,
+      "picked_cliche": 0.027777777777777776,
+      "pool_stock": 0.028935185185185182,
+      "picked_stock": 0.009259259259259259,
+      "pool_fantasy_prop": 0.03376736111111111,
+      "picked_fantasy_prop": 0.0,
+      "pool_unfinished": 0.0,
+      "picked_unfinished": 0.0
+    }
+  },
+  "data_quality": {
+    "old": {
+      "runs": 12,
+      "unique_seeds": 12,
+      "rows": 304,
+      "unique_candidate_keys": 304,
+      "missing_core_metrics": 0,
+      "steps_without_one_pick": 0,
+      "truncated_steps": 0,
+      "picked_hard_gate_failures": 0
+    },
+    "live": {
+      "runs": 12,
+      "unique_seeds": 12,
+      "rows": 288,
+      "unique_candidate_keys": 288,
+      "missing_core_metrics": 0,
+      "steps_without_one_pick": 0,
+      "truncated_steps": 0,
+      "picked_hard_gate_failures": 0
+    }
+  },
+  "caveats": [
+    "The two live runs are independent stochastic replicates; step-1 candidate pools are not identical despite the same CLI random seed.",
+    "net_transport_score over-rewards lexical novelty in noun-drift examples and should not be treated as a validated human-quality measure.",
+    "The live loop-guard condition stopped every trajectory at step 3, usually because graph fragmentation exceeded the sprawl threshold."
+  ]
+}

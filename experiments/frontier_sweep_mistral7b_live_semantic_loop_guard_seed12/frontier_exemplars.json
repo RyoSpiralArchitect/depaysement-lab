@@ -1,0 +1,70 @@
+{
+  "frontier_max": 0.2835604838709677,
+  "frontier_band_min": 0.2035604838709677,
+  "band_ratio": 0.6,
+  "band_width": 0.08,
+  "total_candidates": 288,
+  "band_candidates": 1,
+  "legend_counts": {
+    "readable_object_metamorphosis": 1
+  },
+  "examples": [
+    {
+      "id": "frontier_exemplar_001",
+      "legend_label": "readable_object_metamorphosis",
+      "run_name": "steer_alpha_0p77_traj_c8_tok120_seed06_the_elevator_button_was_cracked.json",
+      "condition": "steer_alpha_0p77_traj",
+      "path": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed06_the_elevator_button_was_cracked.json",
+      "step": 1,
+      "candidate_index": 1,
+      "picked": true,
+      "readable_ontology_frontier": 0.2835604838709677,
+      "frontier_quality": 0.5155645161290322,
+      "ontology_collapse_density": 0.55,
+      "syntax_readability_proxy": 1.0,
+      "graph_integration": 0.031129032258064487,
+      "repair_pressure": 0.0,
+      "unfinished": 0.0,
+      "stock_prop_attractor_score": 0.0,
+      "soft_style_cliche_score": 0.0,
+      "fantasy_prop_score": 0.0,
+      "ordinary_anchor_retention": 1.0,
+      "semantic_loop_pressure": 0.0,
+      "semantic_loop_terms": [],
+      "lineage_diversity": 0.4,
+      "net_transport_score": 0.7,
+      "ordinary_anchor_hits": [
+        "the",
+        "elevator",
+        "button",
+        "was",
+        "cracked"
+      ],
+      "stock_prop_attractor_hits": [],
+      "soft_style_cliche_hits": [],
+      "fantasy_prop_hits": [],
+      "identity_melt_events": [
+        {
+          "kind": "identity_melt",
+          "text": "and it had become a water fountain",
+          "source": "and it had",
+          "target": "water fountain",
+          "confidence": 1.0
+        }
+      ],
+      "affordance_corruption_events": [],
+      "motifs": [
+        "the",
+        "elevator",
+        "button",
+        "was",
+        "cracked"
+      ],
+      "text": "The elevator button was cracked, and it had become a water fountain."
+    }
+  ],
+  "notes": [
+    "The exemplar store selects actual generated candidates from the observed frontier-maximized band.",
+    "Legend labels are heuristic reading aids, not literary classifications."
+  ]
+}

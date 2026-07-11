@@ -1,0 +1,104 @@
+{
+  "created_at": "2026-07-11T09:42:30.157274+00:00",
+  "seed": null,
+  "seed_bank": "data/mundane_seed_bank_en_v1.json",
+  "seeds": [
+    "The receipt on the counter",
+    "A plastic folder in the drawer",
+    "The bus was ten minutes late",
+    "A blue mug near the sink",
+    "The spreadsheet was still open",
+    "The elevator button was cracked",
+    "A delivery label on a cardboard box",
+    "I am opening the fridge",
+    "I am waiting for the printer",
+    "The phone charger under the desk",
+    "A grocery list beside the kettle",
+    "The laundry basket by the door"
+  ],
+  "backend": "mlx",
+  "model": "/Users/ryospiralarchitect/SpiralReality/model/mistral7b-instruct-v0.3",
+  "alphas": [
+    0.77
+  ],
+  "steer_schedule": [
+    0.55,
+    0.72,
+    0.72,
+    0.58,
+    0.45
+  ],
+  "adaptive_steering": true,
+  "candidate_grid": [
+    8
+  ],
+  "max_token_grid": [
+    120
+  ],
+  "select_objective": "banded-frontier",
+  "selector": {
+    "objective": "banded-frontier",
+    "frontier_weight": 1.0,
+    "ontology_weight": 0.35,
+    "unfinished_weight": 0.8,
+    "repair_weight": 0.6,
+    "repetition_weight": 0.3,
+    "sprawl_weight": 0.2,
+    "semantic_loop_weight": 1.6,
+    "lineage_diversity_weight": 0.35,
+    "lineage_diversity_min": 0.25,
+    "cliche_weight": 0.0,
+    "soft_style_cliche_weight": 0.35,
+    "fantasy_prop_weight": 1.4,
+    "ordinary_anchor_weight": 0.55,
+    "ordinary_anchor_min": 0.35,
+    "ontology_min": 0.2,
+    "ontology_max": 0.6,
+    "readability_min": 0.55,
+    "frontier_quality_min": 0.2,
+    "repair_max": 0.45,
+    "unfinished_max": 0.5,
+    "hard_unfinished_max": 0.0,
+    "hard_ban_terms": [
+      "music box",
+      "antique music box",
+      "leather-bound book",
+      "key",
+      "clock",
+      "watch",
+      "pocket watch",
+      "porcelain doll",
+      "porcelain",
+      "doll",
+      "ballerina"
+    ]
+  },
+  "ban_terms": [],
+  "resume": true,
+  "run_limit": 0,
+  "new_runs": 12,
+  "runs": [
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed01_the_receipt_on_the_counter.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed04_a_blue_mug_near_the_sink.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed05_the_spreadsheet_was_still_open.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed06_the_elevator_button_was_cracked.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed07_a_delivery_label_on_a_cardboard_box.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed08_i_am_opening_the_fridge.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed09_i_am_waiting_for_the_printer.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed10_the_phone_charger_under_the_desk.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed11_a_grocery_list_beside_the_kettle.json",
+    "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/steer_alpha_0p77_traj_c8_tok120_seed12_the_laundry_basket_by_the_door.json"
+  ],
+  "report_md": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep_report.md",
+  "report_json": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep_report.json",
+  "candidate_csv": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep_candidates.csv",
+  "plot": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep.png",
+  "texts": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_sweep_texts.md",
+  "frontier_exemplars": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_exemplars.md",
+  "frontier_exemplars_json": "experiments/frontier_sweep_mistral7b_live_semantic_loop_guard_seed12/frontier_exemplars.json",
+  "notes": [
+    null
+  ]
+}

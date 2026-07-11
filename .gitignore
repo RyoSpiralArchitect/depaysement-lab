@@ -150,3 +150,17 @@ experiments/affordance_class_knockout_mundane/*
 !experiments/affordance_class_knockout_mundane/*_report.md
 !experiments/affordance_class_knockout_mundane/*_report.json
 !experiments/affordance_class_knockout_mundane/*_matrix.csv
+
+# Local paper drafting. The evidence stays tracked; exploratory manuscript and
+# build products remain local until the draft is ready for an explicit release.
+paper/*.tex
+paper/*.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/build/

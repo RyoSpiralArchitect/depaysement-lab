@@ -1,0 +1,106 @@
+{
+  "bank_path": "data/depaysement_bank_en_v3.json",
+  "term_groups": {
+    "stock_prop_attractor": [
+      "antique",
+      "clockwork",
+      "crystal",
+      "doll",
+      "dusty shelf",
+      "faded photograph",
+      "glass eyes",
+      "ivory",
+      "leather-bound",
+      "lullaby",
+      "miniature",
+      "music box",
+      "ornate",
+      "pocket watch",
+      "porcelain",
+      "tiny ballerina",
+      "velvet"
+    ],
+    "soft_style_cliche": [
+      "crimson velvet",
+      "delicate",
+      "ethereal",
+      "faint glow",
+      "filigree",
+      "fog",
+      "forgotten dreams",
+      "ghostly",
+      "gossamer",
+      "haunting",
+      "iridescent",
+      "melancholic",
+      "mist",
+      "moonlit",
+      "mournful",
+      "old man",
+      "old woman",
+      "silver mist",
+      "soft glow",
+      "spectral",
+      "timeless",
+      "whispering",
+      "whispers"
+    ]
+  },
+  "partitions": {
+    "positive_depaysement": {
+      "prompt_count": 10,
+      "groups": {
+        "stock_prop_attractor": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        },
+        "soft_style_cliche": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        }
+      }
+    },
+    "negative_realist_repair": {
+      "prompt_count": 8,
+      "groups": {
+        "stock_prop_attractor": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        },
+        "soft_style_cliche": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        }
+      }
+    },
+    "negative_weird_noise": {
+      "prompt_count": 6,
+      "groups": {
+        "stock_prop_attractor": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        },
+        "soft_style_cliche": {
+          "hit_count": 0,
+          "unique_terms": [],
+          "hits": []
+        }
+      }
+    }
+  },
+  "hit_rows": [],
+  "positive_direct_overlap": {
+    "stock_prop_attractor": 0,
+    "soft_style_cliche": 0
+  },
+  "interpretation_boundary": [
+    "Zero exact overlap rules out direct lexical copying only for the tracked terms and current bank version.",
+    "It does not rule out semantic, stylistic, phrase-level, or corpus-mediated contamination.",
+    "A contrastive vector may still point toward a broader stock-surreal generation regime."
+  ]
+}

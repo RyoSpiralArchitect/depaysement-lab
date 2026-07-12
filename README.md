@@ -2,9 +2,10 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21318353.svg)](https://doi.org/10.5281/zenodo.21318353)
 
-`depaysement-lab` is an experimental toolkit for studying **depaysement** as a
-steerable language-model behavior: not simply "make it weird", but move a
-coherent image into a different ontological regime while keeping it readable.
+`depaysement-lab` is an experimental toolkit for asking whether **depaysement**
+can be induced as a steerable language-model behavior: not simply "make it
+weird", but move a coherent image into a different ontological regime while
+keeping it readable.
 
 The current research target is the **Readable Ontology Collapse Frontier**:
 
@@ -14,6 +15,12 @@ high linguistic coherence
 + low explanation/repair pressure
 + low truncation/repetition
 ```
+
+This frontier is a transparent diagnostic observer, not a validated literary
+quality score. A completed blind 36-item audit found zero overlap between its
+four `readable_transport` labels and both permissive and strict conjunctive
+human-positive sets. Raw generated text and human construct checks are therefore
+first-class evidence throughout the repository.
 
 In practical terms, the project asks:
 
@@ -44,6 +51,10 @@ The current release surface includes:
 - [Gemma transition-vector layer probe](experiments/gemma2_transition_layer_probe_seed4/)
 - [fixed-prefix counter-steering probe](experiments/prefix_counter_probe_llama3p2_3b_seed4/)
 - [blind multi-provider judge challenge](experiments/judge_challenge_v1/)
+- [blind human construct analysis](experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_analysis.md)
+- [factorized vector geometry](experiments/factorized_vectors_llama3p2/factorized_vector_geometry.md)
+- [selector-free factorized corridor pilot](experiments/factorized_corridor_pilot/)
+- [candidate-step hysteresis pilot](experiments/hysteresis_controller_law_isolation/)
 - [measurement and vector provenance](docs/measurement_instrument_v11.md)
 - [release and arXiv checklist](docs/release_and_arxiv.md)
 
@@ -60,11 +71,14 @@ Suggested software citation:
 
 ## Latest Diagnostics
 
-The July 2026 probes separate five effects that were previously entangled:
+The July 2026 probes separate eight effects that were previously entangled:
 
 | probe | main observation | interpretation boundary |
 |---|---|---|
-| Prompt x steering contrast | with exact anchors retained, a naive prompt moved from `0.154` to `0.323` readable transport at `alpha=0.6`, but failure also rose from `0.138` to `0.290`; an operational prompt reduced that failure increase while attenuating the ontology shift | 12-seed, no-selector construct pilot; machine labels require the blinded human pass |
+| Prompt x steering contrast | with exact anchors retained, a naive prompt moved from `0.154` to `0.323` observer-labeled transport at `alpha=0.6`, but failure also rose from `0.138` to `0.290`; an operational prompt reduced that failure increase while attenuating the ontology shift | 12-seed, no-selector pool response; this is not a literary success rate |
+| Blind human construct audit | all 36 rows are complete; the four machine `readable_transport` positives overlap with neither the six permissive nor the two strict human positives | one rater and six source scenes; decisive item-level construct failure in this sample, not a population estimate |
+| Factorized vector pilot | endpoint/transition cosine is `-0.358`, hygiene/anti-meta cosine is `0.899`, and nuisance projection retains `82.7%` of transition norm; projected and composed controllers lose anchors rather than widen the selector-free corridor | geometry diagnoses entanglement but does not identify functionally independent axes |
+| Candidate-step hysteresis | default repetition/sprawl pressure saturates at `1.0`, collapsing legacy and hysteretic policies to identical outputs; relaxed guards separate the policies without a clear frontier gain | four-seed diagnostic; calibrate the observer before elaborating the controller |
 | Mistral traceable-transport factorial | loop pressure alone reduced recurrence but increased disconnected noun growth; the combined loop + bridge-budget controller produced the best traceable selection (`0.189`) while retaining readability (`0.793`) | four diagnostic seeds; descriptive controller-conditioned trajectories |
 | Gemma transition-vector layer probe | a matched transition vector produced a narrow late-layer response at `alpha=1.1`; the same effect vanished at `1.4` | direction- and layer-specific pilot, not a monotonic dose law |
 | Fixed-prefix counter-steering | within-prefix first-token JSD across alpha was exactly `0`, while reference-vs-induced prefix JSD averaged `0.095930` bits | under `decode_only`, negative steering edits future decode states but cannot erase emitted context |
@@ -78,6 +92,7 @@ summary metrics:
 - [Gemma transition-layer note](docs/research_notes/2026-07-12-gemma-transition-layer-probe.md)
 - [fixed-prefix counter-steering note](docs/research_notes/2026-07-12-fixed-prefix-counter-steering.md)
 - [LLM judge challenge note](docs/research_notes/2026-07-12-llm-judge-challenge.md)
+- [construct, factorization, and hysteresis audit](docs/research_notes/2026-07-12-construct-factorization-hysteresis-audit.md)
 
 ## Frontier Baseline
 
@@ -117,8 +132,9 @@ Summary of the focused `choose=best` sweep:
 
 Interpretation:
 
-- `alpha=0.60, tok=140` is the best current balance: high picked frontier,
-  strong readability, and only modest unfinished pressure.
+- `alpha=0.60, tok=140` is the best balance on the current observer: high
+  picked frontier, strong surface readability, and only modest unfinished
+  pressure.
 - `alpha=0.45, tok=140` produces the largest selection lift, but the picked
   outputs are a little less readable and more unfinished.
 - `alpha=0.75, tok=140` has the cleanest hit rate, but appears less intense on
@@ -838,8 +854,8 @@ PYTHONPATH=src python3 -m depaysement_lab.cli prompt-steering-contrast \
   --out-dir experiments/prompt_steering_contrast_llama3p2_seed12
 ```
 
-Among candidates that retain all four anchors, medium steering raises readable
-transport most clearly under the naive prompt, but also raises failure. The
+Among candidates that retain all four anchors, medium steering raises
+observer-labeled transport most clearly under the naive prompt, but also raises failure. The
 operational prompt acts as a regulator: it reduces both the ontology gain and
 the failure increase. At `alpha=1.2`, ontology and failure rise sharply under
 both prompts. This supports a complementary-control interpretation: prompting
@@ -849,7 +865,10 @@ The artifact includes all 576 generated texts, seed-paired bootstrap contrasts,
 a deterministic same-seed triptych, and a blinded 36-item construct sheet. The
 human sheet separates anchor traceability, role or affordance change, mere
 decoration, readability, and stock/loop/sprawl failure instead of asking for one
-undifferentiated taste score.
+undifferentiated taste score. The completed audit finds six permissive and two
+strict human positives, with zero overlap against the four machine
+`readable_transport` labels. The rule label must therefore remain a diagnostic,
+not a literary-quality category.
 
 ![Prompt x steering contrast](experiments/prompt_steering_contrast_llama3p2_seed12/prompt_steering_contrast.png)
 
@@ -1144,6 +1163,68 @@ methodological rather than adversarial: LLM judges are useful for convergent
 evidence and disagreement discovery, but this small challenge does not support
 replacing targeted human calibration or confirmatory multi-rater studies.
 
+### Construct And Controller Audits
+
+Merge the completed blinded sheet with its hidden condition key and regenerate
+the non-compensatory construct report:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli construct-rating-analyze \
+  --rating-markdown experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_rating.md \
+  --rating-csv experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_rating.csv \
+  --rating-key experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_rating_key.json \
+  --out-dir experiments/prompt_steering_contrast_llama3p2_seed12 \
+  --out-public-csv experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_unblinded.csv
+```
+
+Audit literal stock/style overlap in the primary vector bank:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli bank-lexical-audit \
+  --bank data/depaysement_bank_en_v3.json \
+  --out-prefix experiments/factorized_vectors_llama3p2/primary_bank_lexical_overlap
+```
+
+Measure and intervene on the collected vector geometry:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli factorize-mlx-vectors \
+  --component endpoint=experiments/depaysement_mlx_vectors.npz \
+  --component transition=experiments/factorized_vectors_llama3p2/transition_l6_16_mean.npz \
+  --component anchor=experiments/factorized_vectors_llama3p2/anchor_lineage_l6_16_mean.npz \
+  --component hygiene=experiments/factorized_vectors_llama3p2/hygiene_l6_16_mean.npz \
+  --component anti_meta=experiments/factorized_vectors_llama3p2/anti_meta_l6_16_mean.npz \
+  --component anti_stock=experiments/factorized_vectors_llama3p2/anti_stock_l6_16_mean.npz \
+  --target transition \
+  --project-out hygiene,anti_meta,anti_stock \
+  --coefficient anchor=0.25 \
+  --coefficient hygiene=0.12 \
+  --coefficient anti_meta=0.08 \
+  --coefficient anti_stock=0.10 \
+  --out-projected experiments/factorized_vectors_llama3p2/transition_projected_l6_16_mean.npz \
+  --out-composed experiments/factorized_vectors_llama3p2/transition_factorized_l6_16_mean.npz \
+  --out-random experiments/factorized_vectors_llama3p2/random_norm_control_l6_16_mean.npz \
+  --report-dir experiments/factorized_vectors_llama3p2
+```
+
+The comparison commands consume saved runs and do not generate new model text:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli factorized-corridor-report \
+  --condition endpoint=experiments/factorized_corridor_pilot/endpoint \
+  --condition transition=experiments/factorized_corridor_pilot/transition \
+  --condition projected=experiments/factorized_corridor_pilot/projected \
+  --condition factorized=experiments/factorized_corridor_pilot/factorized \
+  --condition random=experiments/factorized_corridor_pilot/random \
+  --out-dir experiments/factorized_corridor_pilot
+
+PYTHONPATH=src python3 -m depaysement_lab.cli adaptive-controller-report \
+  --condition fixed=experiments/hysteresis_controller_pilot_matched_light/fixed \
+  --condition legacy_relaxed=experiments/hysteresis_controller_law_isolation/legacy \
+  --condition hysteresis_relaxed=experiments/hysteresis_controller_law_isolation/hysteresis \
+  --out-dir experiments/hysteresis_controller_law_isolation
+```
+
 ## Repository Map
 
 ```text
@@ -1157,6 +1238,11 @@ src/depaysement_lab/
   mlx_intervention.py MLX steering-vector collection/injection
   observation.py      coherence-preserving displacement observer
   prompt_contrast.py  prompt x steering raw-pool contrast and construct audit
+  construct_ratings.py blinded conjunctive human-construct analysis
+  vector_geometry.py factor-vector cosine, projection, composition, and random control
+  corridor_compare.py selector-free factorized-pool comparison
+  controller_compare.py matched candidate-step controller comparison
+  bank_audit.py       literal prompt-bank stock/style audit
   prefix_probe.py     fixed-prefix counter-steering decomposition
   judge_challenge.py  blinded judge prompts, API adapters, and analysis
   backends.py         MLX, HF, Ollama, OpenAI-compatible adapters
@@ -1203,6 +1289,15 @@ experiments/prefix_counter_probe_llama3p2_3b_seed4/
 experiments/judge_challenge_v1/
   blind prompts, sanitized provider responses, and agreement analysis
 
+experiments/factorized_vectors_llama3p2/
+  vector geometry and literal bank-overlap reports
+
+experiments/factorized_corridor_pilot/
+  selector-free endpoint, factorized, and random-control comparison
+
+experiments/hysteresis_controller_law_isolation/
+  matched legacy/hysteresis law-isolation summaries and raw picked trajectories
+
 scripts/build_arxiv_bundle.py
   deterministic self-contained arXiv source bundler
 ```
@@ -1233,10 +1328,10 @@ setup. Those messages are not part of the project API.
   trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
-- The prompt x steering construct labels are deterministic observer outputs. Its
-  blinded 36-item human sheet is published but not yet rated, so the pilot does
-  not establish that the machine `readable_transport` category equals literary
-  depaysement.
+- The prompt x steering construct labels are deterministic observer outputs.
+  The completed blinded 36-item audit has zero machine/human positive overlap;
+  it diagnoses a construct failure but contains one rater and six source scenes,
+  so it does not estimate population prevalence or literary taste.
 - The LLM judge challenge contains one rater and 12 texts. It diagnoses proxy
   mismatch and presentation sensitivity; it is not a provider ranking or a
   replacement for blinded multi-rater evaluation.

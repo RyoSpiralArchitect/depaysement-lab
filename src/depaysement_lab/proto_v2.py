@@ -1706,6 +1706,79 @@ def adaptive_trajectory_steer_alpha(
     return clamp(alpha, float(min_alpha), float(max_alpha)), "; ".join(reasons)
 
 
+def hysteresis_trajectory_steer_alpha(
+    *,
+    current_alpha: float,
+    metrics: Mapping[str, Any],
+    previous_action: str,
+    min_alpha: float,
+    max_alpha: float,
+    ontology_min: float,
+    ontology_max: float,
+    readability_min: float,
+    stock_max: float,
+    unfinished_max: float,
+    loop_max: float,
+    hysteresis_margin: float,
+    boost: float,
+    dampen: float,
+) -> Tuple[float, str, str]:
+    if float(ontology_min) > float(ontology_max):
+        raise ValueError("adaptive steering ontology_min must not exceed ontology_max")
+    margin = max(0.0, float(hysteresis_margin))
+    ontology = float(metrics.get("ontology_collapse_density", 0.0) or 0.0)
+    readability = float(metrics.get("syntax_readability_proxy", 0.0) or 0.0)
+    unfinished = float(metrics.get("unfinished", 0.0) or 0.0)
+    repetition = float(metrics.get("repetition_pressure", 0.0) or 0.0)
+    sprawl = float(metrics.get("sprawl_pressure", 0.0) or 0.0)
+    loop_pressure = max(repetition, sprawl)
+    stock_pressure = max(
+        float(metrics.get("cliche_attractor_score", 0.0) or 0.0),
+        float(metrics.get("soft_style_cliche_score", 0.0) or 0.0),
+        float(metrics.get("fantasy_prop_score", 0.0) or 0.0),
+    )
+    failures = []
+    if unfinished > float(unfinished_max):
+        failures.append(f"unfinished {unfinished:.3f}>{float(unfinished_max):.3f}")
+    if loop_pressure > float(loop_max):
+        failures.append(f"loop {loop_pressure:.3f}>{float(loop_max):.3f}")
+    if readability < float(readability_min):
+        failures.append(f"readability {readability:.3f}<{float(readability_min):.3f}")
+    if stock_pressure > float(stock_max):
+        failures.append(f"stock {stock_pressure:.3f}>{float(stock_max):.3f}")
+
+    lower_enter = float(ontology_min) - margin
+    lower_release = float(ontology_min) + margin
+    upper_enter = float(ontology_max) + margin
+    upper_release = float(ontology_max) - margin
+    action = "hold"
+    reasons: List[str] = []
+    if failures:
+        action = "dampen"
+        reasons.extend(failures)
+    elif ontology > upper_enter:
+        action = "dampen"
+        reasons.append(f"ontology {ontology:.3f}>{upper_enter:.3f} upper-enter")
+    elif previous_action == "dampen" and ontology > upper_release:
+        action = "dampen"
+        reasons.append(f"ontology {ontology:.3f}>{upper_release:.3f} upper-release")
+    elif ontology < lower_enter:
+        action = "boost"
+        reasons.append(f"ontology {ontology:.3f}<{lower_enter:.3f} lower-enter")
+    elif previous_action == "boost" and ontology < lower_release:
+        action = "boost"
+        reasons.append(f"ontology {ontology:.3f}<{lower_release:.3f} lower-release")
+    else:
+        reasons.append("inside hysteresis band")
+
+    alpha = float(current_alpha)
+    if action == "boost":
+        alpha += float(boost)
+    elif action == "dampen":
+        alpha -= float(dampen)
+    return clamp(alpha, float(min_alpha), float(max_alpha)), "; ".join(reasons), action
+
+
 @dataclass
 class DepaysementEngine:
     generator: BaseGenerator
@@ -1736,9 +1809,15 @@ class DepaysementEngine:
         trajectory_sprawl_max: float = 0.65,
         steer_schedule: Optional[Sequence[float]] = None,
         adaptive_steering: bool = False,
+        adaptive_steering_mode: str = "legacy",
         adaptive_steering_min_alpha: float = 0.0,
         adaptive_steering_max_alpha: Optional[float] = None,
         adaptive_steering_frontier_min: float = 0.12,
+        adaptive_steering_ontology_min: float = 0.20,
+        adaptive_steering_ontology_max: float = 0.60,
+        adaptive_steering_readability_min: float = 0.55,
+        adaptive_steering_stock_max: float = 0.60,
+        adaptive_steering_hysteresis_margin: float = 0.03,
         adaptive_steering_unfinished_max: float = 0.05,
         adaptive_steering_loop_max: float = 0.50,
         adaptive_steering_boost: float = 0.08,
@@ -1765,9 +1844,15 @@ class DepaysementEngine:
             trajectory_sprawl_max=trajectory_sprawl_max,
             steer_schedule=steer_schedule,
             adaptive_steering=adaptive_steering,
+            adaptive_steering_mode=adaptive_steering_mode,
             adaptive_steering_min_alpha=adaptive_steering_min_alpha,
             adaptive_steering_max_alpha=adaptive_steering_max_alpha,
             adaptive_steering_frontier_min=adaptive_steering_frontier_min,
+            adaptive_steering_ontology_min=adaptive_steering_ontology_min,
+            adaptive_steering_ontology_max=adaptive_steering_ontology_max,
+            adaptive_steering_readability_min=adaptive_steering_readability_min,
+            adaptive_steering_stock_max=adaptive_steering_stock_max,
+            adaptive_steering_hysteresis_margin=adaptive_steering_hysteresis_margin,
             adaptive_steering_unfinished_max=adaptive_steering_unfinished_max,
             adaptive_steering_loop_max=adaptive_steering_loop_max,
             adaptive_steering_boost=adaptive_steering_boost,
@@ -1797,9 +1882,15 @@ class DepaysementEngine:
         trajectory_sprawl_max: float = 0.65,
         steer_schedule: Optional[Sequence[float]] = None,
         adaptive_steering: bool = False,
+        adaptive_steering_mode: str = "legacy",
         adaptive_steering_min_alpha: float = 0.0,
         adaptive_steering_max_alpha: Optional[float] = None,
         adaptive_steering_frontier_min: float = 0.12,
+        adaptive_steering_ontology_min: float = 0.20,
+        adaptive_steering_ontology_max: float = 0.60,
+        adaptive_steering_readability_min: float = 0.55,
+        adaptive_steering_stock_max: float = 0.60,
+        adaptive_steering_hysteresis_margin: float = 0.03,
         adaptive_steering_unfinished_max: float = 0.05,
         adaptive_steering_loop_max: float = 0.50,
         adaptive_steering_boost: float = 0.08,
@@ -1813,6 +1904,9 @@ class DepaysementEngine:
         schedule = [float(value) for value in (steer_schedule or [])]
         schedule_enabled = bool(schedule and steering_supported)
         adaptive_enabled = bool(adaptive_steering and steering_supported)
+        adaptive_mode = str(adaptive_steering_mode).strip().lower()
+        if adaptive_mode not in {"legacy", "hysteresis"}:
+            raise ValueError("adaptive_steering_mode must be 'legacy' or 'hysteresis'")
         adaptive_max = (
             float(adaptive_steering_max_alpha)
             if adaptive_steering_max_alpha is not None
@@ -1827,6 +1921,7 @@ class DepaysementEngine:
         )
         adaptive_max = max(float(adaptive_max), float(adaptive_steering_min_alpha))
         next_adaptive_alpha: Optional[float] = None
+        adaptive_action = "hold"
         steering_trace: List[Dict[str, Any]] = []
         config = {
             "steps": steps,
@@ -1857,10 +1952,16 @@ class DepaysementEngine:
                 "enabled": bool(schedule_enabled or adaptive_enabled),
                 "schedule": list(schedule),
                 "adaptive": bool(adaptive_enabled),
+                "adaptive_mode": adaptive_mode,
                 "base_alpha": float(base_steer_alpha),
                 "min_alpha": float(adaptive_steering_min_alpha),
                 "max_alpha": float(adaptive_max),
                 "frontier_min": float(adaptive_steering_frontier_min),
+                "ontology_min": float(adaptive_steering_ontology_min),
+                "ontology_max": float(adaptive_steering_ontology_max),
+                "readability_min": float(adaptive_steering_readability_min),
+                "stock_max": float(adaptive_steering_stock_max),
+                "hysteresis_margin": float(adaptive_steering_hysteresis_margin),
                 "unfinished_max": float(adaptive_steering_unfinished_max),
                 "loop_max": float(adaptive_steering_loop_max),
                 "boost": float(adaptive_steering_boost),
@@ -1926,20 +2027,42 @@ class DepaysementEngine:
                 self._attach_selector_metrics(picked, context=context_before_step)
 
             if adaptive_enabled:
-                next_adaptive_alpha, steering_reason = adaptive_trajectory_steer_alpha(
-                    current_alpha=step_alpha,
-                    metrics=picked.selector_metrics,
-                    min_alpha=float(adaptive_steering_min_alpha),
-                    max_alpha=float(adaptive_max),
-                    frontier_min=float(adaptive_steering_frontier_min),
-                    unfinished_max=float(adaptive_steering_unfinished_max),
-                    loop_max=float(adaptive_steering_loop_max),
-                    boost=float(adaptive_steering_boost),
-                    dampen=float(adaptive_steering_dampen),
-                )
+                if adaptive_mode == "hysteresis":
+                    next_adaptive_alpha, steering_reason, adaptive_action = (
+                        hysteresis_trajectory_steer_alpha(
+                            current_alpha=step_alpha,
+                            metrics=picked.selector_metrics,
+                            previous_action=adaptive_action,
+                            min_alpha=float(adaptive_steering_min_alpha),
+                            max_alpha=float(adaptive_max),
+                            ontology_min=float(adaptive_steering_ontology_min),
+                            ontology_max=float(adaptive_steering_ontology_max),
+                            readability_min=float(adaptive_steering_readability_min),
+                            stock_max=float(adaptive_steering_stock_max),
+                            unfinished_max=float(adaptive_steering_unfinished_max),
+                            loop_max=float(adaptive_steering_loop_max),
+                            hysteresis_margin=float(adaptive_steering_hysteresis_margin),
+                            boost=float(adaptive_steering_boost),
+                            dampen=float(adaptive_steering_dampen),
+                        )
+                    )
+                else:
+                    next_adaptive_alpha, steering_reason = adaptive_trajectory_steer_alpha(
+                        current_alpha=step_alpha,
+                        metrics=picked.selector_metrics,
+                        min_alpha=float(adaptive_steering_min_alpha),
+                        max_alpha=float(adaptive_max),
+                        frontier_min=float(adaptive_steering_frontier_min),
+                        unfinished_max=float(adaptive_steering_unfinished_max),
+                        loop_max=float(adaptive_steering_loop_max),
+                        boost=float(adaptive_steering_boost),
+                        dampen=float(adaptive_steering_dampen),
+                    )
+                    adaptive_action = "legacy"
                 if steering_trace:
                     steering_trace[-1]["next_alpha"] = float(next_adaptive_alpha)
                     steering_trace[-1]["reason"] = steering_reason
+                    steering_trace[-1]["action"] = adaptive_action
                 if trace:
                     print(f"[trajectory-steering] next alpha={next_adaptive_alpha:.3f}: {steering_reason}")
 

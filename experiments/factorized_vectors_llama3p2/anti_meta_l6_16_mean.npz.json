@@ -1,0 +1,93 @@
+{
+  "model_name": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+  "token_strategy": "mean",
+  "chat_template": true,
+  "max_length": 192,
+  "num_positive": 12,
+  "num_negative": 12,
+  "prompt_bank": {
+    "format": "depaysement_lab.prompt_bank.v1",
+    "canonical_sha256": "4b3663642c685926317ce348b6021913caa06a9b38e227b868247f19a2c10d50",
+    "counts": {
+      "positive_depaysement": 12,
+      "negative_realist_repair": 12,
+      "negative_weird_noise": 0
+    },
+    "prompts": {
+      "positive_depaysement": [
+        "The receipt climbs the wall, carrying its total from brick to brick.",
+        "Morning light collects in the mug and looks back through the sink.",
+        "The bus card opens a wet platform inside the coat pocket.",
+        "The spreadsheet lets one column walk slowly beneath the office fan.",
+        "The delivery label unfolds a hallway across the cardboard box.",
+        "The refrigerator keeps tomorrow's weather on its middle shelf.",
+        "The comb parts the morning light into narrow, parallel rooms.",
+        "The printer tray releases a garden between two blank pages.",
+        "The grocery list leans against the kettle as a ladder.",
+        "The elevator button carries the ceiling inside its cracked number.",
+        "The charger cable flows beneath the desk and enters the wall.",
+        "The stapler bites a cloud from the edge of the paper."
+      ],
+      "negative_realist_repair": [
+        "The receipt climbs the wall, carrying its total from brick to brick; this symbolizes escaping routine.",
+        "Morning light collects in the mug and looks back through the sink; the strange image represents memory.",
+        "The bus card opens a wet platform inside the coat pocket; this is meant to create disorientation.",
+        "The spreadsheet lets one column walk beneath the office fan; in other words, office order is breaking down.",
+        "The delivery label unfolds a hallway across the box; the surreal hallway represents an uncertain journey.",
+        "The refrigerator keeps tomorrow's weather on its shelf; this impossible detail signals dream logic.",
+        "The comb parts the morning light into rooms; the metaphor deliberately makes the familiar seem strange.",
+        "The printer tray releases a garden between blank pages; this image symbolizes hidden creativity.",
+        "The grocery list leans against the kettle as a ladder; the transformation is intentionally absurd.",
+        "The elevator button carries the ceiling inside its number; this is a surreal reversal of scale.",
+        "The charger cable flows beneath the desk and enters the wall; the river image represents connection.",
+        "The stapler bites a cloud from the paper; this bizarre action is designed to unsettle the reader."
+      ],
+      "negative_weird_noise": []
+    }
+  },
+  "layer_path": "model.layers",
+  "n_layers": 28,
+  "selected_layers": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "norms_before_unit_normalization": {
+    "6": 3.943328857421875,
+    "7": 3.9525036811828613,
+    "8": 3.9559390544891357,
+    "9": 3.9648990631103516,
+    "10": 3.9649763107299805,
+    "11": 3.9721391201019287,
+    "12": 3.9738800525665283,
+    "13": 3.987114667892456,
+    "14": 3.9867424964904785,
+    "15": 3.9410204887390137,
+    "16": 3.930860757827759
+  },
+  "position_default": "last",
+  "apply_on_default": "decode_only",
+  "format": "depaysement_lab.mlx_steering_vectors.v1",
+  "vector_keys": [
+    "layer_10",
+    "layer_11",
+    "layer_12",
+    "layer_13",
+    "layer_14",
+    "layer_15",
+    "layer_16",
+    "layer_6",
+    "layer_7",
+    "layer_8",
+    "layer_9"
+  ],
+  "archive_sha256": "b943995aa3313140a66542976486226dce6a94e4d8bd13f98e4e58207b8ace4c"
+}

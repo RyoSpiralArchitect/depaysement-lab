@@ -129,6 +129,22 @@ def test_prompt_contrast_retains_all_raw_cells_and_builds_blind_sheet():
     assert {item["prompt_mode"] for item in key["items"]} == {"naive", "operational"}
 
 
+def test_prompt_contrast_accepts_dense_alpha_grid():
+    report = run_prompt_steering_contrast(
+        PromptContrastGenerator(),
+        DepaysementScorer(),
+        SelectorConfig(objective="banded-frontier"),
+        items=[_item()],
+        prompt_modes=("operational",),
+        alphas=(0.0, 0.3, 0.6, 0.9, 1.2),
+        candidates=1,
+        max_new_tokens=48,
+    )
+
+    assert len(report["cells"]) == 5
+    assert [row["alpha"] for row in report["summary_rows"]] == [0.0, 0.3, 0.6, 0.9, 1.2]
+
+
 def test_prompt_contrast_strips_trailing_space_inside_multiline_candidates():
     generator = PromptContrastGenerator()
     original_generate = generator.generate

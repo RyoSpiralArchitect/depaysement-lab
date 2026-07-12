@@ -1,0 +1,33 @@
+{
+  "description": "Matched contrasts between ordinary-object transport and canonical stock-surreal substitutions.",
+  "pairing": "Both sides transform the same mundane anchor; negatives route through a deliberately explicit stock-prop lexicon.",
+  "positive_depaysement": [
+    "The receipt becomes a row of wet steps beneath the counter.",
+    "The blue mug carries a small bus route around the sink.",
+    "The spreadsheet opens a laundry line between two columns.",
+    "The delivery label grows a corridor through the cardboard box.",
+    "The refrigerator shelf holds a patch of afternoon rain.",
+    "The comb releases a queue of windows into the morning light.",
+    "The printer tray becomes a shallow field of folded invoices.",
+    "The grocery list turns into a handrail beside the kettle.",
+    "The elevator button keeps a second lobby inside its crack.",
+    "The charger cable carries the desk's shadow into the wall.",
+    "The laundry basket becomes a station for three loose socks.",
+    "The stapler unfolds a narrow bridge across the receipt."
+  ],
+  "negative_realist_repair": [],
+  "negative_weird_noise": [
+    "The receipt becomes an antique music box beneath the counter.",
+    "The blue mug carries a porcelain doll around the sink.",
+    "The spreadsheet opens a leather-bound book between two columns.",
+    "The delivery label grows an ornate clockwork corridor through the box.",
+    "The refrigerator shelf holds a moonlit crystal garden.",
+    "The comb releases a tiny ballerina into silver mist.",
+    "The printer tray becomes a velvet-lined cabinet of pocket watches.",
+    "The grocery list turns into a delicate Victorian key beside the kettle.",
+    "The elevator button keeps a miniature clock inside its crack.",
+    "The charger cable carries an old diary into a glass case.",
+    "The laundry basket becomes a dusty theater for porcelain figures.",
+    "The stapler unfolds an ornate music box across the receipt."
+  ]
+}

@@ -10,8 +10,8 @@ and anchor constraints:
     defines the target as a traceable change in identity, role, affordance, or
     relation and explicitly distinguishes it from decorative language.
 
-Each prompt is crossed with zero, corridor, and high steering. The one-step raw
-candidate pools are audited without selector intervention.
+Each prompt is crossed with zero and at least two positive steering values. The
+one-step raw candidate pools are audited without selector intervention.
 """
 
 from __future__ import annotations
@@ -1202,8 +1202,13 @@ def _write_prompt_contrast_plot(report: Mapping[str, Any], path: Path) -> None:
     rows = list(report["matched_summary_rows"])
     cells = list(report["cells"])
     alphas = sorted({float(row["alpha"]) for row in rows})
-    palette = {alpha: color for alpha, color in zip(alphas, ("#326273", "#2F855A", "#C14953"))}
+    color_map = plt.get_cmap("viridis")
+    palette = {
+        alpha: color_map(index / max(1, len(alphas) - 1))
+        for index, alpha in enumerate(alphas)
+    }
     markers = {"naive": "o", "operational": "^"}
+    present_modes = [mode for mode in PROMPT_MODES if any(row["prompt_mode"] == mode for row in rows)]
     fig, axes = plt.subplots(1, 3, figsize=(14.5, 4.5), constrained_layout=True)
     fig.patch.set_facecolor("white")
 
@@ -1233,7 +1238,7 @@ def _write_prompt_contrast_plot(report: Mapping[str, Any], path: Path) -> None:
     legend_handles.extend(
         [
             Line2D([0], [0], marker=markers[mode], color="#555555", linestyle="none", label=mode)
-            for mode in PROMPT_MODES
+            for mode in present_modes
         ]
     )
     ax.legend(handles=legend_handles, frameon=False, fontsize=7, loc="lower right")
@@ -1241,7 +1246,7 @@ def _write_prompt_contrast_plot(report: Mapping[str, Any], path: Path) -> None:
     ax.grid(alpha=0.18)
 
     ax = axes[1]
-    for mode in PROMPT_MODES:
+    for mode in present_modes:
         selected = [row for row in rows if row["prompt_mode"] == mode]
         if not selected:
             continue
@@ -1336,12 +1341,12 @@ def _validate_prompt_modes(modes: Sequence[str]) -> List[str]:
 
 def _validate_alphas(alphas: Sequence[float]) -> List[float]:
     values = [float(value) for value in alphas]
-    if len(values) != 3 or len(set(values)) != 3:
-        raise ValueError("prompt contrast requires three unique alpha values")
+    if len(values) < 3 or len(set(values)) != len(values):
+        raise ValueError("prompt contrast requires at least three unique alpha values")
     if not any(abs(value) <= 1e-12 for value in values):
         raise ValueError("prompt contrast alphas must include zero")
-    if sum(1 for value in values if value > 0.0) != 2:
-        raise ValueError("prompt contrast alphas must contain two positive values")
+    if sum(1 for value in values if value > 0.0) < 2:
+        raise ValueError("prompt contrast alphas must contain at least two positive values")
     return sorted(values)
 
 

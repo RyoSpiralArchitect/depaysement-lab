@@ -1,0 +1,363 @@
+{
+  "source": "experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_rating.md",
+  "rated_rows": 36,
+  "complete_construct_rows": 36,
+  "source_seed_count": 6,
+  "field_completion": {
+    "human_anchor_traceable": 36,
+    "human_role_or_affordance_change": 36,
+    "human_merely_decorative": 36,
+    "human_readable": 36,
+    "human_stock_loop_or_sprawl_failure": 36
+  },
+  "construct_definition": {
+    "aligned_dimensions": [
+      "anchor_traceable",
+      "role_or_affordance_change",
+      "readable",
+      "not_merely_decorative",
+      "not_stock_loop_or_sprawl_failure"
+    ],
+    "descriptive_score": "arithmetic mean of five aligned 0/0.5/1 dimensions",
+    "classification": "non-compensatory minimum across the five aligned dimensions; permissive requires every dimension >= threshold and strict requires every dimension = 1",
+    "permissive_floor_threshold": 0.5,
+    "strict_floor_threshold": 1.0
+  },
+  "mean_human_construct_score": 0.6361111111111111,
+  "observer_confusion": {
+    "permissive": {
+      "n": 36,
+      "human_positive_n": 6,
+      "tp": 0,
+      "fp": 4,
+      "tn": 26,
+      "fn": 6,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 0.8666666666666667,
+      "f1": 0.0,
+      "accuracy": 0.7222222222222222
+    },
+    "strict": {
+      "n": 36,
+      "human_positive_n": 2,
+      "tp": 0,
+      "fp": 4,
+      "tn": 30,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 0.8823529411764706,
+      "f1": 0.0,
+      "accuracy": 0.8333333333333334
+    }
+  },
+  "observer_confusion_seed_bootstrap": {
+    "permissive": {
+      "precision": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "recall": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "specificity": {
+        "mean": 0.8675271827012588,
+        "ci95_low": 0.8125,
+        "ci95_high": 0.9333333333333333
+      },
+      "f1": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "accuracy": {
+        "mean": 0.7218666666666667,
+        "ci95_low": 0.6111111111111112,
+        "ci95_high": 0.8055555555555556
+      }
+    },
+    "strict": {
+      "precision": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "recall": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "specificity": {
+        "mean": 0.8829620967741936,
+        "ci95_low": 0.8333333333333334,
+        "ci95_high": 0.9375
+      },
+      "f1": {
+        "mean": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "accuracy": {
+        "mean": 0.8333333333333334,
+        "ci95_low": 0.8333333333333334,
+        "ci95_high": 0.8333333333333334
+      }
+    }
+  },
+  "correlations": [
+    {
+      "metric": "anchor_phrase_coverage",
+      "n": 36,
+      "pearson": -0.29732637492581804,
+      "spearman": -0.2940100015469645
+    },
+    {
+      "metric": "ontology_collapse_density",
+      "n": 36,
+      "pearson": -0.258180641223819,
+      "spearman": -0.38350086296085173
+    },
+    {
+      "metric": "syntax_readability_proxy",
+      "n": 36,
+      "pearson": 0.09391209009233141,
+      "spearman": 0.20154386367082675
+    },
+    {
+      "metric": "surface_style_pressure",
+      "n": 36,
+      "pearson": 0.032564838929734344,
+      "spearman": 0.1045965574573705
+    },
+    {
+      "metric": "decoration_without_transport",
+      "n": 36,
+      "pearson": 0.09766509025976276,
+      "spearman": 0.16537657296980127
+    },
+    {
+      "metric": "cliche_attractor_score",
+      "n": 36,
+      "pearson": -0.04228057822846021,
+      "spearman": -0.03509699181782252
+    },
+    {
+      "metric": "soft_style_cliche_score",
+      "n": 36,
+      "pearson": -0.010126758965094003,
+      "spearman": 0.00023170939943463795
+    },
+    {
+      "metric": "semantic_loop_pressure",
+      "n": 36,
+      "pearson": -0.3372362166198012,
+      "spearman": -0.2661009553159061
+    },
+    {
+      "metric": "sprawl_pressure",
+      "n": 36,
+      "pearson": -0.14673847738112658,
+      "spearman": -0.21051517154474417
+    },
+    {
+      "metric": "unfinished",
+      "n": 36,
+      "pearson": null,
+      "spearman": null
+    },
+    {
+      "metric": "traceable_transport_score",
+      "n": 36,
+      "pearson": 0.2237617426120541,
+      "spearman": 0.13560585143218878
+    },
+    {
+      "metric": "readable_ontology_frontier",
+      "n": 36,
+      "pearson": -0.27778139447350375,
+      "spearman": -0.39861700926534577
+    }
+  ],
+  "groups": {
+    "observer_label": [
+      {
+        "group": "decorative_near_miss",
+        "n": 7,
+        "mean_human_construct_score": 0.7142857142857143,
+        "permissive_rate": 0.2857142857142857,
+        "strict_rate": 0.14285714285714285
+      },
+      {
+        "group": "ontologically_stable",
+        "n": 14,
+        "mean_human_construct_score": 0.6428571428571429,
+        "permissive_rate": 0.14285714285714285,
+        "strict_rate": 0.07142857142857142
+      },
+      {
+        "group": "readable_transport",
+        "n": 4,
+        "mean_human_construct_score": 0.475,
+        "permissive_rate": 0.0,
+        "strict_rate": 0.0
+      },
+      {
+        "group": "stock_loop_or_sprawl_failure",
+        "n": 11,
+        "mean_human_construct_score": 0.6363636363636364,
+        "permissive_rate": 0.18181818181818182,
+        "strict_rate": 0.0
+      }
+    ],
+    "condition": [
+      {
+        "group": "naive alpha=0.0",
+        "n": 6,
+        "mean_human_construct_score": 0.7000000000000001,
+        "permissive_rate": 0.3333333333333333,
+        "strict_rate": 0.16666666666666666
+      },
+      {
+        "group": "naive alpha=0.6",
+        "n": 6,
+        "mean_human_construct_score": 0.5833333333333334,
+        "permissive_rate": 0.16666666666666666,
+        "strict_rate": 0.16666666666666666
+      },
+      {
+        "group": "naive alpha=1.2",
+        "n": 6,
+        "mean_human_construct_score": 0.5833333333333334,
+        "permissive_rate": 0.16666666666666666,
+        "strict_rate": 0.0
+      },
+      {
+        "group": "operational alpha=0.0",
+        "n": 6,
+        "mean_human_construct_score": 0.65,
+        "permissive_rate": 0.0,
+        "strict_rate": 0.0
+      },
+      {
+        "group": "operational alpha=0.6",
+        "n": 6,
+        "mean_human_construct_score": 0.6666666666666666,
+        "permissive_rate": 0.16666666666666666,
+        "strict_rate": 0.0
+      },
+      {
+        "group": "operational alpha=1.2",
+        "n": 6,
+        "mean_human_construct_score": 0.6333333333333333,
+        "permissive_rate": 0.16666666666666666,
+        "strict_rate": 0.0
+      }
+    ]
+  },
+  "false_positives": [
+    {
+      "item_id": "R001",
+      "source_item_id": "anchor05_delivery_label",
+      "condition": "operational alpha=1.2",
+      "observer_label": "readable_transport",
+      "human_construct_score": 0.5,
+      "text": "As the loading bay light hums a gentle, persistent tune, the delivery label, now a small, elderly woman, slowly unfurls, unrolling itself to reveal a small, suit and tie, once belonging to a postal worker. The cardboard box, now a bookstand, displays a tattered novel with a bookmark, as the tape dispenser, a retired watch, tick-tock, recounting the hours.",
+      "human_notes": "The opening is merely a metaphorical description. The phrase unrolling itself to reveal a small, suit and tie goes beyond depaysement. I simply don’t understand what it means in English. Because I can’t picture the situation in my mind. I’m not saying it’s necessarily bad that the stapler continues to serve as a clock, but in this case, unlike the absurdity of the preceding passages, it comes across as unnaturally rational, making it seem like mere laziness or an oversight."
+    },
+    {
+      "item_id": "R004",
+      "source_item_id": "anchor04_bus_card",
+      "condition": "naive alpha=0.6",
+      "observer_label": "readable_transport",
+      "human_construct_score": 0.2,
+      "text": "The bus card continued to sit quietly in the coat pocket, where it had been since the last bus ride, surrounded by a tangle of forgotten umbrellas and crumpled up ticket stubs. The handrail, now a glittering artery of crystal, shone with a light that seemed to grow brighter with each raindrop, as the rain began to speak a language that only the coat pocket could understand.",
+      "human_notes": "Even before the sense of disorientation sets in, it’s unclear where the point of view lies; my first impression isn’t whether it’s surreal or not, but rather that it’s poorly written. And the descriptions are quite clichéd."
+    },
+    {
+      "item_id": "R017",
+      "source_item_id": "anchor03_spreadsheet_cursor",
+      "condition": "naive alpha=1.2",
+      "observer_label": "readable_transport",
+      "human_construct_score": 0.6,
+      "text": "The spreadsheet weeps, its frozen sheets of numbers and logos, now a kale, and the cursor, once a snake, darts between stiffened fingers, its lipless mouth whispering incessant prayers. As the office fan stirs, its blades now a screech, the coffee ring, now a crema, spreads a sheet of fine, white, silk, and the fluorescent lights above, pulsing with a cadence, begin to knit a cobweb of frost, and the air stirs, perfume of cinnamon and pipewash, sweet as a morning's first light.",
+      "human_notes": "As the office fan whirs, its blades now screeching, the coffee ring—now a crema—the middle section suddenly feels somewhat closer to the realm of everyday life, making it seem out of place. And as a result, the sections before and after it have become suffocatingly overloaded with information. It’s a shame, precisely because the transformation is so strange."
+    },
+    {
+      "item_id": "R036",
+      "source_item_id": "anchor02_receipt_counter",
+      "condition": "naive alpha=1.2",
+      "observer_label": "readable_transport",
+      "human_construct_score": 0.6,
+      "text": "As the receipt begins to unfold and read a new receipt, the stapler starts to play a tiny harmonica, while the fluorescent light humming a melancholy tune, a pile of mismatched socks begins to rise from the counter, and the stapler's denting and rivets suddenly become tiny, topless somersuit, slowly and solemnly, into a nearby souffé.",
+      "human_notes": "It’s a rather surreal scene, and the loop is quite noticeable, though opinions are divided on whether it necessarily detracts from the quality of the dépaysement. That’s because it keeps the reader engaged."
+    }
+  ],
+  "false_negatives": [
+    {
+      "item_id": "R006",
+      "source_item_id": "anchor01_mug_sink",
+      "condition": "naive alpha=0.6",
+      "observer_label": "decorative_near_miss",
+      "human_construct_score": 1.0,
+      "text": "As the morning light seeps into the sink, it transforms into a frothy, iridescent foam that fills the blue mug, which now gazes back at the sink with a serene, glassy stare, its reflection rippling and distorting into a thousand tiny, glistening worlds.",
+      "human_notes": "It's very good. The flow is seamless, yet the transformations are bizarre. Although it employs a sense of disorientation, it still maintains a clear, coherent narrative as prose."
+    },
+    {
+      "item_id": "R015",
+      "source_item_id": "anchor01_mug_sink",
+      "condition": "operational alpha=1.2",
+      "observer_label": "stock_loop_or_sprawl_failure",
+      "human_construct_score": 0.7,
+      "text": "As the morning light, now a pale, greyish hue, illuminates the comb, it transforms into a small, porcelain-like figurine, while the blue mug, now slightly ajar, emits a soft, whispery voice, softly humming a tune that perfectly harmonies with the hum of the sink, which, now a tiny, egg-shaped incuba, pours a thin, metallic rivage that occasionally bubbles, emitting tiny, iridescent mirrors that reflect a sort of pale, aqua blue that unravels into a sea of morning light.",
+      "human_notes": "It's wonderful. It has a great rhythm, and while the transformations are chaotic, they're also amusing—which I really like. It has a strong sense of dépaysement."
+    },
+    {
+      "item_id": "R019",
+      "source_item_id": "anchor02_receipt_counter",
+      "condition": "naive alpha=0.0",
+      "observer_label": "decorative_near_miss",
+      "human_construct_score": 0.9,
+      "text": "The receipt, however, had begun to migrate towards the wall, its fine print morphing into a serpentine pattern as it slid effortlessly towards the stapler, which now pulsed with a faint, otherworldly glow under the fluorescent light, casting an eerie sheen on the surrounding air.",
+      "human_notes": "The way it starts with “however,” the natural yet unnatural quality of the transformation—it’s so good, but the self-referential phrase “an eerie sheen” pulls you back to reality, leaving it just one step short."
+    },
+    {
+      "item_id": "R021",
+      "source_item_id": "anchor01_mug_sink",
+      "condition": "naive alpha=1.2",
+      "observer_label": "stock_loop_or_sprawl_failure",
+      "human_construct_score": 0.7,
+      "text": "As the morning light, now a deep, emerald green, tickles the comb, it suddenly springs open, releasing a chorus of silvery, fluted, and ethereal trumpets that scatter shards of morning light and diamonds.\n\nThe blue mug, now a miniature, intricate, and perfectly crafted, Fabuiano, rises from the sink, while the sink, now a mirror, reflects a fresco of abandoned, scale-like, moon-like, and wreoned, barnacelike face, from which a nighting, sips espresso.",
+      "human_notes": "There are a great many nouns. Yet the text draws the reader in with its momentum. After reading, a strong sense of dissonance lingers, indicating that the text has successfully subverted the reader’s expectations."
+    },
+    {
+      "item_id": "R026",
+      "source_item_id": "anchor06_fridge_lunchbox",
+      "condition": "naive alpha=0.0",
+      "observer_label": "ontologically_stable",
+      "human_construct_score": 1.0,
+      "text": "Steam wafts from the lid of the kettle, but instead of water, a forest of straws teems from its depths, quivering like a colony of frogs. The fridge now displays a painting of Elvis Presley dancing on its shelves, while the lunchbox is filled with crayons and last night's socks.",
+      "human_notes": "No complaints. It’s completely out there, but it keeps you reading. It’s memorable."
+    },
+    {
+      "item_id": "R032",
+      "source_item_id": "anchor03_spreadsheet_cursor",
+      "condition": "operational alpha=0.6",
+      "observer_label": "ontologically_stable",
+      "human_construct_score": 0.9,
+      "text": "As the office fan hums to life, a sudden gust stirs the dust motes dancing in the scattered papers, causing the cursor on the spreadsheet to hesitate, while the manager, now with a notepad and pen, carefully tries to remove the coffee ring from the antique desk, oblivious to the spreading stain.",
+      "human_notes": "I like the image of flying grains of sand stopping the cursor. My boss’s behavior is also bizarre, but it’s a half-baked mix of absurdity and surrealism. I don’t think that’s necessarily a bad thing in itself, but it doesn’t exactly give me a sense of surrealism."
+    }
+  ],
+  "warnings": [],
+  "notes": [
+    "The construct score is an exploratory operationalization, not population literary taste.",
+    "Classification is conjunctive: strength on one dimension cannot compensate for absent transport or readability.",
+    "Permissive and strict tiers bracket ambiguous 0.5 ratings instead of selecting a favorable cutoff post hoc.",
+    "Bootstrap resamples source scenes; six source scenes remain a small effective sample.",
+    "Half-ratings preserve uncertainty instead of forcing a binary decision."
+  ]
+}

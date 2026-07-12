@@ -7,6 +7,7 @@ from depaysement_lab.proto_v2 import (
     SelectorConfig,
     build_depaysement_prompt,
     cleanup_continuation,
+    hysteresis_trajectory_steer_alpha,
     semantic_transport_metrics,
 )
 import random
@@ -533,3 +534,98 @@ def test_adaptive_steering_boosts_next_step_from_picked_metrics():
     trace = run.config["trajectory_steering"]["trace"]
     assert round(trace[0]["next_alpha"], 3) == 0.6
     assert "frontier" in trace[0]["reason"]
+
+
+def test_hysteresis_controller_retains_action_until_release_threshold():
+    common = {
+        "syntax_readability_proxy": 0.8,
+        "unfinished": 0.0,
+        "repetition_pressure": 0.0,
+        "sprawl_pressure": 0.0,
+        "cliche_attractor_score": 0.0,
+        "soft_style_cliche_score": 0.0,
+        "fantasy_prop_score": 0.0,
+    }
+    alpha, _, action = hysteresis_trajectory_steer_alpha(
+        current_alpha=0.5,
+        metrics={**common, "ontology_collapse_density": 0.10},
+        previous_action="hold",
+        min_alpha=0.0,
+        max_alpha=1.0,
+        ontology_min=0.20,
+        ontology_max=0.60,
+        readability_min=0.55,
+        stock_max=0.60,
+        unfinished_max=0.05,
+        loop_max=0.50,
+        hysteresis_margin=0.03,
+        boost=0.08,
+        dampen=0.12,
+    )
+    assert round(alpha, 2) == 0.58
+    assert action == "boost"
+
+    alpha, reason, action = hysteresis_trajectory_steer_alpha(
+        current_alpha=alpha,
+        metrics={**common, "ontology_collapse_density": 0.21},
+        previous_action=action,
+        min_alpha=0.0,
+        max_alpha=1.0,
+        ontology_min=0.20,
+        ontology_max=0.60,
+        readability_min=0.55,
+        stock_max=0.60,
+        unfinished_max=0.05,
+        loop_max=0.50,
+        hysteresis_margin=0.03,
+        boost=0.08,
+        dampen=0.12,
+    )
+    assert round(alpha, 2) == 0.66
+    assert action == "boost"
+    assert "lower-release" in reason
+
+    alpha, reason, action = hysteresis_trajectory_steer_alpha(
+        current_alpha=alpha,
+        metrics={**common, "ontology_collapse_density": 0.25},
+        previous_action=action,
+        min_alpha=0.0,
+        max_alpha=1.0,
+        ontology_min=0.20,
+        ontology_max=0.60,
+        readability_min=0.55,
+        stock_max=0.60,
+        unfinished_max=0.05,
+        loop_max=0.50,
+        hysteresis_margin=0.03,
+        boost=0.08,
+        dampen=0.12,
+    )
+    assert round(alpha, 2) == 0.66
+    assert action == "hold"
+    assert "inside hysteresis band" in reason
+
+
+def test_hysteresis_controller_dampens_readability_failure():
+    alpha, reason, action = hysteresis_trajectory_steer_alpha(
+        current_alpha=0.6,
+        metrics={
+            "ontology_collapse_density": 0.3,
+            "syntax_readability_proxy": 0.4,
+        },
+        previous_action="hold",
+        min_alpha=0.0,
+        max_alpha=1.0,
+        ontology_min=0.20,
+        ontology_max=0.60,
+        readability_min=0.55,
+        stock_max=0.60,
+        unfinished_max=0.05,
+        loop_max=0.50,
+        hysteresis_margin=0.03,
+        boost=0.08,
+        dampen=0.12,
+    )
+    assert round(alpha, 2) == 0.48
+    assert action == "dampen"
+    assert "readability" in reason

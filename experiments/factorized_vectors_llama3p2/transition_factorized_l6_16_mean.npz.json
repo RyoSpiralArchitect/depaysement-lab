@@ -1,0 +1,52 @@
+{
+  "format": "depaysement_lab.factorized_mlx_steering_vectors.v1",
+  "target": "transition",
+  "project_out": [
+    "hygiene",
+    "anti_meta",
+    "anti_stock"
+  ],
+  "coefficients": {
+    "anchor": 0.25,
+    "hygiene": 0.12,
+    "anti_meta": 0.08,
+    "anti_stock": 0.1
+  },
+  "component_paths": {
+    "endpoint": "experiments/depaysement_mlx_vectors.npz",
+    "transition": "experiments/factorized_vectors_llama3p2/transition_l6_16_mean.npz",
+    "anchor": "experiments/factorized_vectors_llama3p2/anchor_lineage_l6_16_mean.npz",
+    "hygiene": "experiments/factorized_vectors_llama3p2/hygiene_l6_16_mean.npz",
+    "anti_meta": "experiments/factorized_vectors_llama3p2/anti_meta_l6_16_mean.npz",
+    "anti_stock": "experiments/factorized_vectors_llama3p2/anti_stock_l6_16_mean.npz"
+  },
+  "common_layers": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "interpretation_boundary": "Layer-wise orthogonalization is an intervention on measured directions, not evidence that the named functions are causally independent in the model.",
+  "artifact": "projected_target_plus_support",
+  "vector_keys": [
+    "layer_10",
+    "layer_11",
+    "layer_12",
+    "layer_13",
+    "layer_14",
+    "layer_15",
+    "layer_16",
+    "layer_6",
+    "layer_7",
+    "layer_8",
+    "layer_9"
+  ],
+  "archive_sha256": "b7a2009891859d298c653af10f33c3d9111996220b1ed85bc411ad599bcf1d44"
+}

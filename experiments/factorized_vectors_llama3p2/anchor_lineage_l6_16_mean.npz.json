@@ -1,0 +1,93 @@
+{
+  "model_name": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+  "token_strategy": "mean",
+  "chat_template": true,
+  "max_length": 192,
+  "num_positive": 12,
+  "num_negative": 12,
+  "prompt_bank": {
+    "format": "depaysement_lab.prompt_bank.v1",
+    "canonical_sha256": "c3ea2d74300627ee425665150ab0cf9f4a01aaa56853fdbe79d6e1c091be2eec",
+    "counts": {
+      "positive_depaysement": 12,
+      "negative_realist_repair": 12,
+      "negative_weird_noise": 0
+    },
+    "prompts": {
+      "positive_depaysement": [
+        "The receipt becomes a staircase, and its printed total remains visible on every step.",
+        "The blue mug opens into a room, while its chipped handle stays beside the doorway.",
+        "The bus card becomes a footbridge, with its route number running along the rail.",
+        "The spreadsheet rises into a building, and its column letters remain above the floors.",
+        "The delivery label stretches into a road, while its barcode marks the road's edge.",
+        "The refrigerator shelf becomes weather, and the thermostat remains inside the cold cloud.",
+        "The laundry basket opens into a gate, with its two handles holding the gate apart.",
+        "The printer tray becomes a garden, and a strip of printer paper stays between the paths.",
+        "The grocery list unfolds into a ladder, with each written item remaining on a rung.",
+        "The elevator button becomes a pool, and its cracked number stays under the reflected ceiling.",
+        "The phone cable becomes a river, while its plug remains fixed beneath the desk.",
+        "The takeout lid becomes an awning, with the container still supporting it from below."
+      ],
+      "negative_realist_repair": [
+        "A staircase appears where the receipt was, but no printed total remains on the steps.",
+        "A room opens beside the blue mug, whose chipped handle is no longer visible.",
+        "A footbridge replaces the bus card, and the route number disappears from view.",
+        "A building replaces the spreadsheet, with no column letters remaining above its floors.",
+        "A road replaces the delivery label, and no barcode remains along the road's edge.",
+        "Cold weather fills the refrigerator, but the shelf and thermostat disappear inside the cloud.",
+        "A gate replaces the laundry basket, and neither basket handle remains visible.",
+        "A garden replaces the printer tray, with no printer paper remaining between its paths.",
+        "A ladder replaces the grocery list, and none of the written items remain on its rungs.",
+        "A pool replaces the elevator button, and its cracked number disappears under the ceiling.",
+        "A river replaces the phone cable, and the plug is no longer visible beneath the desk.",
+        "An awning replaces the takeout container, which disappears from beneath the lid."
+      ],
+      "negative_weird_noise": []
+    }
+  },
+  "layer_path": "model.layers",
+  "n_layers": 28,
+  "selected_layers": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "norms_before_unit_normalization": {
+    "6": 0.4894777834415436,
+    "7": 0.5556294918060303,
+    "8": 0.5797389149665833,
+    "9": 0.6185241937637329,
+    "10": 0.6374620199203491,
+    "11": 0.7326380014419556,
+    "12": 0.7414029240608215,
+    "13": 0.760246753692627,
+    "14": 0.8764769434928894,
+    "15": 0.931601345539093,
+    "16": 0.9630892276763916
+  },
+  "position_default": "last",
+  "apply_on_default": "decode_only",
+  "format": "depaysement_lab.mlx_steering_vectors.v1",
+  "vector_keys": [
+    "layer_10",
+    "layer_11",
+    "layer_12",
+    "layer_13",
+    "layer_14",
+    "layer_15",
+    "layer_16",
+    "layer_6",
+    "layer_7",
+    "layer_8",
+    "layer_9"
+  ],
+  "archive_sha256": "99b0186dc25b2c9bd7943a586326bba00995039087cd5e14148f96b39193f8b9"
+}

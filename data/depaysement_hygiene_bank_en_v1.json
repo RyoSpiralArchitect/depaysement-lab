@@ -1,0 +1,33 @@
+{
+  "description": "Matched ordinary-object contrasts for complete, locally readable transformation versus repetition, noun sprawl, or malformed endings.",
+  "pairing": "Positive and negative entries reuse the same object inventory; the contrast operationalizes surface completion and relation hygiene rather than literary quality.",
+  "positive_depaysement": [
+    "The receipt folds into a narrow stair, carrying the total upward one line at a time.",
+    "The mug pours morning light into the sink, where the light settles without spilling.",
+    "The bus card opens a small platform inside the coat pocket, then closes after the rain.",
+    "The spreadsheet lifts one row into a hallway, and the cursor waits at its far door.",
+    "The label becomes a road across the box, ending neatly beneath the tape dispenser.",
+    "The kettle releases a roomful of steam, and the lunchbox catches the final cloud.",
+    "The comb draws a fence through the light, leaving each tooth in its original place.",
+    "The printer grows a paper garden, whose last path returns to the empty tray.",
+    "The grocery list becomes a ladder that stops at the refrigerator handle.",
+    "The elevator button holds a shallow reflection until the doors close.",
+    "The charger cable becomes a river that reaches the plug beneath the desk.",
+    "The stapler opens as a jaw, closes once on the paper, and becomes still."
+  ],
+  "negative_realist_repair": [],
+  "negative_weird_noise": [
+    "The receipt folds into a stair, stair, printed stair, total stair, line stair, receipt receipt.",
+    "The mug pours morning light into the sink, comb, window, rain, drawer, silver, morning, and the",
+    "The bus card opens a platform inside the coat pocket inside the card inside the platform inside the",
+    "The spreadsheet lifts one row into a hallway, cursor, office fan, salt, curtain, river, shoe, row.",
+    "The label becomes a road across the box and the road becomes the label and the box becomes the road.",
+    "The kettle releases steam, lunchbox, cloud, fork, ceiling, ticket, moss, button, glass, steam steam.",
+    "The comb draws a fence through the light, tooth fence light comb tooth fence light comb tooth",
+    "The printer grows paper garden tray paper garden printer tray paper garden printer tray paper",
+    "The grocery list becomes a ladder, refrigerator, handle, receipt, bird, corridor, ladder, and then a",
+    "The elevator button holds reflection doors button reflection doors button reflection doors button",
+    "The charger cable becomes river plug desk river cable plug desk river cable plug desk because because.",
+    "The stapler opens as a jaw, paper jaw stapler jaw paper jaw, closes opens closes opens and"
+  ]
+}

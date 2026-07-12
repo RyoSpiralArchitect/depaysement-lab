@@ -19,7 +19,32 @@ from .backends import (
     OpenAICompatGenerator,
     parse_jsonish,
 )
+from .bank_audit import (
+    audit_bank_lexical_overlap,
+    format_bank_lexical_audit,
+    write_bank_lexical_audit,
+)
+from .construct_ratings import (
+    analyze_construct_rows,
+    merge_construct_ratings,
+    write_construct_analysis,
+)
+from .corridor_compare import (
+    compare_corridor_reports,
+    format_corridor_comparison,
+    write_corridor_comparison,
+)
+from .controller_compare import (
+    compare_adaptive_controllers,
+    format_adaptive_controller_report,
+    write_adaptive_controller_report,
+)
 from .mlx_intervention import MLXSteeringRuntimeConfig, collect_mlx_steering_vectors
+from .vector_geometry import (
+    factorize_vector_archives,
+    parse_named_float,
+    parse_named_path,
+)
 from .model_policy import default_english_system_prompt, infer_model_policy
 from .noun_graph import (
     AFFORDANCE_CLASS_ORDER,
@@ -73,11 +98,19 @@ from .proto_v2 import (
     collect_steering_vectors,
     parse_layer_list,
     print_intervention_sketch,
+    steering_alpha_supported,
 )
 from .prefix_probe import (
     format_prefix_probe_report,
     run_prefix_counter_probe,
     write_prefix_probe_artifacts,
+)
+from .prompt_contrast import (
+    PROMPT_MODES,
+    format_prompt_contrast_report,
+    load_anchor_bank,
+    run_prompt_steering_contrast,
+    write_prompt_contrast_artifacts,
 )
 from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
 from .ratings import (
@@ -470,9 +503,20 @@ def add_trajectory_steering_args(p: argparse.ArgumentParser) -> None:
         help="comma-separated per-step steering alpha values; the last value repeats after the schedule ends",
     )
     p.add_argument("--adaptive-steering", action="store_true", help="adapt the next step's steering alpha from picked trajectory health")
+    p.add_argument(
+        "--adaptive-steering-mode",
+        choices=["legacy", "hysteresis"],
+        default="legacy",
+        help="legacy frontier controller or stateful ontology/readability deadband",
+    )
     p.add_argument("--adaptive-steering-min-alpha", type=float, default=0.0)
     p.add_argument("--adaptive-steering-max-alpha", type=float, default=None)
     p.add_argument("--adaptive-steering-frontier-min", type=float, default=0.12)
+    p.add_argument("--adaptive-steering-ontology-min", type=float, default=0.20)
+    p.add_argument("--adaptive-steering-ontology-max", type=float, default=0.60)
+    p.add_argument("--adaptive-steering-readability-min", type=float, default=0.55)
+    p.add_argument("--adaptive-steering-stock-max", type=float, default=0.60)
+    p.add_argument("--adaptive-steering-hysteresis-margin", type=float, default=0.03)
     p.add_argument("--adaptive-steering-unfinished-max", type=float, default=0.05)
     p.add_argument("--adaptive-steering-loop-max", type=float, default=0.50)
     p.add_argument("--adaptive-steering-boost", type=float, default=0.08)
@@ -543,9 +587,19 @@ def trajectory_steering_kwargs(args: argparse.Namespace) -> Dict[str, Any]:
     return {
         "steer_schedule": _parse_float_sequence(getattr(args, "steer_schedule", None)),
         "adaptive_steering": bool(getattr(args, "adaptive_steering", False)),
+        "adaptive_steering_mode": str(getattr(args, "adaptive_steering_mode", "legacy")),
         "adaptive_steering_min_alpha": float(getattr(args, "adaptive_steering_min_alpha", 0.0)),
         "adaptive_steering_max_alpha": getattr(args, "adaptive_steering_max_alpha", None),
         "adaptive_steering_frontier_min": float(getattr(args, "adaptive_steering_frontier_min", 0.12)),
+        "adaptive_steering_ontology_min": float(getattr(args, "adaptive_steering_ontology_min", 0.20)),
+        "adaptive_steering_ontology_max": float(getattr(args, "adaptive_steering_ontology_max", 0.60)),
+        "adaptive_steering_readability_min": float(
+            getattr(args, "adaptive_steering_readability_min", 0.55)
+        ),
+        "adaptive_steering_stock_max": float(getattr(args, "adaptive_steering_stock_max", 0.60)),
+        "adaptive_steering_hysteresis_margin": float(
+            getattr(args, "adaptive_steering_hysteresis_margin", 0.03)
+        ),
         "adaptive_steering_unfinished_max": float(getattr(args, "adaptive_steering_unfinished_max", 0.05)),
         "adaptive_steering_loop_max": float(getattr(args, "adaptive_steering_loop_max", 0.50)),
         "adaptive_steering_boost": float(getattr(args, "adaptive_steering_boost", 0.08)),
@@ -617,6 +671,36 @@ def build_parser() -> argparse.ArgumentParser:
     cm.add_argument("--trust-remote-code", action="store_true")
     cm.add_argument("--max-length", type=int, default=None, help="optional left-truncation length for vector collection")
     cm.add_argument("--verbose", action="store_true")
+
+    fv = sub.add_parser(
+        "factorize-mlx-vectors",
+        help="measure, project, and compose layer-wise MLX steering-vector archives",
+    )
+    fv.add_argument(
+        "--component",
+        action="append",
+        required=True,
+        metavar="NAME=PATH",
+        help="named input archive; repeat for every component",
+    )
+    fv.add_argument("--target", required=True, help="component to residualize")
+    fv.add_argument(
+        "--project-out",
+        default="",
+        help="comma-separated nuisance components projected out of the target",
+    )
+    fv.add_argument(
+        "--coefficient",
+        action="append",
+        default=[],
+        metavar="NAME=FLOAT",
+        help="support component and weight added after projection; repeat as needed",
+    )
+    fv.add_argument("--out-projected", required=True)
+    fv.add_argument("--out-composed", required=True)
+    fv.add_argument("--out-random", default=None)
+    fv.add_argument("--report-dir", required=True)
+    fv.add_argument("--random-seed", type=int, default=20260713)
 
     s = sub.add_parser("score", help="score a single fragment")
     s.add_argument("text", nargs="?", default="The umbrella becomes a small theater; rain's teeth sit in every seat.")
@@ -864,6 +948,11 @@ def build_parser() -> argparse.ArgumentParser:
     fs.add_argument("--save-candidates", type=int, default=0, help="0 means save the full candidate pool for each step")
     fs.add_argument("--resume", action="store_true", help="skip existing run JSONs in --out-dir and include them in the final audit")
     fs.add_argument("--run-limit", type=int, default=0, help="maximum new run JSONs to generate in this invocation; 0 means no limit")
+    fs.add_argument(
+        "--shared-rng-stream",
+        action="store_true",
+        help="preserve the legacy cross-run RNG stream instead of resetting each sweep cell deterministically",
+    )
     fs.add_argument("--include-baseline-control", action="store_true", help="also save ordinary baseline runs for each max-token setting")
     fs.add_argument("--include-prompt", action="store_true")
     fs.add_argument("--trace", action="store_true")
@@ -941,6 +1030,93 @@ def build_parser() -> argparse.ArgumentParser:
         steer_alpha=0.6,
         strict_steering=True,
     )
+
+    prompt_contrast = sub.add_parser(
+        "prompt-steering-contrast",
+        help="cross naive/operational prompts with zero, corridor, and high steering on matched anchors",
+    )
+    add_common_generation_args(prompt_contrast)
+    prompt_contrast.add_argument(
+        "--anchor-bank",
+        default="data/prompt_steering_anchor_bank_en_v1.json",
+        help="JSON bank containing items with id, seed, and anchor phrases",
+    )
+    prompt_contrast.add_argument("--seed-limit", type=int, default=0, help="limit anchor-bank items; 0 means all")
+    prompt_contrast.add_argument(
+        "--prompt-modes",
+        default=",".join(PROMPT_MODES),
+        help="comma-separated prompt modes: naive,operational",
+    )
+    prompt_contrast.add_argument(
+        "--alphas",
+        default="0,0.6,1.2",
+        help="at least three unique values including zero and two positive alphas",
+    )
+    prompt_contrast.add_argument("--candidates", type=int, default=8)
+    prompt_contrast.add_argument("--temperature", type=float, default=1.05)
+    prompt_contrast.add_argument("--top-p", type=float, default=0.92)
+    prompt_contrast.add_argument("--max-new-tokens", type=int, default=120)
+    prompt_contrast.add_argument("--rating-seed-limit", type=int, default=6)
+    prompt_contrast.add_argument("--rating-random-seed", type=int, default=20260712)
+    prompt_contrast.add_argument("--out-dir", required=True)
+    prompt_contrast.add_argument("--resume", action="store_true")
+    prompt_contrast.add_argument("--run-limit", type=int, default=0, help="maximum new cells; 0 means all")
+    prompt_contrast.set_defaults(
+        backend="mlx",
+        steer_alpha=1.2,
+        strict_steering=True,
+    )
+
+    construct_rating = sub.add_parser(
+        "construct-rating-analyze",
+        help="merge blinded construct ratings from Markdown and analyze them against the condition key",
+    )
+    construct_rating.add_argument("--rating-markdown", required=True)
+    construct_rating.add_argument("--rating-csv", required=True)
+    construct_rating.add_argument("--rating-key", required=True)
+    construct_rating.add_argument("--out-dir", required=True)
+    construct_rating.add_argument("--out-public-csv", default=None)
+    construct_rating.add_argument(
+        "--positive-threshold",
+        type=float,
+        default=0.50,
+        help="Minimum value required on every aligned human construct dimension (default: 0.50)",
+    )
+    construct_rating.add_argument("--bootstrap-samples", type=int, default=5000)
+    construct_rating.add_argument("--random-seed", type=int, default=20260713)
+
+    corridor_report = sub.add_parser(
+        "factorized-corridor-report",
+        help="compare selector-free prompt-steering sweeps across vector conditions",
+    )
+    corridor_report.add_argument(
+        "--condition",
+        action="append",
+        required=True,
+        metavar="NAME=PATH",
+        help="named prompt-steering report JSON or directory; repeat for every condition",
+    )
+    corridor_report.add_argument("--out-dir", required=True)
+
+    controller_report = sub.add_parser(
+        "adaptive-controller-report",
+        help="compare matched fixed and candidate-step adaptive trajectory runs",
+    )
+    controller_report.add_argument(
+        "--condition",
+        action="append",
+        required=True,
+        metavar="NAME=PATH",
+        help="named run directory or write-run JSON; repeat for every controller",
+    )
+    controller_report.add_argument("--out-dir", required=True)
+
+    bank_audit = sub.add_parser(
+        "bank-lexical-audit",
+        help="audit literal stock and soft-style attractor terms in a prompt bank",
+    )
+    bank_audit.add_argument("--bank", required=True)
+    bank_audit.add_argument("--out-prefix", required=True)
 
     b = sub.add_parser("show-bank", help="print or write the default/current prompt bank")
     b.add_argument("--bank", default=None)
@@ -1098,6 +1274,33 @@ def cmd_collect_mlx_vectors(args: argparse.Namespace) -> None:
     print(f"Wrote MLX steering vectors: {out}")
     print(f"Wrote MLX steering metadata: {out}.json")
     print(f"Wrote MLX steering checksum: {out}.sha256")
+
+
+def cmd_factorize_mlx_vectors(args: argparse.Namespace) -> None:
+    component_paths = dict(parse_named_path(spec) for spec in args.component)
+    if len(component_paths) != len(args.component):
+        raise ValueError("Component names must be unique")
+    coefficients = dict(parse_named_float(spec) for spec in args.coefficient)
+    if len(coefficients) != len(args.coefficient):
+        raise ValueError("Coefficient component names must be unique")
+    project_out = [name.strip() for name in str(args.project_out).split(",") if name.strip()]
+    report = factorize_vector_archives(
+        component_paths=component_paths,
+        target_name=args.target,
+        project_out=project_out,
+        coefficients=coefficients,
+        out_projected=args.out_projected,
+        out_composed=args.out_composed,
+        out_random=args.out_random,
+        report_dir=args.report_dir,
+        random_seed=args.random_seed,
+    )
+    print(f"Mean retained target norm: {report['mean_retained_norm_ratio']:.3f}")
+    print(f"Wrote projected vector: {report['outputs']['projected']}")
+    print(f"Wrote composed vector: {report['outputs']['composed']}")
+    if report["outputs"]["random"]:
+        print(f"Wrote random control: {report['outputs']['random']}")
+    print(f"Wrote factorization report: {args.report_dir}")
 
 
 def _pearson(xs: List[float], ys: List[float]) -> float:
@@ -1821,7 +2024,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
             break
         seed_label = safe_seed_label(seed, seed_idx)
         multi_seed_suffix = f"_{seed_label}" if len(seeds) > 1 else ""
-        for max_tokens in token_grid:
+        for token_index, max_tokens in enumerate(token_grid):
             if stop_sweep:
                 break
             if args.include_baseline_control:
@@ -1858,10 +2061,10 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                     new_runs += 1
                     print(f"[sweep] wrote {bpath}", file=sys.stderr)
 
-            for candidates in candidate_grid:
+            for candidate_index, candidates in enumerate(candidate_grid):
                 if stop_sweep:
                     break
-                for alpha in alphas:
+                for alpha_index, alpha in enumerate(alphas):
                     steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
                     trajectory_alpha_requested = any(abs(float(value)) > 1e-12 for value in steer_schedule)
                     steering_requested = (
@@ -1893,11 +2096,25 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                         f"{condition}_c{candidates}_tok{max_tokens}{multi_seed_suffix}",
                         file=sys.stderr,
                     )
+                    run_seed = (
+                        int(args.random_seed)
+                        + int(seed_idx) * 1_000_003
+                        + int(token_index) * 10_007
+                        + int(candidate_index) * 101
+                        + int(alpha_index)
+                    )
+                    resetter = getattr(generator, "reset_seed", None)
+                    generator_seed_reset = False
+                    run_rng = rng
+                    if not bool(getattr(args, "shared_rng_stream", False)):
+                        run_rng = random.Random(run_seed)
+                        if callable(resetter):
+                            generator_seed_reset = bool(resetter(run_seed))
                     with steering_enabled(generator, steering_requested):
                         engine = DepaysementEngine(
                             generator=generator,
                             scorer=scorer,
-                            rng=rng,
+                            rng=run_rng,
                             motif_jitter=args.motif_jitter,
                             selector=make_selector_config(args),
                         )
@@ -1925,6 +2142,9 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
                     run.config["max_new_tokens"] = int(max_tokens)
                     run.config["seed_index"] = int(seed_idx)
                     run.config["seed_label"] = seed_label
+                    run.config["generation_seed"] = int(run_seed)
+                    run.config["generator_seed_reset"] = bool(generator_seed_reset)
+                    run.config["shared_rng_stream"] = bool(getattr(args, "shared_rng_stream", False))
                     if abs(float(alpha)) > 1e-12 and not steering_requested:
                         run.config["steering_note"] = "alpha was requested but activation steering was unavailable or disabled"
                     write_run_artifact(run, str(path), "json", include_candidates=True, include_prompt=args.include_prompt)
@@ -1964,6 +2184,7 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
         "alphas": alphas,
         "steer_schedule": list(steer_schedule),
         "adaptive_steering": bool(getattr(args, "adaptive_steering", False)),
+        "shared_rng_stream": bool(getattr(args, "shared_rng_stream", False)),
         "candidate_grid": candidate_grid,
         "max_token_grid": token_grid,
         "select_objective": args.select_objective,
@@ -2227,6 +2448,122 @@ def cmd_prefix_probe(args: argparse.Namespace) -> None:
     print(f"[prefix-probe] wrote {args.out_dir}", file=sys.stderr)
 
 
+def cmd_prompt_steering_contrast(args: argparse.Namespace) -> None:
+    emit_model_policy(args)
+    modes = [part.strip() for part in str(args.prompt_modes).split(",") if part.strip()]
+    alphas = _parse_float_sequence(args.alphas)
+    items = load_anchor_bank(args.anchor_bank, limit=args.seed_limit)
+    gen_args = copy.copy(args)
+    gen_args.steer_alpha = max((abs(float(alpha)) for alpha in alphas), default=0.0)
+    for name in ("_steering_preflight_done", "_steering_preflight_note", "_steering_preflight_usable"):
+        if hasattr(gen_args, name):
+            delattr(gen_args, name)
+    generator = make_generator(gen_args, random.Random(args.random_seed))
+    if not steering_alpha_supported(generator):
+        note = getattr(gen_args, "_steering_preflight_note", None) or "activation steering was not loaded"
+        raise SystemExit(f"[prompt-steering-contrast] {note}")
+
+    scorer = make_scorer(args)
+    selector = SelectorConfig(objective="banded-frontier")
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report = run_prompt_steering_contrast(
+        generator,
+        scorer,
+        selector,
+        items=items,
+        prompt_modes=modes,
+        alphas=alphas,
+        candidates=args.candidates,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        max_new_tokens=args.max_new_tokens,
+        random_seed=args.random_seed,
+        cell_dir=str(out_dir / "cells"),
+        resume=args.resume,
+        run_limit=args.run_limit,
+        progress=lambda message: print(f"[prompt-contrast] {message}", file=sys.stderr),
+    )
+    artifact_paths = write_prompt_contrast_artifacts(
+        report,
+        str(out_dir),
+        rating_seed_limit=args.rating_seed_limit,
+        rating_random_seed=args.rating_random_seed,
+    )
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "backend": args.backend,
+        "model": resolve_model(args),
+        "vectors": args.vectors,
+        "steer_layers": args.steer_layers,
+        "steering_apply_on": args.mlx_steer_apply_on,
+        "system_prompt": getattr(generator, "system_prompt", None),
+        "anchor_bank": args.anchor_bank,
+        "items": items,
+        "design": report["design"],
+        "selector_observer_config": selector.to_dict(),
+        "artifacts": artifact_paths,
+    }
+    (out_dir / "prompt_steering_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(format_prompt_contrast_report(report))
+    print(f"[prompt-steering-contrast] wrote {out_dir}", file=sys.stderr)
+
+
+def cmd_construct_rating_analyze(args: argparse.Namespace) -> None:
+    public_rows, analysis_rows, warnings = merge_construct_ratings(
+        markdown_path=args.rating_markdown,
+        rating_csv_path=args.rating_csv,
+        key_path=args.rating_key,
+    )
+    analysis = analyze_construct_rows(
+        analysis_rows,
+        source=args.rating_markdown,
+        warnings=warnings,
+        positive_threshold=args.positive_threshold,
+        bootstrap_samples=args.bootstrap_samples,
+        random_seed=args.random_seed,
+    )
+    paths = write_construct_analysis(
+        analysis,
+        analysis_rows,
+        public_rows,
+        out_dir=args.out_dir,
+        public_csv_path=args.out_public_csv,
+    )
+    print(Path(paths["report"]).read_text(encoding="utf-8"))
+    print(f"[construct-rating-analyze] wrote {args.out_dir}", file=sys.stderr)
+
+
+def cmd_factorized_corridor_report(args: argparse.Namespace) -> None:
+    condition_paths = dict(parse_named_path(spec) for spec in args.condition)
+    if len(condition_paths) != len(args.condition):
+        raise ValueError("Condition names must be unique")
+    report = compare_corridor_reports(condition_paths)
+    write_corridor_comparison(report, args.out_dir)
+    print(format_corridor_comparison(report))
+    print(f"[factorized-corridor-report] wrote {args.out_dir}", file=sys.stderr)
+
+
+def cmd_adaptive_controller_report(args: argparse.Namespace) -> None:
+    condition_paths = dict(parse_named_path(spec) for spec in args.condition)
+    if len(condition_paths) != len(args.condition):
+        raise ValueError("Condition names must be unique")
+    report = compare_adaptive_controllers(condition_paths)
+    write_adaptive_controller_report(report, args.out_dir)
+    print(format_adaptive_controller_report(report))
+    print(f"[adaptive-controller-report] wrote {args.out_dir}", file=sys.stderr)
+
+
+def cmd_bank_lexical_audit(args: argparse.Namespace) -> None:
+    report = audit_bank_lexical_overlap(args.bank)
+    write_bank_lexical_audit(report, args.out_prefix)
+    print(format_bank_lexical_audit(report))
+    print(f"[bank-lexical-audit] wrote {args.out_prefix}.[md,json]", file=sys.stderr)
+
+
 def cmd_show_bank(args: argparse.Namespace) -> None:
     bank = PromptBank.from_file(args.bank)
     data = bank.to_dict()
@@ -2257,6 +2594,8 @@ def main() -> None:
         cmd_collect_vectors(args)
     elif args.command == "collect-mlx-vectors":
         cmd_collect_mlx_vectors(args)
+    elif args.command == "factorize-mlx-vectors":
+        cmd_factorize_mlx_vectors(args)
     elif args.command == "score":
         cmd_score(args)
     elif args.command == "audit-run":
@@ -2289,6 +2628,16 @@ def main() -> None:
         cmd_resilience_sweep(args)
     elif args.command == "prefix-probe":
         cmd_prefix_probe(args)
+    elif args.command == "prompt-steering-contrast":
+        cmd_prompt_steering_contrast(args)
+    elif args.command == "construct-rating-analyze":
+        cmd_construct_rating_analyze(args)
+    elif args.command == "factorized-corridor-report":
+        cmd_factorized_corridor_report(args)
+    elif args.command == "adaptive-controller-report":
+        cmd_adaptive_controller_report(args)
+    elif args.command == "bank-lexical-audit":
+        cmd_bank_lexical_audit(args)
     elif args.command == "show-bank":
         cmd_show_bank(args)
     elif args.command == "model-check":

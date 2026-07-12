@@ -1,0 +1,33 @@
+{
+  "description": "Matched contrasts for whether an ordinary source object remains traceable after an ontological transition.",
+  "pairing": "Positive and negative entries share the source and destination concepts; positives preserve visible lineage while negatives replace or abandon the source.",
+  "positive_depaysement": [
+    "The receipt becomes a staircase, and its printed total remains visible on every step.",
+    "The blue mug opens into a room, while its chipped handle stays beside the doorway.",
+    "The bus card becomes a footbridge, with its route number running along the rail.",
+    "The spreadsheet rises into a building, and its column letters remain above the floors.",
+    "The delivery label stretches into a road, while its barcode marks the road's edge.",
+    "The refrigerator shelf becomes weather, and the thermostat remains inside the cold cloud.",
+    "The laundry basket opens into a gate, with its two handles holding the gate apart.",
+    "The printer tray becomes a garden, and a strip of printer paper stays between the paths.",
+    "The grocery list unfolds into a ladder, with each written item remaining on a rung.",
+    "The elevator button becomes a pool, and its cracked number stays under the reflected ceiling.",
+    "The phone cable becomes a river, while its plug remains fixed beneath the desk.",
+    "The takeout lid becomes an awning, with the container still supporting it from below."
+  ],
+  "negative_realist_repair": [
+    "A staircase appears where the receipt was, but no printed total remains on the steps.",
+    "A room opens beside the blue mug, whose chipped handle is no longer visible.",
+    "A footbridge replaces the bus card, and the route number disappears from view.",
+    "A building replaces the spreadsheet, with no column letters remaining above its floors.",
+    "A road replaces the delivery label, and no barcode remains along the road's edge.",
+    "Cold weather fills the refrigerator, but the shelf and thermostat disappear inside the cloud.",
+    "A gate replaces the laundry basket, and neither basket handle remains visible.",
+    "A garden replaces the printer tray, with no printer paper remaining between its paths.",
+    "A ladder replaces the grocery list, and none of the written items remain on its rungs.",
+    "A pool replaces the elevator button, and its cracked number disappears under the ceiling.",
+    "A river replaces the phone cable, and the plug is no longer visible beneath the desk.",
+    "An awning replaces the takeout container, which disappears from beneath the lid."
+  ],
+  "negative_weird_noise": []
+}

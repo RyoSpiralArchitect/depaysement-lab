@@ -38,6 +38,8 @@ Zenodo, and submission checklist.
 
 | Paper role | Repository evidence |
 |---|---|
+| Prompt-only, medium-steering, and oversteering contrast | `docs/research_notes/2026-07-12-prompt-steering-contrast.md`, `experiments/prompt_steering_contrast_llama3p2_seed12/` |
+| Blind human construct audit | `experiments/prompt_steering_contrast_llama3p2_seed12/human_construct_analysis.md` |
 | Frontier definition and initial sweep | `docs/readable_ontology_collapse_frontier_v10.md`, `docs/research_notes/2026-05-16-banded-frontier-generation.md` |
 | Exact observer formulas and vector-bank provenance | `docs/measurement_instrument_v11.md` |
 | Human taste calibration | `docs/research_notes/2026-05-17-human-taste-pass.md` |
@@ -51,9 +53,12 @@ Zenodo, and submission checklist.
 | Mistral traceable-transport factorial | `docs/research_notes/2026-07-12-traceable-transport-controller.md` |
 | Gemma transition-vector layer probe | `docs/research_notes/2026-07-12-gemma-transition-layer-probe.md` |
 | Fixed-prefix counter-steering decomposition | `docs/research_notes/2026-07-12-fixed-prefix-counter-steering.md` |
+| Factorized-vector geometry and selector-free pilot | `docs/research_notes/2026-07-12-construct-factorization-hysteresis-audit.md`, `experiments/factorized_vectors_llama3p2/`, `experiments/factorized_corridor_pilot/` |
+| Candidate-step hysteresis and observer saturation | `docs/research_notes/2026-07-12-construct-factorization-hysteresis-audit.md`, `experiments/hysteresis_controller_law_isolation/` |
 
 Primary tracked figures for the draft:
 
+- `experiments/prompt_steering_contrast_llama3p2_seed12/prompt_steering_contrast.png`
 - `experiments/frontier_sweep_steered_hybrid_focus_best/frontier_sweep.png`
 - `experiments/model_compare_large_probe/model_compare_frontier.png`
 - `experiments/mistral7b_live_semantic_loop_guard_compare/live_guard_comparison.png`
@@ -61,12 +66,15 @@ Primary tracked figures for the draft:
 - `experiments/judge_challenge_v1/judge_challenge.png`
 - `experiments/mistral7b_traceable_factorial_seed4_compact/factorial_plot.png`
 - `experiments/gemma2_transition_layer_probe_seed4/gemma_transition_delta_response.png`
+- `experiments/factorized_vectors_llama3p2/factorized_vector_cosine.png`
+- `experiments/hysteresis_controller_law_isolation/adaptive_controller_comparison.png`
 
 ## Claim Discipline
 
 - Treat frontier, ontology collapse, readability, loop, lineage, and affordance
-  scores as heuristic instruments calibrated by text inspection and limited
-  human ratings.
+  scores as heuristic instruments. The completed 36-item audit has zero overlap
+  between machine and human positives, so the current `readable_transport`
+  category is not a validated literary-quality label.
 - Distinguish candidate-pool movement from selector lift.
 - Describe cross-run comparisons as independent stochastic replicates unless
   the candidate pools are demonstrably paired.
@@ -75,3 +83,6 @@ Primary tracked figures for the draft:
 - Describe model-specific results as observed generation-distribution behavior;
   do not infer a unique internal manifold or causal mechanism without direct
   representation-level evidence.
+- Treat vector orthogonalization as an intervention rather than evidence of
+  functionally independent latent axes, and treat the single norm-matched random
+  vector as a pilot control rather than a null distribution.

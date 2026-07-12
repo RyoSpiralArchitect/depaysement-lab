@@ -1,0 +1,93 @@
+{
+  "model_name": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+  "token_strategy": "mean",
+  "chat_template": true,
+  "max_length": 192,
+  "num_positive": 12,
+  "num_negative": 12,
+  "prompt_bank": {
+    "format": "depaysement_lab.prompt_bank.v1",
+    "canonical_sha256": "04873d60c9ef5c0b3679332f4c8e5e3ec92a93b01a6990c11f5b366d42400a3b",
+    "counts": {
+      "positive_depaysement": 12,
+      "negative_realist_repair": 0,
+      "negative_weird_noise": 12
+    },
+    "prompts": {
+      "positive_depaysement": [
+        "The receipt becomes a row of wet steps beneath the counter.",
+        "The blue mug carries a small bus route around the sink.",
+        "The spreadsheet opens a laundry line between two columns.",
+        "The delivery label grows a corridor through the cardboard box.",
+        "The refrigerator shelf holds a patch of afternoon rain.",
+        "The comb releases a queue of windows into the morning light.",
+        "The printer tray becomes a shallow field of folded invoices.",
+        "The grocery list turns into a handrail beside the kettle.",
+        "The elevator button keeps a second lobby inside its crack.",
+        "The charger cable carries the desk's shadow into the wall.",
+        "The laundry basket becomes a station for three loose socks.",
+        "The stapler unfolds a narrow bridge across the receipt."
+      ],
+      "negative_realist_repair": [],
+      "negative_weird_noise": [
+        "The receipt becomes an antique music box beneath the counter.",
+        "The blue mug carries a porcelain doll around the sink.",
+        "The spreadsheet opens a leather-bound book between two columns.",
+        "The delivery label grows an ornate clockwork corridor through the box.",
+        "The refrigerator shelf holds a moonlit crystal garden.",
+        "The comb releases a tiny ballerina into silver mist.",
+        "The printer tray becomes a velvet-lined cabinet of pocket watches.",
+        "The grocery list turns into a delicate Victorian key beside the kettle.",
+        "The elevator button keeps a miniature clock inside its crack.",
+        "The charger cable carries an old diary into a glass case.",
+        "The laundry basket becomes a dusty theater for porcelain figures.",
+        "The stapler unfolds an ornate music box across the receipt."
+      ]
+    }
+  },
+  "layer_path": "model.layers",
+  "n_layers": 28,
+  "selected_layers": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "norms_before_unit_normalization": {
+    "6": 0.42177730798721313,
+    "7": 0.4462631642818451,
+    "8": 0.45524221658706665,
+    "9": 0.4634521007537842,
+    "10": 0.4713015556335449,
+    "11": 0.5098499655723572,
+    "12": 0.5130152702331543,
+    "13": 0.5217073559761047,
+    "14": 0.5667147636413574,
+    "15": 0.6276935338973999,
+    "16": 0.6670425534248352
+  },
+  "position_default": "last",
+  "apply_on_default": "decode_only",
+  "format": "depaysement_lab.mlx_steering_vectors.v1",
+  "vector_keys": [
+    "layer_10",
+    "layer_11",
+    "layer_12",
+    "layer_13",
+    "layer_14",
+    "layer_15",
+    "layer_16",
+    "layer_6",
+    "layer_7",
+    "layer_8",
+    "layer_9"
+  ],
+  "archive_sha256": "23df4bbaf8ccef260d59db31cdf1e965b26938d14268b0dfb37ddf05b1dc10bc"
+}

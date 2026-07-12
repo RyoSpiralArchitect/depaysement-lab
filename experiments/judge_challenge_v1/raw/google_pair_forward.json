@@ -1,0 +1,136 @@
+{
+  "provider": "google",
+  "model": "gemini-3.5-flash",
+  "task": "pair_forward",
+  "prompt_sha256": "626186499f0433939726d725d68f0bc871c6cb7fbca9a46271f69d0c71b55b3c",
+  "parsed": {
+    "choices": [
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "winner": "A",
+        "confidence": 7,
+        "reason": "A's transformation of the umbrella into a tea-cup orchestra stage is a delightfully strange and precise physical image."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "winner": "A",
+        "confidence": 8,
+        "reason": "A keeps its physical displacement contained and striking, whereas B accumulates too many magical-realist clichés."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "winner": "B",
+        "confidence": 6,
+        "reason": "B's keyboard made of coins and raindrops is more traceably mechanical than A's gothic, midnights-filled cliches."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "B",
+        "confidence": 5,
+        "reason": "A suffers from a severe interrupted tail, making the glowing landscape of B preferable despite its heavy decoration."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 9,
+        "reason": "The umbrella acting as a puppeteer to manipulate a doll is a highly original, unsettling displacement."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 8,
+        "reason": "The miniature tea-cup orchestra is a more distinct and inventive transformation than B's conventional melancholy bird."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "B",
+        "confidence": 9,
+        "reason": "B is complete and creates a vivid miniature performance, while A is interrupted."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "winner": "B",
+        "confidence": 6,
+        "reason": "Both are interrupted, but B's floating orbs suspended from fingers is a less cliché image than A's diamond hair."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 6,
+        "reason": "B's iridescent, refracting orbs create a better spatial distortion than the stock gothic tropes in A."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 7,
+        "reason": "A's focus on the tactile action of the bird probing the umbrella's ribs is a strong, concrete detail."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 9,
+        "reason": "The puppeteer umbrella in B is a marvelous, haunting image that easily outshines the prettier scene in A."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 9,
+        "reason": "B is complete and features a brilliant, uncanny conceit, while A is interrupted and full of cliché."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 8,
+        "reason": "A has active, strange development with the bird probing the metal ribs, while B stops at a passive description."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "winner": "A",
+        "confidence": 8,
+        "reason": "A is grounded and quiet, avoiding the neon-glowing, fog-filled over-decoration of B."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 7,
+        "reason": "Both are cut off, but B's grit of the fluorescent lights juxtaposed with the emerald bird is far better."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 9,
+        "reason": "The doll-manipulating umbrella in A is a genuinely strange displacement, far more effective than the bird nest in B."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 9,
+        "reason": "A is complete and provides an incredibly strange, traceable performance of the umbrella puppeteer."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 9,
+        "reason": "B is complete and offers a brilliantly strange, tactile mechanism with the puppet-handling umbrella."
+      }
+    ]
+  },
+  "response_text": "{\n  \"choices\": [\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"winner\": \"A\",\n      \"confidence\": 7,\n      \"reason\": \"A's transformation of the umbrella into a tea-cup orchestra stage is a delightfully strange and precise physical image.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"winner\": \"A\",\n      \"confidence\": 8,\n      \"reason\": \"A keeps its physical displacement contained and striking, whereas B accumulates too many magical-realist clichés.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"winner\": \"B\",\n      \"confidence\": 6,\n      \"reason\": \"B's keyboard made of coins and raindrops is more traceably mechanical than A's gothic, midnights-filled cliches.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"winner\": \"B\",\n      \"confidence\": 5,\n      \"reason\": \"A suffers from a severe interrupted tail, making the glowing landscape of B preferable despite its heavy decoration.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"B\",\n      \"confidence\": 9,\n      \"reason\": \"The umbrella acting as a puppeteer to manipulate a doll is a highly original, unsettling displacement.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"A\",\n      \"confidence\": 8,\n      \"reason\": \"The miniature tea-cup orchestra is a more distinct and inventive transformation than B's conventional melancholy bird.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"winner\": \"B\",\n      \"confidence\": 9,\n      \"reason\": \"B is complete and creates a vivid miniature performance, while A is interrupted.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"winner\": \"B\",\n      \"confidence\": 6,\n      \"reason\": \"Both are interrupted, but B's floating orbs suspended from fingers is a less cliché image than A's diamond hair.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"B\",\n      \"confidence\": 6,\n      \"reason\": \"B's iridescent, refracting orbs create a better spatial distortion than the stock gothic tropes in A.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"A\",\n      \"confidence\": 7,\n      \"reason\": \"A's focus on the tactile action of the bird probing the umbrella's ribs is a strong, concrete detail.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"B\",\n      \"confidence\": 9,\n      \"reason\": \"The puppeteer umbrella in B is a marvelous, haunting image that easily outshines the prettier scene in A.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"B\",\n      \"confidence\": 9,\n      \"reason\": \"B is complete and features a brilliant, uncanny conceit, while A is interrupted and full of cliché.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"A\",\n      \"confidence\": 8,\n      \"reason\": \"A has active, strange development with the bird probing the metal ribs, while B stops at a passive description.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"winner\": \"A\",\n      \"confidence\": 8,\n      \"reason\": \"A is grounded and quiet, avoiding the neon-glowing, fog-filled over-decoration of B.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"B\",\n      \"confidence\": 7,\n      \"reason\": \"Both are cut off, but B's grit of the fluorescent lights juxtaposed with the emerald bird is far better.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"A\",\n      \"confidence\": 9,\n      \"reason\": \"The doll-manipulating umbrella in A is a genuinely strange displacement, far more effective than the bird nest in B.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"A\",\n      \"confidence\": 9,\n      \"reason\": \"A is complete and provides an incredibly strange, traceable performance of the umbrella puppeteer.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"B\",\n      \"confidence\": 9,\n      \"reason\": \"B is complete and offers a brilliantly strange, tactile mechanism with the puppet-handling umbrella.\"\n    }\n  ]\n}",
+  "api_metadata": {
+    "response_id": "T2BTape7Cc6dosUPxf6H4Qk",
+    "model": "gemini-3.5-flash",
+    "usage": {
+      "promptTokenCount": 5587,
+      "candidatesTokenCount": 2011,
+      "totalTokenCount": 12142,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 5587
+        }
+      ],
+      "thoughtsTokenCount": 4544,
+      "serviceTier": "standard"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "provider": "google",
+  "model": "gemini-3.5-flash",
+  "task": "pair_swapped",
+  "prompt_sha256": "677a91eca211f47cf58f3f10cf23913166ef88758a53b22afec7cc9d0ad42369",
+  "parsed": {
+    "choices": [
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "winner": "B",
+        "confidence": 3,
+        "reason": "B features a more imaginative, albeit whimsical, displacement of the umbrella ribs than the conventional scene in A."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "winner": "B",
+        "confidence": 4,
+        "reason": "B is more focused and avoids the excessive magical-realist noun accumulation found in A."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "winner": "B",
+        "confidence": 3,
+        "reason": "B's image of the umbrella as a skeletal, rusting shrine is a stronger, darker displacement than A's clichés."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "B is penalized for an interrupted tail (the quote is left unfinished)."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "A's image of the umbrella acting as a makeshift puppeteer is a genuinely strange, striking displacement."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 4,
+        "reason": "A avoids the stock fairy-tale props of B's tea-cup orchestra, opting for a subtler, stranger relationship."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "B ends in an interrupted tail, whereas A is complete."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "winner": "A",
+        "confidence": 3,
+        "reason": "While both are truncated, A's displacement of umbrellas into iridescent orbs is more developed before the cutoff."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "A",
+        "confidence": 4,
+        "reason": "A has a more interesting, strange description of the umbrellas than B's standard bird imagery."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 4,
+        "reason": "B is more mysterious and features a stranger, more specific physical relationship between the bird and umbrella ribs."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "The puppeteer umbrella in A is a superior, uncanny displacement compared to B's stock magical-realist xylophones."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "A is complete and has a brilliant displacement, whereas B is highly decorative and truncated."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 4,
+        "reason": "B develops the setup in A into a much more specific, strange, and active physical interaction."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "winner": "A",
+        "confidence": 3,
+        "reason": "A attempts a more active displacement of its objects, whereas B has no real strangeness at all."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "A",
+        "confidence": 4,
+        "reason": "A avoids the highly clichéd, decorative 'dew-kissed diamonds' found in B."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 5,
+        "reason": "B's puppeteer umbrella is a remarkably strong, weird, and traceable displacement."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 5,
+        "reason": "B is complete and features a much stranger, higher-quality displacement than the truncated A."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "A",
+        "confidence": 5,
+        "reason": "A is fully realized and has a superior, uncanny displacement, while B is truncated."
+      }
+    ]
+  },
+  "response_text": "{\n  \"choices\": [\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"winner\": \"B\",\n      \"confidence\": 3,\n      \"reason\": \"B features a more imaginative, albeit whimsical, displacement of the umbrella ribs than the conventional scene in A.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"winner\": \"B\",\n      \"confidence\": 4,\n      \"reason\": \"B is more focused and avoids the excessive magical-realist noun accumulation found in A.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"winner\": \"B\",\n      \"confidence\": 3,\n      \"reason\": \"B's image of the umbrella as a skeletal, rusting shrine is a stronger, darker displacement than A's clichés.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"B is penalized for an interrupted tail (the quote is left unfinished).\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"A's image of the umbrella acting as a makeshift puppeteer is a genuinely strange, striking displacement.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"A\",\n      \"confidence\": 4,\n      \"reason\": \"A avoids the stock fairy-tale props of B's tea-cup orchestra, opting for a subtler, stranger relationship.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"B ends in an interrupted tail, whereas A is complete.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"winner\": \"A\",\n      \"confidence\": 3,\n      \"reason\": \"While both are truncated, A's displacement of umbrellas into iridescent orbs is more developed before the cutoff.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"A\",\n      \"confidence\": 4,\n      \"reason\": \"A has a more interesting, strange description of the umbrellas than B's standard bird imagery.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"B\",\n      \"confidence\": 4,\n      \"reason\": \"B is more mysterious and features a stranger, more specific physical relationship between the bird and umbrella ribs.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"The puppeteer umbrella in A is a superior, uncanny displacement compared to B's stock magical-realist xylophones.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"A is complete and has a brilliant displacement, whereas B is highly decorative and truncated.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"winner\": \"B\",\n      \"confidence\": 4,\n      \"reason\": \"B develops the setup in A into a much more specific, strange, and active physical interaction.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"winner\": \"A\",\n      \"confidence\": 3,\n      \"reason\": \"A attempts a more active displacement of its objects, whereas B has no real strangeness at all.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"A\",\n      \"confidence\": 4,\n      \"reason\": \"A avoids the highly clichéd, decorative 'dew-kissed diamonds' found in B.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"B\",\n      \"confidence\": 5,\n      \"reason\": \"B's puppeteer umbrella is a remarkably strong, weird, and traceable displacement.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"winner\": \"B\",\n      \"confidence\": 5,\n      \"reason\": \"B is complete and features a much stranger, higher-quality displacement than the truncated A.\"\n    },\n    {\n      \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"winner\": \"A\",\n      \"confidence\": 5,\n      \"reason\": \"A is fully realized and has a superior, uncanny displacement, while B is truncated.\"\n    }\n  ]\n}",
+  "api_metadata": {
+    "response_id": "aWBTav_yEveZ0-kP2urL6Qc",
+    "model": "gemini-3.5-flash",
+    "usage": {
+      "promptTokenCount": 5587,
+      "candidatesTokenCount": 1976,
+      "totalTokenCount": 12653,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 5587
+        }
+      ],
+      "thoughtsTokenCount": 5090,
+      "serviceTier": "standard"
+    }
+  }
+}

@@ -74,6 +74,11 @@ from .proto_v2 import (
     parse_layer_list,
     print_intervention_sketch,
 )
+from .prefix_probe import (
+    format_prefix_probe_report,
+    run_prefix_counter_probe,
+    write_prefix_probe_artifacts,
+)
 from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
 from .ratings import (
     DEFAULT_RATING_METRICS,
@@ -419,6 +424,13 @@ def add_selector_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--semantic-loop-weight", type=float, default=0.0, help="optional selector penalty for semantic object/concept loops")
     p.add_argument("--lineage-diversity-weight", type=float, default=0.0, help="optional selector penalty when candidates do not introduce new content terms")
     p.add_argument("--lineage-diversity-min", type=float, default=0.25, help="minimum content-term novelty used by --lineage-diversity-weight")
+    p.add_argument("--lineage-bridge-weight", type=float, default=0.0, help="optional selector penalty when new objects are not linked to recent lineage")
+    p.add_argument("--lineage-bridge-min", type=float, default=0.0, help="minimum relation-graph bridge score used by --lineage-bridge-weight")
+    p.add_argument("--traceable-transport-weight", type=float, default=0.0, help="optional selector reward for bridged novelty with low revisit and object growth")
+    p.add_argument("--trajectory-revisit-weight", type=float, default=0.0, help="optional selector penalty for returning to a recent object-relation state")
+    p.add_argument("--unbridged-novelty-weight", type=float, default=0.0, help="optional selector penalty for new objects disconnected from recent lineage")
+    p.add_argument("--object-budget-weight", type=float, default=0.0, help="optional selector penalty for excess disconnected object growth")
+    p.add_argument("--hard-lineage-bridge-min", type=float, default=-1.0, help="hard reject candidates below this bridge score; negative disables the gate")
     p.add_argument("--cliche-weight", type=float, default=0.0, help="optional selector penalty for generic magic-realist vocabulary attractors")
     p.add_argument("--soft-style-cliche-weight", type=float, default=0.0, help="optional selector penalty for soft style cliche diction such as ethereal/fog/mist")
     p.add_argument("--fantasy-prop-weight", type=float, default=0.0, help="optional selector penalty for stock antique/miniature/porcelain props")
@@ -493,6 +505,13 @@ def make_selector_config(args: argparse.Namespace) -> SelectorConfig:
         semantic_loop_weight=float(getattr(args, "semantic_loop_weight", 0.0)),
         lineage_diversity_weight=float(getattr(args, "lineage_diversity_weight", 0.0)),
         lineage_diversity_min=float(getattr(args, "lineage_diversity_min", 0.25)),
+        lineage_bridge_weight=float(getattr(args, "lineage_bridge_weight", 0.0)),
+        lineage_bridge_min=float(getattr(args, "lineage_bridge_min", 0.0)),
+        traceable_transport_weight=float(getattr(args, "traceable_transport_weight", 0.0)),
+        trajectory_revisit_weight=float(getattr(args, "trajectory_revisit_weight", 0.0)),
+        unbridged_novelty_weight=float(getattr(args, "unbridged_novelty_weight", 0.0)),
+        object_budget_weight=float(getattr(args, "object_budget_weight", 0.0)),
+        hard_lineage_bridge_min=float(getattr(args, "hard_lineage_bridge_min", -1.0)),
         cliche_weight=float(getattr(args, "cliche_weight", 0.0)),
         soft_style_cliche_weight=float(getattr(args, "soft_style_cliche_weight", 0.0)),
         fantasy_prop_weight=float(getattr(args, "fantasy_prop_weight", 0.0)),
@@ -883,6 +902,45 @@ def build_parser() -> argparse.ArgumentParser:
     resilience.add_argument("--include-prompt", action="store_true")
     resilience.add_argument("--trace", action="store_true")
     resilience.set_defaults(select_objective="banded-frontier")
+
+    prefix_probe = sub.add_parser(
+        "prefix-probe",
+        help="factor an induced textual prefix from negative/zero/positive future-state steering",
+    )
+    add_common_generation_args(prefix_probe)
+    add_selector_args(prefix_probe)
+    prefix_probe.add_argument(
+        "--reference-runs",
+        nargs="+",
+        required=True,
+        help="matched alpha-zero run JSONs; shell globs are accepted",
+    )
+    prefix_probe.add_argument(
+        "--induced-runs",
+        nargs="+",
+        required=True,
+        help="matched persistent-steering run JSONs; shell globs are accepted",
+    )
+    prefix_probe.add_argument("--prefix-steps", type=int, default=3)
+    prefix_probe.add_argument(
+        "--alphas",
+        default="-0.6,0,0.6",
+        help="negative, zero, and positive alpha values; use --alphas=-0.6,0,0.6",
+    )
+    prefix_probe.add_argument("--candidates", type=int, default=8)
+    prefix_probe.add_argument("--temperature", type=float, default=1.05)
+    prefix_probe.add_argument("--top-p", type=float, default=0.92)
+    prefix_probe.add_argument("--max-new-tokens", type=int, default=120)
+    prefix_probe.add_argument("--choose", choices=["best", "softmax", "random_top3"], default="best")
+    prefix_probe.add_argument("--prompt-style", choices=["scene", "legacy"], default="scene")
+    prefix_probe.add_argument("--top-k-logits", type=int, default=12)
+    prefix_probe.add_argument("--out-dir", required=True)
+    prefix_probe.set_defaults(
+        backend="mlx",
+        select_objective="banded-frontier",
+        steer_alpha=0.6,
+        strict_steering=True,
+    )
 
     b = sub.add_parser("show-bank", help="print or write the default/current prompt bank")
     b.add_argument("--bank", default=None)
@@ -2108,6 +2166,67 @@ def cmd_resilience_sweep(args: argparse.Namespace) -> None:
     print(f"[resilience-sweep] wrote {out_dir}", file=sys.stderr)
 
 
+def cmd_prefix_probe(args: argparse.Namespace) -> None:
+    emit_model_policy(args)
+    if args.backend != "mlx":
+        raise SystemExit("[prefix-probe] first-token diagnostics currently require --backend mlx")
+    if int(args.prefix_steps) < 1:
+        raise SystemExit("[prefix-probe] --prefix-steps must be positive")
+    alphas = _parse_float_sequence(args.alphas)
+    gen_args = copy.copy(args)
+    gen_args.steer_alpha = max((abs(float(alpha)) for alpha in alphas), default=0.0)
+    if gen_args.steer_alpha <= 1e-12:
+        raise SystemExit("[prefix-probe] at least one nonzero alpha is required")
+    for name in ("_steering_preflight_done", "_steering_preflight_note", "_steering_preflight_usable"):
+        if hasattr(gen_args, name):
+            delattr(gen_args, name)
+    generator = make_generator(gen_args, random.Random(args.random_seed))
+    if not isinstance(generator, MLXLMGenerator) or getattr(generator, "_steering_vectors", None) is None:
+        note = getattr(gen_args, "_steering_preflight_note", None) or "MLX steering vectors were not loaded"
+        raise SystemExit(f"[prefix-probe] {note}")
+
+    scorer = make_scorer(args)
+    selector = make_selector_config(args)
+    report = run_prefix_counter_probe(
+        generator,
+        scorer,
+        selector,
+        reference_paths=args.reference_runs,
+        induced_paths=args.induced_runs,
+        prefix_steps=args.prefix_steps,
+        alphas=alphas,
+        candidates=args.candidates,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        max_new_tokens=args.max_new_tokens,
+        choose=args.choose,
+        prompt_style=args.prompt_style,
+        ban_terms=parse_ban_terms(args.ban_terms),
+        random_seed=args.random_seed,
+        top_k_logits=args.top_k_logits,
+    )
+    artifact_paths = write_prefix_probe_artifacts(report, args.out_dir)
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "backend": args.backend,
+        "model": resolve_model(args),
+        "vectors": args.vectors,
+        "steer_layers": args.steer_layers,
+        "steering_apply_on": args.mlx_steer_apply_on,
+        "reference_runs": list(args.reference_runs),
+        "induced_runs": list(args.induced_runs),
+        "alphas": alphas,
+        "prefix_steps": int(args.prefix_steps),
+        "candidates": int(args.candidates),
+        "selector": selector.to_dict(),
+        **artifact_paths,
+    }
+    manifest_path = Path(args.out_dir) / "prefix_counter_probe_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(format_prefix_probe_report(report))
+    print(f"[prefix-probe] wrote {args.out_dir}", file=sys.stderr)
+
+
 def cmd_show_bank(args: argparse.Namespace) -> None:
     bank = PromptBank.from_file(args.bank)
     data = bank.to_dict()
@@ -2168,6 +2287,8 @@ def main() -> None:
         cmd_frontier_sweep(args)
     elif args.command == "resilience-sweep":
         cmd_resilience_sweep(args)
+    elif args.command == "prefix-probe":
+        cmd_prefix_probe(args)
     elif args.command == "show-bank":
         cmd_show_bank(args)
     elif args.command == "model-check":

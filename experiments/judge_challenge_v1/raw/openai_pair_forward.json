@@ -1,0 +1,136 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.2",
+  "task": "pair_forward",
+  "prompt_sha256": "626186499f0433939726d725d68f0bc871c6cb7fbca9a46271f69d0c71b55b3c",
+  "parsed": {
+    "choices": [
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "winner": "B",
+        "confidence": 62,
+        "reason": "More concrete scene; less fussy trance-to-orchestra escalation."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "winner": "A",
+        "confidence": 58,
+        "reason": "B piles spell/cats/coins/raindrops; A’s xylophone-umbrella is cleaner, still strange."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "winner": "B",
+        "confidence": 60,
+        "reason": "A leans on stock “thousand midnights/keepers of secrets”; B’s image-chain tracks actionably."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 66,
+        "reason": "B is neon-ethereal fog overload; A is terse, specific, and unsettling despite the typo."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 57,
+        "reason": "Puppeteer umbrella is intriguing but cute; book-and-bird mechanics feel more grounded."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 55,
+        "reason": "Less ornamental; the bird probing ribs is a sharper, traceable displacement."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 63,
+        "reason": "The whispered “Remember” creates tension and implication; B is pretty but predictable."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "winner": "tie",
+        "confidence": 50,
+        "reason": "Both are truncated, jewel-box description with no payoff; hard to distinguish."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "tie",
+        "confidence": 50,
+        "reason": "Both cut off mid-phrase; neither establishes a complete strange relation."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 60,
+        "reason": "Book/sketches/bird song is more specific than tea-for-pigeons and wrinkle-map cliché."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 61,
+        "reason": "Umbrella-as-puppeteer is a clearer, stranger object relation than teacup orchestra."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 72,
+        "reason": "A is decorative diamonds and truncation; B completes a weird, readable mechanism."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 56,
+        "reason": "B animates the scene; A is setup-heavy and generic despite decent texture."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "winner": "A",
+        "confidence": 65,
+        "reason": "B’s neon entity/fog/statue feels like stock spectacle; A stays human-scaled and legible."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 54,
+        "reason": "Both truncated, but B has a clearer situation; A is pure ornamental spill."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 62,
+        "reason": "Puppeteer/doll/clock forms a coherent strange triangle; B is mostly scene-setting."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 74,
+        "reason": "B is kaleidoscope-iridescence fluff and truncation; A delivers an odd, traceable action."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 69,
+        "reason": "A is cut off and generic-eyed; B is complete, kinetic, and stranger."
+      }
+    ]
+  },
+  "response_text": "{\"choices\":[{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\"winner\":\"B\",\"confidence\":62,\"reason\":\"More concrete scene; less fussy trance-to-orchestra escalation.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\"winner\":\"A\",\"confidence\":58,\"reason\":\"B piles spell/cats/coins/raindrops; A’s xylophone-umbrella is cleaner, still strange.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"A leans on stock “thousand midnights/keepers of secrets”; B’s image-chain tracks actionably.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":66,\"reason\":\"B is neon-ethereal fog overload; A is terse, specific, and unsettling despite the typo.\"},{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":57,\"reason\":\"Puppeteer umbrella is intriguing but cute; book-and-bird mechanics feel more grounded.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Less ornamental; the bird probing ribs is a sharper, traceable displacement.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":63,\"reason\":\"The whispered “Remember” creates tension and implication; B is pretty but predictable.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\"winner\":\"tie\",\"confidence\":50,\"reason\":\"Both are truncated, jewel-box description with no payoff; hard to distinguish.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"tie\",\"confidence\":50,\"reason\":\"Both cut off mid-phrase; neither establishes a complete strange relation.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"Book/sketches/bird song is more specific than tea-for-pigeons and wrinkle-map cliché.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":61,\"reason\":\"Umbrella-as-puppeteer is a clearer, stranger object relation than teacup orchestra.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":72,\"reason\":\"A is decorative diamonds and truncation; B completes a weird, readable mechanism.\"},{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":56,\"reason\":\"B animates the scene; A is setup-heavy and generic despite decent texture.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\"winner\":\"A\",\"confidence\":65,\"reason\":\"B’s neon entity/fog/statue feels like stock spectacle; A stays human-scaled and legible.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":54,\"reason\":\"Both truncated, but B has a clearer situation; A is pure ornamental spill.\"},{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":62,\"reason\":\"Puppeteer/doll/clock forms a coherent strange triangle; B is mostly scene-setting.\"},{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":74,\"reason\":\"B is kaleidoscope-iridescence fluff and truncation; A delivers an odd, traceable action.\"},{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":69,\"reason\":\"A is cut off and generic-eyed; B is complete, kinetic, and stranger.\"}]}",
+  "api_metadata": {
+    "response_id": "resp_0d68964fde35d85e016a535e6f2e80819996a92668fc0c5222",
+    "model": "gpt-5.2-2025-12-11",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 4828,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 1242,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 6070
+    }
+  }
+}

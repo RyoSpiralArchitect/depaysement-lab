@@ -241,6 +241,125 @@ def test_semantic_loop_weight_debuffs_closed_candidate_cycle():
     assert loop.selector_score < transport.selector_score
 
 
+def test_traceable_transport_separates_bridged_reroute_from_noun_sprawl():
+    context = "The printer hums beside a stack of paper."
+    bridged = (
+        "The printer's ink unfurls into a garden, where flowers press their petals "
+        "against the waiting paper."
+    )
+    noun_sprawl = "Parsley, milk, lemons, mushrooms, wine, pears, peaches, and a scone crowd the room."
+
+    bridged_metrics = semantic_transport_metrics(context, bridged)
+    sprawl_metrics = semantic_transport_metrics(context, noun_sprawl)
+
+    assert bridged_metrics["lineage_bridge"] > 0.50
+    assert bridged_metrics["unbridged_novelty"] < sprawl_metrics["unbridged_novelty"]
+    assert bridged_metrics["object_budget_pressure"] < sprawl_metrics["object_budget_pressure"]
+    assert bridged_metrics["traceable_transport_score"] > sprawl_metrics["traceable_transport_score"] + 0.25
+    assert "printer" in bridged_metrics["lineage_bridge_terms"]
+    assert "garden" in bridged_metrics["lineage_bridged_new_terms"]
+
+
+def test_trajectory_revisit_detects_repeated_object_relation_state():
+    context = (
+        "The printer spills words across the tray. "
+        "The words become a book. The book opens into pages."
+    )
+    revisit = "The printer spills words again; the words become a book, and the book opens into pages."
+    reroute = "The printer's ink enters a garden, where violets press their petals against the paper."
+
+    revisit_metrics = semantic_transport_metrics(context, revisit)
+    reroute_metrics = semantic_transport_metrics(context, reroute)
+
+    assert revisit_metrics["trajectory_revisit_pressure"] > 0.50
+    assert revisit_metrics["trajectory_revisit_pressure"] > reroute_metrics["trajectory_revisit_pressure"] + 0.25
+    assert revisit_metrics["traceable_transport_score"] < reroute_metrics["traceable_transport_score"]
+
+
+def test_traceable_transport_selector_rewards_bridge_and_penalizes_noun_growth():
+    context = "The printer hums beside a stack of paper."
+    bridged = Candidate(
+        "The printer's ink unfurls into a garden, where flowers press their petals against the paper.",
+        ScoreBreakdown(total=1.0),
+    )
+    noun_sprawl = Candidate(
+        "Parsley, milk, lemons, mushrooms, wine, pears, peaches, and a scone crowd the room.",
+        ScoreBreakdown(total=1.0),
+    )
+    engine = DepaysementEngine(
+        DummyGenerator(random.Random(0)),
+        rng=random.Random(0),
+        selector=SelectorConfig(
+            objective="hybrid",
+            frontier_weight=0.0,
+            ontology_weight=0.0,
+            unfinished_weight=0.0,
+            repair_weight=0.0,
+            repetition_weight=0.0,
+            sprawl_weight=0.0,
+            lineage_bridge_weight=1.0,
+            lineage_bridge_min=0.50,
+            traceable_transport_weight=1.25,
+            trajectory_revisit_weight=1.0,
+            unbridged_novelty_weight=1.0,
+            object_budget_weight=1.0,
+            readability_min=0.0,
+            frontier_quality_min=0.0,
+        ),
+    )
+
+    engine._attach_selector_metrics(bridged, context=context)
+    engine._attach_selector_metrics(noun_sprawl, context=context)
+
+    assert bridged.selector_metrics["lineage_bridge"] > noun_sprawl.selector_metrics["lineage_bridge"]
+    assert bridged.selector_metrics["traceable_transport_reward"] > noun_sprawl.selector_metrics["traceable_transport_reward"]
+    assert bridged.selector_score > noun_sprawl.selector_score
+
+
+def test_hard_lineage_bridge_gate_rejects_unlinked_candidate():
+    context = "The printer hums beside a stack of paper."
+    candidate = Candidate(
+        "Parsley, milk, lemons, mushrooms, wine, pears, peaches, and a scone crowd the room.",
+        ScoreBreakdown(total=1.0),
+    )
+    engine = DepaysementEngine(
+        DummyGenerator(random.Random(0)),
+        rng=random.Random(0),
+        selector=SelectorConfig(
+            objective="banded-frontier",
+            hard_lineage_bridge_min=0.35,
+        ),
+    )
+
+    engine._attach_selector_metrics(candidate, context=context)
+
+    assert candidate.selector_metrics["hard_lineage_bridge_failed"] is True
+    assert candidate.selector_metrics["hard_gate_failed"] is True
+
+
+def test_lineage_bridge_floor_is_soft_without_hard_gate():
+    context = "The printer hums beside a stack of paper."
+    candidate = Candidate(
+        "Parsley, milk, lemons, mushrooms, wine, pears, peaches, and a scone crowd the room.",
+        ScoreBreakdown(total=1.0),
+    )
+    engine = DepaysementEngine(
+        DummyGenerator(random.Random(0)),
+        rng=random.Random(0),
+        selector=SelectorConfig(
+            objective="banded-frontier",
+            lineage_bridge_weight=1.0,
+            lineage_bridge_min=0.50,
+        ),
+    )
+
+    engine._attach_selector_metrics(candidate, context=context)
+
+    assert candidate.selector_metrics["lineage_bridge_penalty"] > 0.0
+    assert candidate.selector_metrics["hard_lineage_bridge_failed"] is False
+    assert candidate.selector_metrics["hard_gate_failed"] is False
+
+
 def test_hard_unfinished_gate_rejects_truncated_frontier_candidate():
     rng = random.Random(0)
     truncated = (

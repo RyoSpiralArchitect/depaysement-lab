@@ -1,0 +1,136 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.2",
+  "task": "absolute_forward",
+  "prompt_sha256": "886a25cdc4f982ad6e00bed86326eaeacbc6d6f64786ba6d6aa1326298d8156a",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 4,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 7,
+        "confidence": 0.75,
+        "reason": "Pigeons sheltered under umbrella is traceable, but vendor’s wrinkle “topographic map” and tea/melody feel stock; sentences complete, stakes modest."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 7,
+        "cliche_pressure": 8,
+        "confidence": 0.74,
+        "reason": "Umbrella as stage/xylophone is readable, but “collective trance,” glowing feathers, and teacup orchestra push into decorative whimsy; syntactically intact."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 2,
+        "readable_displacement": 4,
+        "completion": 6,
+        "cliche_pressure": 9,
+        "confidence": 0.78,
+        "reason": "Spell-entraps-cats logic and escalating “symphonic keyboard” coin/raindrop keys feel over-stuffed; readable but noun-piled, predictably enchanted."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 1,
+        "readable_displacement": 2,
+        "completion": 1,
+        "cliche_pressure": 8,
+        "confidence": 0.9,
+        "reason": "Heavy jewel-like simile (“dew-kissed diamonds”) and then breaks off mid-phrase (“umbrellas, now a chorus of”); incomplete."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 1,
+        "readable_displacement": 3,
+        "completion": 1,
+        "cliche_pressure": 9,
+        "confidence": 0.9,
+        "reason": "Iridescent orbs on invisible thread and kaleidoscope reflections are stock; ends trailing (“like a thousand tiny”); no closure."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 2,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 9,
+        "confidence": 0.73,
+        "reason": "Fog from ancient statue and neon-green glowing entity are familiar props; long sentence stays grammatical but relies on generic “ethereal energy.”"
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 5,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 5,
+        "confidence": 0.72,
+        "reason": "Bedraggled bird living in wrecked umbrella is concrete; stranger with leather-bound book hints story without overdoing magic; complete."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 4,
+        "readable_displacement": 3,
+        "completion": 7,
+        "cliche_pressure": 6,
+        "confidence": 0.72,
+        "reason": "Sketchbook of birds + melancholy song is clear but familiar; sensory detail works; displacement mild and predictable."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 8,
+        "confidence": 0.76,
+        "reason": "“Thousand midnights,” “old and ageless hand,” birds as secret-keepers are cliché-mystic; umbrella as skeletal grin is vivid but piled-on."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 1,
+        "readable_displacement": 2,
+        "completion": 1,
+        "cliche_pressure": 7,
+        "confidence": 0.88,
+        "reason": "Mostly generic description; truncates abruptly (“fluorescent lig”), leaving sentence and scene unfinished."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 2,
+        "cliche_pressure": 7,
+        "confidence": 0.85,
+        "reason": "Whispered “Remember” could pivot, but quotation cuts off; “face a map of creases” is stock; incomplete closure."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 6,
+        "readable_displacement": 7,
+        "completion": 8,
+        "cliche_pressure": 4,
+        "confidence": 0.77,
+        "reason": "Umbrella as puppeteer manipulating porcelain doll is a specific, strange relation; clock/creaking harmony supports it without excessive glitter; complete."
+      }
+    ]
+  },
+  "response_text": "{\"ratings\":[{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":4,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":7,\"confidence\":0.75,\"reason\":\"Pigeons sheltered under umbrella is traceable, but vendor’s wrinkle “topographic map” and tea/melody feel stock; sentences complete, stakes modest.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":7,\"cliche_pressure\":8,\"confidence\":0.74,\"reason\":\"Umbrella as stage/xylophone is readable, but “collective trance,” glowing feathers, and teacup orchestra push into decorative whimsy; syntactically intact.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":2,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":9,\"confidence\":0.78,\"reason\":\"Spell-entraps-cats logic and escalating “symphonic keyboard” coin/raindrop keys feel over-stuffed; readable but noun-piled, predictably enchanted.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":1,\"readable_displacement\":2,\"completion\":1,\"cliche_pressure\":8,\"confidence\":0.9,\"reason\":\"Heavy jewel-like simile (“dew-kissed diamonds”) and then breaks off mid-phrase (“umbrellas, now a chorus of”); incomplete.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":1,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":9,\"confidence\":0.9,\"reason\":\"Iridescent orbs on invisible thread and kaleidoscope reflections are stock; ends trailing (“like a thousand tiny”); no closure.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":9,\"confidence\":0.73,\"reason\":\"Fog from ancient statue and neon-green glowing entity are familiar props; long sentence stays grammatical but relies on generic “ethereal energy.”\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":5,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":5,\"confidence\":0.72,\"reason\":\"Bedraggled bird living in wrecked umbrella is concrete; stranger with leather-bound book hints story without overdoing magic; complete.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":4,\"readable_displacement\":3,\"completion\":7,\"cliche_pressure\":6,\"confidence\":0.72,\"reason\":\"Sketchbook of birds + melancholy song is clear but familiar; sensory detail works; displacement mild and predictable.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":8,\"confidence\":0.76,\"reason\":\"“Thousand midnights,” “old and ageless hand,” birds as secret-keepers are cliché-mystic; umbrella as skeletal grin is vivid but piled-on.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":1,\"readable_displacement\":2,\"completion\":1,\"cliche_pressure\":7,\"confidence\":0.88,\"reason\":\"Mostly generic description; truncates abruptly (“fluorescent lig”), leaving sentence and scene unfinished.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":2,\"cliche_pressure\":7,\"confidence\":0.85,\"reason\":\"Whispered “Remember” could pivot, but quotation cuts off; “face a map of creases” is stock; incomplete closure.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":6,\"readable_displacement\":7,\"completion\":8,\"cliche_pressure\":4,\"confidence\":0.77,\"reason\":\"Umbrella as puppeteer manipulating porcelain doll is a specific, strange relation; clock/creaking harmony supports it without excessive glitter; complete.\"}]}",
+  "api_metadata": {
+    "response_id": "resp_0abe1b55551a189c016a535e57a7fc8198bcb76ee23fe3110e",
+    "model": "gpt-5.2-2025-12-11",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1579,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 982,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2561
+    }
+  }
+}

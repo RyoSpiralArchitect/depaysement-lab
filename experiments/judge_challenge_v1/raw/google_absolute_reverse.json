@@ -1,0 +1,136 @@
+{
+  "provider": "google",
+  "model": "gemini-3.5-flash",
+  "task": "absolute_reverse",
+  "prompt_sha256": "35b7e3832c24876cc7cef92da5f4970f00cadc8dc5aa6b38ddf4f64fa9ae167c",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 7,
+        "confidence": 0.9,
+        "reason": "Heavy reliance on stock magical-realist tropes like melancholic steam-powered clocks and porcelain dolls weakens the umbrella-puppeteer displacement."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 5,
+        "cliche_pressure": 8,
+        "confidence": 0.9,
+        "reason": "Grammatically fractured and heavily reliant on clichés like a whispering bird and faces like maps."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 1,
+        "readable_displacement": 2,
+        "completion": 3,
+        "cliche_pressure": 8,
+        "confidence": 0.9,
+        "reason": "Severely cut off at the end; suffers from highly decorative and cliché descriptions of eyes and hair."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 1,
+        "readable_displacement": 3,
+        "completion": 7,
+        "cliche_pressure": 9,
+        "confidence": 0.9,
+        "reason": "Exhausting accumulation of stock clichés like \"thousand midnights\" and \"keepers of secrets.\""
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 2,
+        "readable_displacement": 2,
+        "completion": 8,
+        "cliche_pressure": 7,
+        "confidence": 0.9,
+        "reason": "Lacks actual displacement, settling instead for cozy, predictable imagery of yellowed pages and melancholic bird songs."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 3,
+        "readable_displacement": 2,
+        "completion": 6,
+        "cliche_pressure": 6,
+        "confidence": 0.9,
+        "reason": "Syntactically incomplete fragment with very low displacement, relying on familiar leather-bound book tropes."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 1,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 9,
+        "confidence": 0.9,
+        "reason": "Overloaded with high-fantasy tropes like glowing entities, ethereal energy, and ancient stone statues watching people."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 1,
+        "readable_displacement": 3,
+        "completion": 3,
+        "cliche_pressure": 8,
+        "confidence": 0.9,
+        "reason": "Cut off mid-sentence and drowning in decorative, glittering adjectives and cliché imagery."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 0,
+        "readable_displacement": 1,
+        "completion": 3,
+        "cliche_pressure": 9,
+        "confidence": 0.9,
+        "reason": "Severely interrupted and choked by excessively saccharine clichés like \"dew-kissed diamonds.\""
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 4,
+        "readable_displacement": 6,
+        "completion": 8,
+        "cliche_pressure": 7,
+        "confidence": 0.9,
+        "reason": "Whimsical to a fault with Disney-like clichés, but offers a relatively clear, traceable mechanical displacement of the umbrella ribs."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 8,
+        "confidence": 0.9,
+        "reason": "The miniature tea-cup orchestra is a highly predictable, decorative magical-realist prop that diminishes the displacement."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 4,
+        "readable_displacement": 4,
+        "completion": 8,
+        "cliche_pressure": 6,
+        "confidence": 0.9,
+        "reason": "The detail of a vendor offering tea to pigeons is a nice, brief weirdness, though marred by the \"topographic map\" cliché."
+      }
+    ]
+  },
+  "response_text": "{\n  \"ratings\": [\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"preference_score\": 3,\n      \"readable_displacement\": 5,\n      \"completion\": 8,\n      \"cliche_pressure\": 7,\n      \"confidence\": 0.9,\n      \"reason\": \"Heavy reliance on stock magical-realist tropes like melancholic steam-powered clocks and porcelain dolls weakens the umbrella-puppeteer displacement.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"preference_score\": 2,\n      \"readable_displacement\": 3,\n      \"completion\": 5,\n      \"cliche_pressure\": 8,\n      \"confidence\": 0.9,\n      \"reason\": \"Grammatically fractured and heavily reliant on clichés like a whispering bird and faces like maps.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"preference_score\": 1,\n      \"readable_displacement\": 2,\n      \"completion\": 3,\n      \"cliche_pressure\": 8,\n      \"confidence\": 0.9,\n      \"reason\": \"Severely cut off at the end; suffers from highly decorative and cliché descriptions of eyes and hair.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"preference_score\": 1,\n      \"readable_displacement\": 3,\n      \"completion\": 7,\n      \"cliche_pressure\": 9,\n      \"confidence\": 0.9,\n      \"reason\": \"Exhausting accumulation of stock clichés like \\\"thousand midnights\\\" and \\\"keepers of secrets.\\\"\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"preference_score\": 2,\n      \"readable_displacement\": 2,\n      \"completion\": 8,\n      \"cliche_pressure\": 7,\n      \"confidence\": 0.9,\n      \"reason\": \"Lacks actual displacement, settling instead for cozy, predictable imagery of yellowed pages and melancholic bird songs.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"preference_score\": 3,\n      \"readable_displacement\": 2,\n      \"completion\": 6,\n      \"cliche_pressure\": 6,\n      \"confidence\": 0.9,\n      \"reason\": \"Syntactically incomplete fragment with very low displacement, relying on familiar leather-bound book tropes.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"preference_score\": 1,\n      \"readable_displacement\": 4,\n      \"completion\": 7,\n      \"cliche_pressure\": 9,\n      \"confidence\": 0.9,\n      \"reason\": \"Overloaded with high-fantasy tropes like glowing entities, ethereal energy, and ancient stone statues watching people.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"preference_score\": 1,\n      \"readable_displacement\": 3,\n      \"completion\": 3,\n      \"cliche_pressure\": 8,\n      \"confidence\": 0.9,\n      \"reason\": \"Cut off mid-sentence and drowning in decorative, glittering adjectives and cliché imagery.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"preference_score\": 0,\n      \"readable_displacement\": 1,\n      \"completion\": 3,\n      \"cliche_pressure\": 9,\n      \"confidence\": 0.9,\n      \"reason\": \"Severely interrupted and choked by excessively saccharine clichés like \\\"dew-kissed diamonds.\\\"\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"preference_score\": 4,\n      \"readable_displacement\": 6,\n      \"completion\": 8,\n      \"cliche_pressure\": 7,\n      \"confidence\": 0.9,\n      \"reason\": \"Whimsical to a fault with Disney-like clichés, but offers a relatively clear, traceable mechanical displacement of the umbrella ribs.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"preference_score\": 3,\n      \"readable_displacement\": 5,\n      \"completion\": 8,\n      \"cliche_pressure\": 8,\n      \"confidence\": 0.9,\n      \"reason\": \"The miniature tea-cup orchestra is a highly predictable, decorative magical-realist prop that diminishes the displacement.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"preference_score\": 4,\n      \"readable_displacement\": 4,\n      \"completion\": 8,\n      \"cliche_pressure\": 6,\n      \"confidence\": 0.9,\n      \"reason\": \"The detail of a vendor offering tea to pigeons is a nice, brief weirdness, though marred by the \\\"topographic map\\\" cliché.\"\n    }\n  ]\n}\n",
+  "api_metadata": {
+    "response_id": "OGBTas_rO9fR1e8P3PTiiA4",
+    "model": "gemini-3.5-flash",
+    "usage": {
+      "promptTokenCount": 1706,
+      "candidatesTokenCount": 1395,
+      "totalTokenCount": 7669,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1706
+        }
+      ],
+      "thoughtsTokenCount": 4568,
+      "serviceTier": "standard"
+    }
+  }
+}

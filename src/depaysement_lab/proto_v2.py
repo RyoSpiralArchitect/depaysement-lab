@@ -1542,6 +1542,13 @@ class SelectorConfig:
     semantic_loop_weight: float = 0.0
     lineage_diversity_weight: float = 0.0
     lineage_diversity_min: float = 0.25
+    lineage_bridge_weight: float = 0.0
+    lineage_bridge_min: float = 0.0
+    traceable_transport_weight: float = 0.0
+    trajectory_revisit_weight: float = 0.0
+    unbridged_novelty_weight: float = 0.0
+    object_budget_weight: float = 0.0
+    hard_lineage_bridge_min: float = -1.0
     cliche_weight: float = 0.0
     soft_style_cliche_weight: float = 0.0
     fantasy_prop_weight: float = 0.0
@@ -2029,6 +2036,12 @@ class DepaysementEngine:
         semantic_loop = float(transport_metrics["semantic_loop_pressure"])
         lineage_diversity = float(transport_metrics["lineage_diversity"])
         lineage_diversity_deficit = max(0.0, cfg.lineage_diversity_min - lineage_diversity)
+        lineage_bridge = float(transport_metrics["lineage_bridge"])
+        lineage_bridge_deficit = max(0.0, cfg.lineage_bridge_min - lineage_bridge)
+        traceable_transport = float(transport_metrics["traceable_transport_score"])
+        trajectory_revisit = float(transport_metrics["trajectory_revisit_pressure"])
+        unbridged_novelty = float(transport_metrics["unbridged_novelty"])
+        object_budget = float(transport_metrics["object_budget_pressure"])
         hard_ban_terms = tuple(str(term).strip() for term in cfg.hard_ban_terms if str(term).strip())
         hard_ban_hits = banned_term_hits(text, hard_ban_terms)
         ordinary_anchor, ordinary_hits, ordinary_terms = ordinary_anchor_retention(
@@ -2052,6 +2065,10 @@ class DepaysementEngine:
             + cfg.sprawl_weight * sprawl
             + cfg.semantic_loop_weight * semantic_loop
             + cfg.lineage_diversity_weight * lineage_diversity_deficit
+            + cfg.lineage_bridge_weight * lineage_bridge_deficit
+            + cfg.trajectory_revisit_weight * trajectory_revisit
+            + cfg.unbridged_novelty_weight * unbridged_novelty
+            + cfg.object_budget_weight * object_budget
             + cfg.cliche_weight * cliche
             + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
@@ -2065,8 +2082,10 @@ class DepaysementEngine:
         unfinished_excess = max(0.0, unfinished - cfg.unfinished_max)
         hard_unfinished_enabled = cfg.hard_unfinished_max >= 0.0
         hard_unfinished_failed = hard_unfinished_enabled and unfinished > cfg.hard_unfinished_max
+        hard_lineage_bridge_enabled = cfg.hard_lineage_bridge_min >= 0.0
+        hard_lineage_bridge_failed = hard_lineage_bridge_enabled and lineage_bridge < cfg.hard_lineage_bridge_min
         hard_ban_failed = bool(hard_ban_hits)
-        hard_gate_failed = bool(hard_unfinished_failed or hard_ban_failed)
+        hard_gate_failed = bool(hard_unfinished_failed or hard_lineage_bridge_failed or hard_ban_failed)
         hard_gate_penalty = 1000.0 if hard_gate_failed else 0.0
         band_violation = (
             1.50 * ontology_below
@@ -2079,6 +2098,10 @@ class DepaysementEngine:
             + 0.30 * sprawl
             + cfg.semantic_loop_weight * semantic_loop
             + cfg.lineage_diversity_weight * lineage_diversity_deficit
+            + cfg.lineage_bridge_weight * lineage_bridge_deficit
+            + cfg.trajectory_revisit_weight * trajectory_revisit
+            + cfg.unbridged_novelty_weight * unbridged_novelty
+            + cfg.object_budget_weight * object_budget
             + cfg.soft_style_cliche_weight * soft_style
             + cfg.fantasy_prop_weight * fantasy_prop
             + cfg.ordinary_anchor_weight * ordinary_anchor_deficit
@@ -2088,6 +2111,7 @@ class DepaysementEngine:
             float(candidate.score.total)
             + cfg.frontier_weight * frontier
             + cfg.ontology_weight * ontology_band_score
+            + cfg.traceable_transport_weight * traceable_transport
             - penalty
             - 0.50 * readability_deficit
             - 0.25 * frontier_quality_deficit
@@ -2106,6 +2130,7 @@ class DepaysementEngine:
         banded_frontier_score = (
             (1.0 if eligible else 0.0)
             + cfg.frontier_weight * frontier
+            + cfg.traceable_transport_weight * traceable_transport
             + 0.15 * ontology_band_score
             - band_violation
         )
@@ -2155,6 +2180,8 @@ class DepaysementEngine:
             "unfinished_excess": float(unfinished_excess),
             "hard_unfinished_max": float(cfg.hard_unfinished_max),
             "hard_unfinished_failed": bool(hard_unfinished_failed),
+            "hard_lineage_bridge_min": float(cfg.hard_lineage_bridge_min),
+            "hard_lineage_bridge_failed": bool(hard_lineage_bridge_failed),
             "hard_ban_terms": list(hard_ban_terms),
             "hard_ban_hits": list(hard_ban_hits),
             "hard_ban_hit_count": len(hard_ban_hits),
@@ -2173,6 +2200,24 @@ class DepaysementEngine:
             "lineage_new_terms": list(transport_metrics["lineage_new_terms"]),
             "lineage_diversity_penalty": float(cfg.lineage_diversity_weight * lineage_diversity_deficit),
             "net_transport_score": float(transport_metrics["net_transport_score"]),
+            "lineage_bridge": lineage_bridge,
+            "lineage_bridge_min": float(cfg.lineage_bridge_min),
+            "lineage_bridge_deficit": float(lineage_bridge_deficit),
+            "lineage_bridge_terms": list(transport_metrics["lineage_bridge_terms"]),
+            "lineage_bridged_new_terms": list(transport_metrics["lineage_bridged_new_terms"]),
+            "lineage_unbridged_new_terms": list(transport_metrics["lineage_unbridged_new_terms"]),
+            "lineage_bridge_penalty": float(cfg.lineage_bridge_weight * lineage_bridge_deficit),
+            "trajectory_revisit_pressure": trajectory_revisit,
+            "trajectory_revisited_terms": list(transport_metrics["trajectory_revisited_terms"]),
+            "trajectory_revisit_penalty": float(cfg.trajectory_revisit_weight * trajectory_revisit),
+            "unbridged_novelty": unbridged_novelty,
+            "unbridged_novelty_penalty": float(cfg.unbridged_novelty_weight * unbridged_novelty),
+            "object_budget_pressure": object_budget,
+            "object_budget_penalty": float(cfg.object_budget_weight * object_budget),
+            "relation_edge_novelty": float(transport_metrics["relation_edge_novelty"]),
+            "useful_lineage_novelty": float(transport_metrics["useful_lineage_novelty"]),
+            "traceable_transport_score": traceable_transport,
+            "traceable_transport_reward": float(cfg.traceable_transport_weight * traceable_transport),
             "selector_penalty": float(penalty),
             "band_violation": float(band_violation),
             "selector_eligible": bool(eligible),
@@ -2362,6 +2407,219 @@ def _semantic_ngram_loop_pressure(terms: Sequence[str]) -> float:
     return pressure
 
 
+TRACEABLE_RELATION_VERB_TERMS = {
+    "attach",
+    "become",
+    "bind",
+    "bloom",
+    "carry",
+    "contain",
+    "dissolve",
+    "enter",
+    "feed",
+    "flow",
+    "grow",
+    "hold",
+    "melt",
+    "nurture",
+    "open",
+    "press",
+    "release",
+    "spill",
+    "transform",
+    "turn",
+    "unfold",
+    "unfurl",
+    "water",
+    "weave",
+    "wrap",
+}
+
+
+def _normalized_graph_objects(graph: ImageRelationGraph, text: str) -> set[str]:
+    allowed = set(semantic_transport_terms(text))
+    return {
+        term
+        for raw in graph.object_terms
+        if (term := _semantic_transport_term(raw))
+        and term in allowed
+        and term not in TRACEABLE_RELATION_VERB_TERMS
+    }
+
+
+def _normalized_graph_edge_pairs(
+    graph: ImageRelationGraph,
+    text: str,
+    objects: set[str],
+) -> set[Tuple[str, str]]:
+    pairs: set[Tuple[str, str]] = set()
+    for raw_left, _relation, raw_right in graph.edges:
+        left = _semantic_transport_term(raw_left)
+        right = _semantic_transport_term(raw_right)
+        if not left or not right or left == right or left not in objects or right not in objects:
+            continue
+        pairs.add(tuple(sorted((left, right))))
+    tokens = _english_word_tokens(text)
+    for raw, start, end in tokens:
+        relation = _semantic_transport_term(raw)
+        if relation not in TRACEABLE_RELATION_VERB_TERMS:
+            continue
+        left = next(
+            (
+                term
+                for token, _token_start, token_end in reversed(tokens)
+                if token_end <= start
+                and (term := _semantic_transport_term(token)) in objects
+            ),
+            None,
+        )
+        right = next(
+            (
+                term
+                for token, token_start, _token_end in tokens
+                if token_start >= end
+                and (term := _semantic_transport_term(token)) in objects
+            ),
+            None,
+        )
+        if left and right and left != right:
+            pairs.add(tuple(sorted((left, right))))
+    return pairs
+
+
+def _graph_components(objects: set[str], pairs: set[Tuple[str, str]]) -> List[set[str]]:
+    parent = {term: term for term in objects}
+
+    def find(term: str) -> str:
+        while parent[term] != term:
+            parent[term] = parent[parent[term]]
+            term = parent[term]
+        return term
+
+    def union(left: str, right: str) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root != right_root:
+            parent[right_root] = left_root
+
+    for left, right in pairs:
+        if left in parent and right in parent:
+            union(left, right)
+    components: Dict[str, set[str]] = defaultdict(set)
+    for term in objects:
+        components[find(term)].add(term)
+    return list(components.values())
+
+
+def _set_jaccard(left: set[Any], right: set[Any]) -> float:
+    union = left | right
+    if not union:
+        return 0.0
+    return len(left & right) / len(union)
+
+
+def _lineage_relation_metrics(context: str, text: str, *, lineage_diversity: float) -> Dict[str, Any]:
+    """Measure bridged novelty and cross-step state recurrence.
+
+    The instrument remains deliberately lexical. A new object is bridged when
+    its candidate-graph component also contains an object from recent context.
+    This distinguishes relation-bearing transport from disconnected noun growth
+    without claiming dependency-parse or embedding semantics.
+    """
+
+    context_spans = split_spans(context)
+    recent_spans = context_spans[-6:]
+    context_tail = " ".join(context_spans[-4:]) if context_spans else context
+    current_graph = image_relation_graph(text)
+    context_graph = image_relation_graph(context_tail)
+    current_objects = _normalized_graph_objects(current_graph, text)
+    context_objects = _normalized_graph_objects(context_graph, context_tail)
+    current_pairs = _normalized_graph_edge_pairs(current_graph, text, current_objects)
+    shared_objects = current_objects & context_objects
+    new_objects = current_objects - context_objects
+
+    bridged_new: set[str] = set()
+    unbridged_new: set[str] = set()
+    unbridged_components = 0
+    for component in _graph_components(current_objects, current_pairs):
+        component_new = component & new_objects
+        if not component_new:
+            continue
+        if component & shared_objects:
+            bridged_new.update(component_new)
+        else:
+            unbridged_new.update(component_new)
+            unbridged_components += 1
+
+    shared_presence = clamp(len(shared_objects) / 2.0, 0.0, 1.0)
+    bridged_new_ratio = len(bridged_new) / max(1, len(new_objects))
+    lineage_bridge = clamp(
+        0.25 * shared_presence + (0.75 * bridged_new_ratio if new_objects else 0.0),
+        0.0,
+        1.0,
+    )
+    new_object_ratio = len(new_objects) / max(1, len(current_objects))
+    unbridged_ratio = len(unbridged_new) / max(1, len(new_objects))
+    unbridged_novelty = clamp(new_object_ratio * unbridged_ratio, 0.0, 1.0)
+
+    excess_new = clamp((len(new_objects) - 4) / 8.0, 0.0, 1.0)
+    unbridged_excess = clamp((len(unbridged_new) - 2) / 6.0, 0.0, 1.0)
+    component_excess = clamp((unbridged_components - 1) / 4.0, 0.0, 1.0)
+    object_budget = clamp(
+        0.45 * excess_new + 0.35 * unbridged_excess + 0.20 * component_excess,
+        0.0,
+        1.0,
+    )
+
+    historical_pairs: set[Tuple[str, str]] = set()
+    trajectory_revisit = 0.0
+    revisited_terms: set[str] = set()
+    state_windows = list(recent_spans)
+    for width in (2, 3):
+        state_windows.extend(
+            " ".join(recent_spans[start : start + width])
+            for start in range(0, max(0, len(recent_spans) - width + 1))
+        )
+    for span in state_windows:
+        previous_graph = image_relation_graph(span)
+        previous_objects = _normalized_graph_objects(previous_graph, span)
+        previous_pairs = _normalized_graph_edge_pairs(previous_graph, span, previous_objects)
+        historical_pairs.update(previous_pairs)
+        object_overlap = current_objects & previous_objects
+        pair_overlap = current_pairs & previous_pairs
+        if current_pairs and previous_pairs:
+            similarity = 0.30 * _set_jaccard(current_objects, previous_objects) + 0.70 * _set_jaccard(
+                current_pairs,
+                previous_pairs,
+            )
+        else:
+            similarity = 0.45 * _set_jaccard(current_objects, previous_objects)
+        if len(object_overlap) < 2 and not pair_overlap:
+            similarity *= 0.35
+        if similarity > trajectory_revisit:
+            trajectory_revisit = similarity
+            revisited_terms = set(object_overlap)
+
+    if current_pairs:
+        relation_edge_novelty = len(current_pairs - historical_pairs) / len(current_pairs)
+    else:
+        relation_edge_novelty = 0.0
+    useful_novelty = max(float(lineage_diversity), float(relation_edge_novelty)) * (1.0 - unbridged_novelty)
+
+    return {
+        "lineage_bridge": float(lineage_bridge),
+        "lineage_bridge_terms": tuple(sorted(shared_objects))[:12],
+        "lineage_bridged_new_terms": tuple(sorted(bridged_new))[:12],
+        "lineage_unbridged_new_terms": tuple(sorted(unbridged_new))[:12],
+        "trajectory_revisit_pressure": float(clamp(trajectory_revisit, 0.0, 1.0)),
+        "trajectory_revisited_terms": tuple(sorted(revisited_terms))[:12],
+        "unbridged_novelty": float(unbridged_novelty),
+        "object_budget_pressure": float(object_budget),
+        "relation_edge_novelty": float(relation_edge_novelty),
+        "useful_lineage_novelty": float(clamp(useful_novelty, 0.0, 1.0)),
+    }
+
+
 def semantic_transport_metrics(context: str, text: str) -> Dict[str, Any]:
     terms = semantic_transport_terms(text)
     context_tail = " ".join(split_spans(context)[-4:]) if context else ""
@@ -2386,14 +2644,31 @@ def semantic_transport_metrics(context: str, text: str) -> Dict[str, Any]:
     lineage_diversity = len(new_terms) / max(1, len(unique_terms)) if unique_terms else 1.0
     net_transport = clamp((1.0 - semantic_loop) * (0.50 + 0.50 * lineage_diversity), 0.0, 1.0)
     loop_terms = sorted(repeated, key=lambda term: (-repeated[term], term))[:12]
-    return {
+    relation_metrics = _lineage_relation_metrics(
+        context,
+        text,
+        lineage_diversity=float(lineage_diversity),
+    )
+    traceable_transport = clamp(
+        (1.0 - semantic_loop)
+        * (0.25 + 0.75 * float(relation_metrics["lineage_bridge"]))
+        * (0.25 + 0.75 * float(relation_metrics["useful_lineage_novelty"]))
+        * (1.0 - 0.70 * float(relation_metrics["trajectory_revisit_pressure"]))
+        * (1.0 - 0.70 * float(relation_metrics["object_budget_pressure"])),
+        0.0,
+        1.0,
+    )
+    out = {
         "semantic_loop_pressure": float(semantic_loop),
         "semantic_loop_terms": tuple(loop_terms),
         "lineage_diversity": float(lineage_diversity),
         "lineage_revisited_terms": revisited[:12],
         "lineage_new_terms": new_terms[:12],
         "net_transport_score": float(net_transport),
+        "traceable_transport_score": float(traceable_transport),
     }
+    out.update(relation_metrics)
+    return out
 
 
 def banned_term_hits(text: str, terms: Sequence[str]) -> Tuple[str, ...]:
@@ -2507,12 +2782,14 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("readable_ontology_frontier", 0.0)),
         float(lm.get("ontology_band_score", 0.0)),
         float(lm.get("ordinary_anchor_weighted", 0.0)),
+        float(lm.get("traceable_transport_reward", 0.0)),
     )
     right_good = (
         float(rm.get("depaysement_score", 0.0)),
         float(rm.get("readable_ontology_frontier", 0.0)),
         float(rm.get("ontology_band_score", 0.0)),
         float(rm.get("ordinary_anchor_weighted", 0.0)),
+        float(rm.get("traceable_transport_reward", 0.0)),
     )
     left_bad = (
         float(lm.get("unfinished", 0.0)),
@@ -2521,6 +2798,10 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(lm.get("sprawl_pressure", 0.0)),
         float(lm.get("semantic_loop_pressure", 0.0)),
         float(lm.get("lineage_diversity_penalty", 0.0)),
+        float(lm.get("lineage_bridge_penalty", 0.0)),
+        float(lm.get("trajectory_revisit_penalty", 0.0)),
+        float(lm.get("unbridged_novelty_penalty", 0.0)),
+        float(lm.get("object_budget_penalty", 0.0)),
         float(lm.get("hard_gate_penalty", 0.0)),
         float(lm.get("soft_style_cliche_penalty", 0.0)),
         float(lm.get("fantasy_prop_penalty", 0.0)),
@@ -2533,6 +2814,10 @@ def _selector_dominates(left: Candidate, right: Candidate) -> bool:
         float(rm.get("sprawl_pressure", 0.0)),
         float(rm.get("semantic_loop_pressure", 0.0)),
         float(rm.get("lineage_diversity_penalty", 0.0)),
+        float(rm.get("lineage_bridge_penalty", 0.0)),
+        float(rm.get("trajectory_revisit_penalty", 0.0)),
+        float(rm.get("unbridged_novelty_penalty", 0.0)),
+        float(rm.get("object_budget_penalty", 0.0)),
         float(rm.get("hard_gate_penalty", 0.0)),
         float(rm.get("soft_style_cliche_penalty", 0.0)),
         float(rm.get("fantasy_prop_penalty", 0.0)),

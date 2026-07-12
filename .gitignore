@@ -126,6 +126,14 @@ experiments/frontier_sweep_model_compare_mistral7b_stock_guard_traj_seed12/*
 experiments/model_compare_large_probe/*
 !experiments/model_compare_large_probe/model_compare_frontier.png
 !experiments/model_compare_large_probe/model_compare_summary.csv
+!experiments/prefix_counter_probe_llama3p2_3b_seed4/
+!experiments/prefix_counter_probe_llama3p2_3b_seed4/**
+!experiments/judge_challenge_v1/
+!experiments/judge_challenge_v1/**
+!experiments/mistral7b_traceable_factorial_seed4_compact/
+!experiments/mistral7b_traceable_factorial_seed4_compact/**
+!experiments/gemma2_transition_layer_probe_seed4/
+!experiments/gemma2_transition_layer_probe_seed4/**
 !experiments/hub_ablation_probe_mundane/
 experiments/hub_ablation_probe_mundane/*
 !experiments/hub_ablation_probe_mundane/hub_ablation_report.md

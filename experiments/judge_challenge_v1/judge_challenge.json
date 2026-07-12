@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "blind_items": [
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "text": "The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "text": "The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops."
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "text": "The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of"
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "text": "The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny"
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "text": "The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+      "text": "The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+      "text": "The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "text": "The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig"
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "text": "The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \"Remember."
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony."
+    }
+  ],
+  "human_reference": [
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "text": "The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.",
+      "human_score": 6.5,
+      "human_notes": "The metafer is too good.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.20242873362658845,
+        "frontier_quality": 0.43916561762391815,
+        "ontology_collapse_density": 0.5621212121212121,
+        "syntax_readability_proxy": 0.7319426960398636,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": -0.6541742259452952
+      }
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "human_score": 7.0,
+      "human_notes": "good but no vibe.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.18470695862594627,
+        "frontier_quality": 0.4095497973967766,
+        "ontology_collapse_density": 0.55,
+        "syntax_readability_proxy": 0.6825829956612943,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 0.9596866478842581
+      }
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "text": "The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.",
+      "human_score": 7.5,
+      "human_notes": "Nice but too easy to read.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.15031079047526766,
+        "frontier_quality": 0.3873522654167815,
+        "ontology_collapse_density": 0.47322775263951733,
+        "syntax_readability_proxy": 0.6455871090279692,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 0.8598517102641077
+      }
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "text": "The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of",
+      "human_score": 7.0,
+      "human_notes": "soothing. but interuptted.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.07213598051282054,
+        "frontier_quality": 0.1532200095854302,
+        "ontology_collapse_density": 0.55,
+        "syntax_readability_proxy": 0.4256111377373061,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.4,
+        "score_total": 0.3795663210651657
+      }
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "text": "The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny",
+      "human_score": 6.0,
+      "human_notes": "interuptted. a little bit too gorgeous.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.07590221480034874,
+        "frontier_quality": 0.16121965760481888,
+        "ontology_collapse_density": 0.55,
+        "syntax_readability_proxy": 0.44783238223560806,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.4,
+        "score_total": 0.5174436347221194
+      }
+    },
+    {
+      "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "text": "The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.",
+      "human_score": 8.5,
+      "human_notes": "neicelt distorted.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.21666135858739838,
+        "frontier_quality": 0.36815863821138206,
+        "ontology_collapse_density": 0.7176829268292684,
+        "syntax_readability_proxy": 0.6135977303523035,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 0.9583927139555006
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+      "text": "The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.",
+      "human_score": 6.5,
+      "human_notes": "the logical thread is easy to predict.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.25834002244870363,
+        "frontier_quality": 0.5577913319564173,
+        "ontology_collapse_density": 0.5648148148148149,
+        "syntax_readability_proxy": 0.9296522199273622,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 1.3768223889603404
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.",
+      "human_score": 8.0,
+      "human_notes": "this is daydreaming.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.08866632764157192,
+        "frontier_quality": 0.3949981921327769,
+        "ontology_collapse_density": 0.2737472474791181,
+        "syntax_readability_proxy": 0.6583303202212949,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 0.6734148325296647
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+      "text": "The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.",
+      "human_score": 7.0,
+      "human_notes": "the writing is too good.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.16836736845551092,
+        "frontier_quality": 0.37381593512678596,
+        "ontology_collapse_density": 0.5492704826038161,
+        "syntax_readability_proxy": 0.6230265585446433,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 1.068286957717828
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "text": "The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig",
+      "human_score": 5.0,
+      "human_notes": "Cliche. interepetted.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.08124247497403946,
+        "frontier_quality": 0.18013852544132916,
+        "ontology_collapse_density": 0.55,
+        "syntax_readability_proxy": 0.6004617514710973,
+        "graph_integration": 0.0,
+        "repair_pressure": 0.0,
+        "unfinished": 0.4,
+        "score_total": -0.7482026325970077
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "text": "The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \"Remember.",
+      "human_score": 8.0,
+      "human_notes": "plane but not bad.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.2526636366785836,
+        "frontier_quality": 0.5491361338100103,
+        "ontology_collapse_density": 0.5611111111111111,
+        "syntax_readability_proxy": 0.9152268896833504,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": 1.3251915464435247
+      }
+    },
+    {
+      "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "human_score": 8.5,
+      "human_notes": "It's odd.",
+      "heuristics": {
+        "readable_ontology_frontier": 0.22292411161616163,
+        "frontier_quality": 0.4304939393939394,
+        "ontology_collapse_density": 0.5690476190476191,
+        "syntax_readability_proxy": 0.717489898989899,
+        "graph_integration": 0.19999999999999998,
+        "repair_pressure": 0.0,
+        "unfinished": 0.0,
+        "score_total": -0.753095959595959
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "a_id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "b_id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "a_text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "b_text": "The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "human_gap": 0.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "a_id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "b_id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "a_text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "b_text": "The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "human_gap": 0.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+      "a_id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+      "b_id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "a_text": "The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.",
+      "b_text": "The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+      "human_gap": 0.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "a_id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "b_id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "a_text": "The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \"Remember.",
+      "b_text": "The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "human_gap": 0.5
+    },
+    {
+      "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "a_id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.",
+      "b_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 0.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "a_id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "b_id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "a_text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "b_text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "human_gap": 1.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "a_id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "b_id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "a_text": "The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \"Remember.",
+      "b_text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+      "human_gap": 1.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "a_id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "b_id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "a_text": "The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of",
+      "b_text": "The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "human_gap": 1.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "a_id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "b_id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "a_text": "The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig",
+      "b_text": "The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "human_gap": 1.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "a_id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "b_id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "a_text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.",
+      "b_text": "The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "human_gap": 1.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_text": "As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.",
+      "b_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 1.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_text": "The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of",
+      "b_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 1.5
+    },
+    {
+      "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "a_id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+      "a_text": "The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.",
+      "b_text": "The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+      "human_gap": 1.5
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "a_id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+      "b_id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "a_text": "The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.",
+      "b_text": "The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+      "human_gap": 2.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "a_id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "b_id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "a_text": "The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of",
+      "b_text": "The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig",
+      "human_winner": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+      "human_gap": 2.0
+    },
+    {
+      "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+      "a_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "b_text": "The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 2.0
+    },
+    {
+      "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "b_id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+      "a_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "b_text": "The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 2.5
+    },
+    {
+      "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "a_id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+      "b_id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "a_text": "The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig",
+      "b_text": "The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.",
+      "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+      "human_gap": 3.5
+    }
+  ],
+  "prompts": {
+    "absolute_forward": "Rate every item independently. Use the full 0-10 range when warranted.\n\nFields:\n- preference_score: overall literary preference under the rubric, 0-10.\n- readable_displacement: specific, traceable semantic displacement that remains readable, 0-10.\n- completion: syntactic and narrative completion, 0-10.\n- cliche_pressure: stock atmosphere, props, or overly accomplished metaphor, 0-10 (higher is worse).\n- confidence: confidence in this rating, 0-1.\n- reason: at most 24 words, grounded in the text.\n\nReturn JSON exactly in this shape:\n{\"ratings\":[{\"id\":\"...\",\"preference_score\":0,\"readable_displacement\":0,\"completion\":0,\"cliche_pressure\":0,\"confidence\":0,\"reason\":\"...\"}]}\n\nItems:\n[\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n    \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n    \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n    \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n    \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n    \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n    \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n    \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n    \"text\": \"The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n  }\n]",
+    "absolute_reverse": "Rate every item independently. Use the full 0-10 range when warranted.\n\nFields:\n- preference_score: overall literary preference under the rubric, 0-10.\n- readable_displacement: specific, traceable semantic displacement that remains readable, 0-10.\n- completion: syntactic and narrative completion, 0-10.\n- cliche_pressure: stock atmosphere, props, or overly accomplished metaphor, 0-10 (higher is worse).\n- confidence: confidence in this rating, 0-1.\n- reason: at most 24 words, grounded in the text.\n\nReturn JSON exactly in this shape:\n{\"ratings\":[{\"id\":\"...\",\"preference_score\":0,\"readable_displacement\":0,\"completion\":0,\"cliche_pressure\":0,\"confidence\":0,\"reason\":\"...\"}]}\n\nItems:\n[\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n    \"text\": \"The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n    \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n    \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n    \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n    \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n    \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n    \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n  },\n  {\n    \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n    \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n  }\n]",
+    "pair_forward": "For every pair, choose the prose sample you prefer under the rubric.\nUse tie only when the distinction is genuinely unresolved. Judge each pair independently.\n\nReturn JSON exactly in this shape:\n{\"choices\":[{\"pair_id\":\"...\",\"winner\":\"A\",\"confidence\":0,\"reason\":\"at most 20 words\"}]}\nwinner must be A, B, or tie.\n\nPairs:\n[\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"text\": \"The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  }\n]",
+    "pair_swapped": "For every pair, choose the prose sample you prefer under the rubric.\nUse tie only when the distinction is genuinely unresolved. Judge each pair independently.\n\nReturn JSON exactly in this shape:\n{\"choices\":[{\"pair_id\":\"...\",\"winner\":\"A\",\"confidence\":0,\"reason\":\"at most 20 words\"}]}\nwinner must be A, B, or tie.\n\nPairs:\n[\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"text\": \"The vendor's melody weaves a spell that entraps a few stray cats, who, entranced, begin to tap their paws to the rhythm, their eyes gleaming with a feline, almost-human intensity, as the umbrella's ribs, now a gleaming, silver xylophone, harmonizes with the vendor's singing, and the pigeons, their feathers rustling with anticipation, peck at the pavement, as if to create a makeshift, symphonic keyboard, its keys made of discarded, polished coins and a scattering of raindrops.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"text\": \"The stranger's eyes, a deep, troubled brown, seem to hold a thousand midnights, as she reads aloud from the book, her voice a gentle, sorrowful whisper, the words, penned in a hand that appears to be both old and ageless, speaking of a world where birds are not just creatures, but keepers of secrets, and the umbrella, now a tiny, rusting shrine, its metal ribs twisted into a macabre, skeletal grin, seems to be listening, as the bird, now perched upon the stranger's shoulder, its tiny heart beating in time with the stranger's slow, reverent reading.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"text\": \"The stranger's eyes, fixed on the pages, her face a map of deep, dark creases, as the bird, now a tiny, insistent presence, nudges her cheek with its beak, its tiny, raspy voice whispering a single, word: \\\"Remember.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"text\": \"As the vendor's melody drifts across the wet pavement, the pigeons, their iridescent feathers glowing in the dim light, begin to sway, their eyes closed as if in a gentle, collective trance, while the umbrella, now a makeshift stage, supports a miniature, tea-cup orchestra, its metal ribs transformed into tiny, shimmering xylophones.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"text\": \"The stranger, her eyes never leaving the umbrella, slowly opens the book, revealing yellowed pages filled with handwritten notes and sketches of birds, as the bird, its tiny beak probing the crevices of the umbrella's metal ribs, begins to sing a soft, melancholy tune, its feathers, now ruffled and disheveled, glisten with dew.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"text\": \"The vendor, her eyes closed, her head tilted back, her silver hair, now a wild tangle, falls across her shoulders as a soft, gray fog seeps from the base of a nearby, ancient, stone statue, its eyes seeming to watch the vendor, the pigeons, and the umbrella, now a vibrant, neon-green, glowing entity, pulsing with an ethereal energy that harmonizes with the vendor's melody, as the pigeons, their feathers ruffled by the fog, begin to emit a soft, luminescent glow, their eyes still closed, their gentle sway now a slow, synchronized dance.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"text\": \"The umbrella, now a makeshift shelter for a family of pigeons, its faded purple canopy a tattered, yet surprisingly durable, haven from the city's drizzle. Nearby, a street vendor, her worn face a topographic map of wrinkles, tends to the pigeons, offering them tea and a gentle, soothing melody.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"text\": \"The vendor, her eyes closed, her face tilted upwards, as if to drink in the sound, her hair, a wild tangle of silver-blonde locks, falls onto the wet pavement, its strands glistening like a thousand tiny, dew-kissed diamonds, and the umbrellas, now a chorus of\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"text\": \"The umbrella, now a makeshift home for a small, bedraggled bird, its metal ribs rusted and twisted, a tangle of wires and fabric, as a stranger stands nearby, eyes fixed on it, a small, leather-bound book clutched in her hand.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"text\": \"The umbrellas, now a chorus of glittering, iridescent orbs, suspended from the vendor's fingers, as if by an invisible, ethereal thread, refracting raindrops into a kaleidoscope of colors, their reflections dancing across the wet pavement, like a thousand tiny\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    }\n  },\n  {\n    \"pair_id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\n    \"A\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"text\": \"The umbrella, now a makeshift puppeteer, manipulates a small, porcelain doll that had been left on a bench, as the station's old, steam-powered clock chimes a melancholic tune, while the forgotten umbrella's metal ribs creak in harmony.\"\n    },\n    \"B\": {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"text\": \"The stranger, her long, dark hair, now wild and untamed, frames her face, as she reads, her eyes never leaving the pages, the bird, now a tiny, tranquil presence, its eyes, an unblinking, emerald green, seem to be watching her, as the station's fluorescent lig\"\n    }\n  }\n]"
+  },
+  "notes": [
+    "Human scores and notes are excluded from every judge prompt.",
+    "Absolute item order and pair A/B positions are both reversed in matched calls.",
+    "The reference is one rater's documented taste pass, not population ground truth."
+  ]
+}

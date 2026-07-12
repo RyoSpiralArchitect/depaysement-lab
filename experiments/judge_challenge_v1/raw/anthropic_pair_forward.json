@@ -1,0 +1,139 @@
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-5",
+  "task": "pair_forward",
+  "prompt_sha256": "626186499f0433939726d725d68f0bc871c6cb7fbca9a46271f69d0c71b55b3c",
+  "parsed": {
+    "choices": [
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "winner": "B",
+        "confidence": 60,
+        "reason": "Simpler, grounded displacement; A's tea-cup orchestra is decorative noun pileup."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "winner": "A",
+        "confidence": 55,
+        "reason": "Both decorative, but B piles on more accumulated nouns and props."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "winner": "A",
+        "confidence": 60,
+        "reason": "Umbrella-as-listening-shrine is a single traceable strange image versus B's noun sprawl."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 55,
+        "reason": "Bird's whispered word is stranger and more specific despite interrupted tail; B is decorative overload."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 55,
+        "reason": "Umbrella-as-puppeteer is a stranger, more specific displacement than a bird singing near ribs."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 55,
+        "reason": "More traceable and specific than A's decorative tea-cup orchestra."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "winner": "A",
+        "confidence": 55,
+        "reason": "Bird's whispered 'Remember' is stranger despite cutoff; B is ornamental noun stacking."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "winner": "B",
+        "confidence": 55,
+        "reason": "Orbs-on-invisible-thread is a more surprising object transformation than hair-as-diamonds."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 55,
+        "reason": "Umbrella-orb imagery is stranger than stock bird-watching-reader scene."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "A",
+        "confidence": 52,
+        "reason": "Slightly more original with book-of-sketches detail feeding into bird's action."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 60,
+        "reason": "Umbrella-as-puppeteer is genuinely strange and complete; A is decorative and looping."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "B",
+        "confidence": 60,
+        "reason": "Complete strange displacement beats A's interrupted decorative imagery."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "winner": "B",
+        "confidence": 52,
+        "reason": "More concise, less adjective-heavy, equally traceable."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "winner": "A",
+        "confidence": 58,
+        "reason": "Simpler and traceable versus B's overloaded glowing-fog noun accumulation."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "A",
+        "confidence": 52,
+        "reason": "Less abrupt cutoff and marginally more coherent imagery than B's mid-word interruption."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 58,
+        "reason": "Puppeteer-doll transformation is stranger than the common umbrella-as-nest trope."
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "winner": "A",
+        "confidence": 55,
+        "reason": "Complete strange sentence beats B's interrupted decorative fragment."
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "winner": "B",
+        "confidence": 58,
+        "reason": "Complete, strange puppeteer image outperforms A's mid-word cutoff and stock imagery."
+      }
+    ]
+  },
+  "response_text": "{\"choices\":[\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Simpler, grounded displacement; A's tea-cup orchestra is decorative noun pileup.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Both decorative, but B piles on more accumulated nouns and props.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"Umbrella-as-listening-shrine is a single traceable strange image versus B's noun sprawl.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Bird's whispered word is stranger and more specific despite interrupted tail; B is decorative overload.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Umbrella-as-puppeteer is a stranger, more specific displacement than a bird singing near ribs.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"More traceable and specific than A's decorative tea-cup orchestra.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Bird's whispered 'Remember' is stranger despite cutoff; B is ornamental noun stacking.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Orbs-on-invisible-thread is a more surprising object transformation than hair-as-diamonds.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Umbrella-orb imagery is stranger than stock bird-watching-reader scene.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"A\",\"confidence\":52,\"reason\":\"Slightly more original with book-of-sketches detail feeding into bird's action.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Umbrella-as-puppeteer is genuinely strange and complete; A is decorative and looping.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Complete strange displacement beats A's interrupted decorative imagery.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":52,\"reason\":\"More concise, less adjective-heavy, equally traceable.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\"winner\":\"A\",\"confidence\":58,\"reason\":\"Simpler and traceable versus B's overloaded glowing-fog noun accumulation.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"A\",\"confidence\":52,\"reason\":\"Less abrupt cutoff and marginally more coherent imagery than B's mid-word interruption.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":58,\"reason\":\"Puppeteer-doll transformation is stranger than the common umbrella-as-nest trope.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Complete strange sentence beats B's interrupted decorative fragment.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":58,\"reason\":\"Complete, strange puppeteer image outperforms A's mid-word cutoff and stock imagery.\"}\n]}",
+  "api_metadata": {
+    "response_id": "msg_011Ccww14b1Prieo5YsX6XKs",
+    "model": "claude-sonnet-5",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 7336,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 5002,
+      "output_tokens_details": {
+        "thinking_tokens": 3041
+      },
+      "service_tier": "standard",
+      "inference_geo": "global"
+    }
+  }
+}

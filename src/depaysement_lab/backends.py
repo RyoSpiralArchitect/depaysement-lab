@@ -11,7 +11,12 @@ from .proto_v2 import (
     BaseGenerator,
     cleanup_continuation,
 )
-from .mlx_intervention import MLXLayerPatch, MLXSteeringRuntimeConfig, load_mlx_steering_vectors
+from .mlx_intervention import (
+    MLXLayerPatch,
+    MLXSteeringRuntimeConfig,
+    encode_prompt_mlx,
+    load_mlx_steering_vectors,
+)
 
 
 DEFAULT_STOP_SEQUENCES = [
@@ -248,10 +253,63 @@ class MLXLMGenerator(BaseGenerator):
             out.append(cleanup_continuation(text))
         return out
 
+    def next_token_logits(self, prompt: str) -> Any:
+        """Return the prefill distribution for the first continuation token.
+
+        This diagnostic deliberately performs a full prompt forward pass without
+        a generation cache. Under the default ``decode_only`` intervention, the
+        layer patch therefore sees a sequence longer than one token and leaves
+        the prefill unchanged. That makes first-token invariance across alpha an
+        explicit testable consequence of the intervention semantics.
+        """
+
+        import numpy as np
+
+        formatted = self._format_prompt(prompt)
+        input_ids = encode_prompt_mlx(self.tokenizer, formatted, chat_template=False)
+        if self._steering_vectors is not None and self.steering is not None:
+            with MLXLayerPatch(
+                self.model,
+                layers=self.steering.layers,
+                vectors=self._steering_vectors,
+                alpha=self.steering.alpha,
+                position=self.steering.position,
+                apply_on=self.steering.apply_on,
+            ):
+                output = self.model(input_ids)
+        else:
+            output = self.model(input_ids)
+        logits = _extract_logits_tensor(output)
+        self._mx.eval(logits)
+        array = np.asarray(logits, dtype=np.float64)
+        if array.ndim == 0:
+            raise ValueError("MLX model returned scalar logits")
+        while array.ndim > 1:
+            array = array[0, -1] if array.ndim >= 3 else array[-1]
+        if array.ndim != 1 or array.size == 0:
+            raise ValueError(f"Expected one vocabulary logit vector, got shape={array.shape}")
+        return array
+
     def reset_seed(self, seed: int) -> bool:
         self.seed = int(seed)
         self._mx.random.seed(int(seed))
         return True
+
+
+def _extract_logits_tensor(output: Any) -> Any:
+    """Extract a logits-like tensor from common MLX model return shapes."""
+
+    if hasattr(output, "logits"):
+        return output.logits
+    if isinstance(output, Mapping):
+        if "logits" not in output:
+            raise ValueError("MLX model mapping output does not contain 'logits'")
+        return output["logits"]
+    if isinstance(output, (tuple, list)):
+        if not output:
+            raise ValueError("MLX model returned an empty output sequence")
+        return output[0]
+    return output
 
 
 def parse_jsonish(s: Optional[str]) -> Dict[str, Any]:

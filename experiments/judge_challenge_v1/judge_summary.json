@@ -1,0 +1,210 @@
+{
+  "results": [
+    {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "item_count": 12,
+      "absolute": {
+        "pearson_forward": 0.12998344982768253,
+        "pearson_reverse": -0.04869419849497178,
+        "pearson_averaged": 0.058973642866229845,
+        "spearman_forward": 0.0980552781436411,
+        "spearman_reverse": -0.17561407309284657,
+        "spearman_averaged": -0.0072869537309328105,
+        "mae_averaged": 4.25,
+        "order_mean_absolute_delta": 0.5833333333333334
+      },
+      "pairwise": {
+        "pair_count": 18,
+        "accuracy": 0.5833333333333334,
+        "order_consistency": 0.6111111111111112,
+        "position_a_rate": 0.4444444444444444,
+        "tie_rate": 0.027777777777777776
+      },
+      "heuristic_correlations": {
+        "readable_ontology_frontier": {
+          "pearson": 0.44708844625011257,
+          "spearman": 0.38941041873724874
+        },
+        "frontier_quality": {
+          "pearson": 0.48679374151944754,
+          "spearman": 0.20886558823179707
+        },
+        "ontology_collapse_density": {
+          "pearson": -0.01805479679629847,
+          "spearman": 0.18739012502791128
+        },
+        "syntax_readability_proxy": {
+          "pearson": 0.23697436613296044,
+          "spearman": 0.20886558823179707
+        },
+        "graph_integration": {
+          "pearson": 0.6390495769126503,
+          "spearman": 0.4863734571139201
+        },
+        "repair_pressure": {
+          "pearson": null,
+          "spearman": null
+        },
+        "unfinished": {
+          "pearson": -0.6478341756738252,
+          "spearman": -0.5926672593342224
+        },
+        "score_total": {
+          "pearson": 0.28743299825547847,
+          "spearman": 0.11682312562117463
+        }
+      },
+      "limitations": [
+        "Twelve texts and one human rater provide calibration evidence, not population validity.",
+        "Provider models and APIs can drift; raw responses and exact model IDs are retained.",
+        "A high correlation would support supplemental use, not replacement of human literary judgment."
+      ]
+    },
+    {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "item_count": 12,
+      "absolute": {
+        "pearson_forward": 0.42634076749526606,
+        "pearson_reverse": 0.1572253771612035,
+        "pearson_averaged": 0.34760299060741723,
+        "spearman_forward": 0.35082808367535173,
+        "spearman_reverse": 0.11294778282945857,
+        "spearman_averaged": 0.27532169262300243,
+        "mae_averaged": 4.8125,
+        "order_mean_absolute_delta": 1.125
+      },
+      "pairwise": {
+        "pair_count": 18,
+        "accuracy": 0.6944444444444444,
+        "order_consistency": 0.8333333333333334,
+        "position_a_rate": 0.5277777777777778,
+        "tie_rate": 0.0
+      },
+      "heuristic_correlations": {
+        "readable_ontology_frontier": {
+          "pearson": 0.44708844625011257,
+          "spearman": 0.38941041873724874
+        },
+        "frontier_quality": {
+          "pearson": 0.48679374151944754,
+          "spearman": 0.20886558823179707
+        },
+        "ontology_collapse_density": {
+          "pearson": -0.01805479679629847,
+          "spearman": 0.18739012502791128
+        },
+        "syntax_readability_proxy": {
+          "pearson": 0.23697436613296044,
+          "spearman": 0.20886558823179707
+        },
+        "graph_integration": {
+          "pearson": 0.6390495769126503,
+          "spearman": 0.4863734571139201
+        },
+        "repair_pressure": {
+          "pearson": null,
+          "spearman": null
+        },
+        "unfinished": {
+          "pearson": -0.6478341756738252,
+          "spearman": -0.5926672593342224
+        },
+        "score_total": {
+          "pearson": 0.28743299825547847,
+          "spearman": 0.11682312562117463
+        }
+      },
+      "limitations": [
+        "Twelve texts and one human rater provide calibration evidence, not population validity.",
+        "Provider models and APIs can drift; raw responses and exact model IDs are retained.",
+        "A high correlation would support supplemental use, not replacement of human literary judgment."
+      ]
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-5.2",
+      "item_count": 12,
+      "absolute": {
+        "pearson_forward": 0.38325247435898957,
+        "pearson_reverse": 0.32615459522191176,
+        "pearson_averaged": 0.3675812760195667,
+        "spearman_forward": 0.3315363750493815,
+        "spearman_reverse": 0.2578217894366753,
+        "spearman_averaged": 0.2758076977543548,
+        "mae_averaged": 4.166666666666667,
+        "order_mean_absolute_delta": 0.5833333333333334
+      },
+      "pairwise": {
+        "pair_count": 18,
+        "accuracy": 0.5,
+        "order_consistency": 0.8333333333333334,
+        "position_a_rate": 0.4444444444444444,
+        "tie_rate": 0.08333333333333333
+      },
+      "heuristic_correlations": {
+        "readable_ontology_frontier": {
+          "pearson": 0.44708844625011257,
+          "spearman": 0.38941041873724874
+        },
+        "frontier_quality": {
+          "pearson": 0.48679374151944754,
+          "spearman": 0.20886558823179707
+        },
+        "ontology_collapse_density": {
+          "pearson": -0.01805479679629847,
+          "spearman": 0.18739012502791128
+        },
+        "syntax_readability_proxy": {
+          "pearson": 0.23697436613296044,
+          "spearman": 0.20886558823179707
+        },
+        "graph_integration": {
+          "pearson": 0.6390495769126503,
+          "spearman": 0.4863734571139201
+        },
+        "repair_pressure": {
+          "pearson": null,
+          "spearman": null
+        },
+        "unfinished": {
+          "pearson": -0.6478341756738252,
+          "spearman": -0.5926672593342224
+        },
+        "score_total": {
+          "pearson": 0.28743299825547847,
+          "spearman": 0.11682312562117463
+        }
+      },
+      "limitations": [
+        "Twelve texts and one human rater provide calibration evidence, not population validity.",
+        "Provider models and APIs can drift; raw responses and exact model IDs are retained.",
+        "A high correlation would support supplemental use, not replacement of human literary judgment."
+      ]
+    }
+  ],
+  "cross_provider": [
+    {
+      "left": "anthropic",
+      "right": "google",
+      "pearson": 0.7883974140607228,
+      "spearman": 0.8179507486579171,
+      "pair_agreement": 0.6388888888888888
+    },
+    {
+      "left": "anthropic",
+      "right": "openai",
+      "pearson": 0.8418969818109443,
+      "spearman": 0.8646150704200006,
+      "pair_agreement": 0.6111111111111112
+    },
+    {
+      "left": "google",
+      "right": "openai",
+      "pearson": 0.9069552916212548,
+      "spearman": 0.902999640734742,
+      "pair_agreement": 0.5833333333333334
+    }
+  ]
+}

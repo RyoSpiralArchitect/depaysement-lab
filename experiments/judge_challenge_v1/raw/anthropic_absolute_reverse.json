@@ -1,0 +1,139 @@
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-5",
+  "task": "absolute_reverse",
+  "prompt_sha256": "35b7e3832c24876cc7cef92da5f4970f00cadc8dc5aa6b38ddf4f64fa9ae167c",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 8,
+        "cliche_pressure": 8,
+        "confidence": 0.7,
+        "reason": "Puppeteer umbrella and steam clock are stock whimsy; displacement legible but predictable."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 7,
+        "cliche_pressure": 8,
+        "confidence": 0.7,
+        "reason": "Talking bird whispering 'Remember' is a tired trope; face-as-map cliché compounds it."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 4,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Sentence cuts off mid-word; watching-bird motif is generic, little genuine displacement."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 8,
+        "confidence": 0.75,
+        "reason": "Rich but overloaded with noun-piling clichés—midnight eyes, skeletal grin, keeper birds."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 8,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Singing bird and dewy feathers are conventional whimsy; readable but unsurprising."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 6,
+        "confidence": 0.7,
+        "reason": "Umbrella-as-home is plausible displacement, restrained imagery, less ornamental than others."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 8,
+        "cliche_pressure": 9,
+        "confidence": 0.75,
+        "reason": "Glowing neon umbrella and luminescent pigeons pile clichés; displacement drowned in ornament."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 4,
+        "cliche_pressure": 7,
+        "confidence": 0.65,
+        "reason": "Kaleidoscope imagery is decorative; sentence cuts off before completion."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 4,
+        "cliche_pressure": 8,
+        "confidence": 0.65,
+        "reason": "Diamond-hair simile overused; truncated ending undercuts coherence."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 8,
+        "confidence": 0.7,
+        "reason": "Xylophone ribs and dancing cats are whimsical but heavily ornamented, verging on noun accumulation."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Tea-cup orchestra on umbrella stage is inventive but still whimsical prop-stacking."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 8,
+        "cliche_pressure": 6,
+        "confidence": 0.7,
+        "reason": "Umbrella-as-shelter for pigeons is simple, coherent displacement with modest cliché load."
+      }
+    ]
+  },
+  "response_text": "{\"ratings\":[\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Puppeteer umbrella and steam clock are stock whimsy; displacement legible but predictable.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Talking bird whispering 'Remember' is a tired trope; face-as-map cliché compounds it.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":4,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Sentence cuts off mid-word; watching-bird motif is generic, little genuine displacement.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.75,\"reason\":\"Rich but overloaded with noun-piling clichés—midnight eyes, skeletal grin, keeper birds.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":8,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Singing bird and dewy feathers are conventional whimsy; readable but unsurprising.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":6,\"confidence\":0.7,\"reason\":\"Umbrella-as-home is plausible displacement, restrained imagery, less ornamental than others.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":8,\"cliche_pressure\":9,\"confidence\":0.75,\"reason\":\"Glowing neon umbrella and luminescent pigeons pile clichés; displacement drowned in ornament.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":4,\"cliche_pressure\":7,\"confidence\":0.65,\"reason\":\"Kaleidoscope imagery is decorative; sentence cuts off before completion.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":4,\"cliche_pressure\":8,\"confidence\":0.65,\"reason\":\"Diamond-hair simile overused; truncated ending undercuts coherence.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Xylophone ribs and dancing cats are whimsical but heavily ornamented, verging on noun accumulation.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Tea-cup orchestra on umbrella stage is inventive but still whimsical prop-stacking.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":6,\"confidence\":0.7,\"reason\":\"Umbrella-as-shelter for pigeons is simple, coherent displacement with modest cliché load.\"}\n]}",
+  "api_metadata": {
+    "response_id": "msg_011Ccwvyx44w6F7CLZv4jA8h",
+    "model": "claude-sonnet-5",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 2448,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 1484,
+      "output_tokens_details": {
+        "thinking_tokens": 107
+      },
+      "service_tier": "standard",
+      "inference_geo": "global"
+    }
+  }
+}

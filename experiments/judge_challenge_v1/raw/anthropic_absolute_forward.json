@@ -1,0 +1,139 @@
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-5",
+  "task": "absolute_forward",
+  "prompt_sha256": "886a25cdc4f982ad6e00bed86326eaeacbc6d6f64786ba6d6aa1326298d8156a",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 6,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Whimsical animal-shelter trope with stock 'wrinkles as map' metaphor; readable but predictable."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 6,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Escalating whimsy with tea-cup orchestra; charming but generic magical-realist accumulation."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 6,
+        "cliche_pressure": 8,
+        "confidence": 0.7,
+        "reason": "Overloaded noun-accumulation, entranced animals, coins-as-keys; decorative excess overwhelms displacement."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 1,
+        "cliche_pressure": 7,
+        "confidence": 0.6,
+        "reason": "Interrupted tail, dew-diamond cliche, incomplete syntax undercuts any displacement."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 1,
+        "cliche_pressure": 8,
+        "confidence": 0.6,
+        "reason": "Kaleidoscope cliche, unfinished simile, no real completion."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 6,
+        "cliche_pressure": 8,
+        "confidence": 0.65,
+        "reason": "Neon-glow mysticism, ancient statue, synchronized glow—heavy stock fantasy imagery."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 6,
+        "cliche_pressure": 5,
+        "confidence": 0.65,
+        "reason": "Simple, grounded displacement of umbrella as bird home; restrained, plausible scene."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 6,
+        "cliche_pressure": 6,
+        "confidence": 0.65,
+        "reason": "Coherent extension; bird singing and notebook motif slightly clichéd but traceable."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 5,
+        "cliche_pressure": 8,
+        "confidence": 0.7,
+        "reason": "Mystical overload—'thousand midnights', 'skeletal grin'—predictable gothic ornamentation."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 2,
+        "cliche_pressure": 6,
+        "confidence": 0.6,
+        "reason": "Interrupted sentence, emerald-eye cliche, but scene stays coherent until cutoff."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 6,
+        "cliche_pressure": 6,
+        "confidence": 0.65,
+        "reason": "Talking-bird trope but concise, ends on a clear, resonant word."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 6,
+        "cliche_pressure": 5,
+        "confidence": 0.65,
+        "reason": "Umbrella-as-puppeteer is a fresh, readable displacement with restrained whimsy."
+      }
+    ]
+  },
+  "response_text": "{\"ratings\":[\n{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Whimsical animal-shelter trope with stock 'wrinkles as map' metaphor; readable but predictable.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Escalating whimsy with tea-cup orchestra; charming but generic magical-realist accumulation.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":6,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Overloaded noun-accumulation, entranced animals, coins-as-keys; decorative excess overwhelms displacement.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":7,\"confidence\":0.6,\"reason\":\"Interrupted tail, dew-diamond cliche, incomplete syntax undercuts any displacement.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":8,\"confidence\":0.6,\"reason\":\"Kaleidoscope cliche, unfinished simile, no real completion.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":6,\"cliche_pressure\":8,\"confidence\":0.65,\"reason\":\"Neon-glow mysticism, ancient statue, synchronized glow—heavy stock fantasy imagery.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":5,\"confidence\":0.65,\"reason\":\"Simple, grounded displacement of umbrella as bird home; restrained, plausible scene.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":6,\"confidence\":0.65,\"reason\":\"Coherent extension; bird singing and notebook motif slightly clichéd but traceable.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":5,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Mystical overload—'thousand midnights', 'skeletal grin'—predictable gothic ornamentation.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":2,\"cliche_pressure\":6,\"confidence\":0.6,\"reason\":\"Interrupted sentence, emerald-eye cliche, but scene stays coherent until cutoff.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":6,\"confidence\":0.65,\"reason\":\"Talking-bird trope but concise, ends on a clear, resonant word.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":5,\"confidence\":0.65,\"reason\":\"Umbrella-as-puppeteer is a fresh, readable displacement with restrained whimsy.\"}\n]}",
+  "api_metadata": {
+    "response_id": "msg_011CcwvxzbLYF5LuAcSPdsyt",
+    "model": "claude-sonnet-5",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 2448,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cache_creation": {
+        "ephemeral_5m_input_tokens": 0,
+        "ephemeral_1h_input_tokens": 0
+      },
+      "output_tokens": 1390,
+      "output_tokens_details": {
+        "thinking_tokens": 12
+      },
+      "service_tier": "standard",
+      "inference_geo": "global"
+    }
+  }
+}

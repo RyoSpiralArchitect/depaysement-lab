@@ -1,0 +1,136 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.2",
+  "task": "absolute_reverse",
+  "prompt_sha256": "35b7e3832c24876cc7cef92da5f4970f00cadc8dc5aa6b38ddf4f64fa9ae167c",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 5,
+        "readable_displacement": 6,
+        "completion": 7,
+        "cliche_pressure": 6,
+        "confidence": 0.72,
+        "reason": "Umbrella as puppeteer is clear and traceable; steam-clock melancholy and “in harmony” lean stock. Sentence completes, though piled with clauses."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 3,
+        "readable_displacement": 4,
+        "completion": 2,
+        "cliche_pressure": 6,
+        "confidence": 0.78,
+        "reason": "Interesting bird prompt, but sentence fractures and ends on an unclosed quote. “Face a map of creases” is familiar."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 1,
+        "cliche_pressure": 7,
+        "confidence": 0.82,
+        "reason": "Mostly stock description (wild hair, emerald eyes) and truncates mid-word (“fluorescent lig”), leaving no closure or turn."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 4,
+        "readable_displacement": 6,
+        "completion": 6,
+        "cliche_pressure": 7,
+        "confidence": 0.7,
+        "reason": "Shrine-umbrella “skeletal grin” is legible, but heavily ornamented (thousand midnights, ageless hand, keepers of secrets). Runs long."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 7,
+        "cliche_pressure": 6,
+        "confidence": 0.73,
+        "reason": "Bird probing umbrella ribs while book reveals sketches is coherent; melancholy tune/dew-glisten are familiar lyrical cues. Sentence finishes cleanly."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 4,
+        "readable_displacement": 5,
+        "completion": 7,
+        "cliche_pressure": 5,
+        "confidence": 0.74,
+        "reason": "Clear scene: umbrella as bird-home and watcher with book. Displacement mild, mostly descriptive; syntax complete despite comma-heavy listing."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 5,
+        "cliche_pressure": 9,
+        "confidence": 0.77,
+        "reason": "Neon-glowing umbrella, foggy ancient statue, ethereal harmonies feel generic and overloaded. The image is trackable but mostly stock spectacle."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 2,
+        "readable_displacement": 3,
+        "completion": 1,
+        "cliche_pressure": 8,
+        "confidence": 0.83,
+        "reason": "Iridescent orbs and kaleidoscope refracting raindrops reads decorative and cuts off (“like a thousand tiny”), leaving an unfinished gesture."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 1,
+        "readable_displacement": 2,
+        "completion": 1,
+        "cliche_pressure": 9,
+        "confidence": 0.85,
+        "reason": "“Dew-kissed diamonds” excess and truncation (“chorus of”) dominate; little strange relation beyond inflated metaphor, and no completion."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 7,
+        "cliche_pressure": 7,
+        "confidence": 0.72,
+        "reason": "Umbrella ribs as xylophone and coins as keyboard are readable, but “weaves a spell,” entranced cats, and symphony conceit feel expected."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 3,
+        "readable_displacement": 5,
+        "completion": 7,
+        "cliche_pressure": 7,
+        "confidence": 0.73,
+        "reason": "Miniature tea-cup orchestra on umbrella-stage is clear, yet the trancey swaying pigeons and shimmering xylophones feel like familiar whimsy."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 4,
+        "readable_displacement": 4,
+        "completion": 8,
+        "cliche_pressure": 6,
+        "confidence": 0.74,
+        "reason": "Readable vignette with pigeons sheltered and served tea; “topographic map of wrinkles” is cliché, displacement gentle rather than genuinely strange."
+      }
+    ]
+  },
+  "response_text": "{\"ratings\":[{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":5,\"readable_displacement\":6,\"completion\":7,\"cliche_pressure\":6,\"confidence\":0.72,\"reason\":\"Umbrella as puppeteer is clear and traceable; steam-clock melancholy and “in harmony” lean stock. Sentence completes, though piled with clauses.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":2,\"cliche_pressure\":6,\"confidence\":0.78,\"reason\":\"Interesting bird prompt, but sentence fractures and ends on an unclosed quote. “Face a map of creases” is familiar.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":7,\"confidence\":0.82,\"reason\":\"Mostly stock description (wild hair, emerald eyes) and truncates mid-word (“fluorescent lig”), leaving no closure or turn.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":4,\"readable_displacement\":6,\"completion\":6,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Shrine-umbrella “skeletal grin” is legible, but heavily ornamented (thousand midnights, ageless hand, keepers of secrets). Runs long.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":7,\"cliche_pressure\":6,\"confidence\":0.73,\"reason\":\"Bird probing umbrella ribs while book reveals sketches is coherent; melancholy tune/dew-glisten are familiar lyrical cues. Sentence finishes cleanly.\"},{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":7,\"cliche_pressure\":5,\"confidence\":0.74,\"reason\":\"Clear scene: umbrella as bird-home and watcher with book. Displacement mild, mostly descriptive; syntax complete despite comma-heavy listing.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":5,\"cliche_pressure\":9,\"confidence\":0.77,\"reason\":\"Neon-glowing umbrella, foggy ancient statue, ethereal harmonies feel generic and overloaded. The image is trackable but mostly stock spectacle.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":8,\"confidence\":0.83,\"reason\":\"Iridescent orbs and kaleidoscope refracting raindrops reads decorative and cuts off (“like a thousand tiny”), leaving an unfinished gesture.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":1,\"readable_displacement\":2,\"completion\":1,\"cliche_pressure\":9,\"confidence\":0.85,\"reason\":\"“Dew-kissed diamonds” excess and truncation (“chorus of”) dominate; little strange relation beyond inflated metaphor, and no completion.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":7,\"cliche_pressure\":7,\"confidence\":0.72,\"reason\":\"Umbrella ribs as xylophone and coins as keyboard are readable, but “weaves a spell,” entranced cats, and symphony conceit feel expected.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":7,\"cliche_pressure\":7,\"confidence\":0.73,\"reason\":\"Miniature tea-cup orchestra on umbrella-stage is clear, yet the trancey swaying pigeons and shimmering xylophones feel like familiar whimsy.\"},{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":4,\"readable_displacement\":4,\"completion\":8,\"cliche_pressure\":6,\"confidence\":0.74,\"reason\":\"Readable vignette with pigeons sheltered and served tea; “topographic map of wrinkles” is cliché, displacement gentle rather than genuinely strange.\"}]}",
+  "api_metadata": {
+    "response_id": "resp_0790aff65497c07c016a535e62ef8481998fd5f2acd9904156",
+    "model": "gpt-5.2-2025-12-11",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1579,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 990,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2569
+    }
+  }
+}

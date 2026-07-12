@@ -39,6 +39,10 @@ The current release surface includes:
 - [semantic resilience pilot](experiments/resilience_llama3p2_3b_pilot/)
 - [three-model comparison](experiments/model_compare_large_probe/)
 - [live semantic-loop guard comparison](experiments/mistral7b_live_semantic_loop_guard_compare/)
+- [Mistral traceable-transport factorial](experiments/mistral7b_traceable_factorial_seed4_compact/)
+- [Gemma transition-vector layer probe](experiments/gemma2_transition_layer_probe_seed4/)
+- [fixed-prefix counter-steering probe](experiments/prefix_counter_probe_llama3p2_3b_seed4/)
+- [blind multi-provider judge challenge](experiments/judge_challenge_v1/)
 - [measurement and vector provenance](docs/measurement_instrument_v11.md)
 - [release and arXiv checklist](docs/release_and_arxiv.md)
 
@@ -53,7 +57,26 @@ Suggested software citation:
 > resilience experiments for language models* (v1.1.0) [Software]. Zenodo.
 > https://doi.org/10.5281/zenodo.21318353
 
-## Current Result
+## Latest Diagnostics
+
+The July 2026 probes separate four effects that were previously entangled:
+
+| probe | main observation | interpretation boundary |
+|---|---|---|
+| Mistral traceable-transport factorial | loop pressure alone reduced recurrence but increased disconnected noun growth; the combined loop + bridge-budget controller produced the best traceable selection (`0.189`) while retaining readability (`0.793`) | four diagnostic seeds; descriptive controller-conditioned trajectories |
+| Gemma transition-vector layer probe | a matched transition vector produced a narrow late-layer response at `alpha=1.1`; the same effect vanished at `1.4` | direction- and layer-specific pilot, not a monotonic dose law |
+| Fixed-prefix counter-steering | within-prefix first-token JSD across alpha was exactly `0`, while reference-vs-induced prefix JSD averaged `0.095930` bits | under `decode_only`, negative steering edits future decode states but cannot erase emitted context |
+| Blind judge challenge | three API judges agreed strongly with each other but only weakly with the 12-item human taste pass; pair decisions were also position-sensitive | a stress test of criterion choice, not a provider leaderboard or substitute for multi-rater evaluation |
+
+The associated notes retain generated prose and failure cases alongside the
+summary metrics:
+
+- [traceable-transport controller note](docs/research_notes/2026-07-12-traceable-transport-controller.md)
+- [Gemma transition-layer note](docs/research_notes/2026-07-12-gemma-transition-layer-probe.md)
+- [fixed-prefix counter-steering note](docs/research_notes/2026-07-12-fixed-prefix-counter-steering.md)
+- [LLM judge challenge note](docs/research_notes/2026-07-12-llm-judge-challenge.md)
+
+## Frontier Baseline
 
 The latest focused sweep is saved in:
 
@@ -273,10 +296,16 @@ hybrid_score =
   depaysement_score
   + frontier_weight * readable_ontology_frontier
   + ontology_weight * ontology_band_score
+  + traceable_transport_weight * traceable_transport_score
   - unfinished_weight * unfinished
   - repair_weight * repair_pressure
   - repetition_weight * repetition_pressure
   - sprawl_weight * sprawl_pressure
+  - semantic_loop_weight * semantic_loop_pressure
+  - lineage_bridge_weight * lineage_bridge_deficit
+  - trajectory_revisit_weight * trajectory_revisit_pressure
+  - unbridged_novelty_weight * unbridged_novelty
+  - object_budget_weight * object_budget_pressure
   - cliche_weight * cliche_attractor_score
   - soft_style_cliche_weight * soft_style_cliche_score
   - fantasy_prop_weight * fantasy_prop_score
@@ -292,6 +321,8 @@ want to discourage generic magic-realist diction after measuring it.
 such as `receipt`, `folder`, `bus`, `spreadsheet`, or `fridge`.
 `hard_unfinished_max` is disabled by default; when set to `0.0` or `0.05`, it
 hard-rejects candidates whose unfinished score exceeds that threshold.
+The traceable-transport terms are also disabled by default, preserving earlier
+selection behavior unless their weights are supplied explicitly.
 
 The ontology band is intentionally bounded. Pushing collapse upward without a
 band tends to produce unfinished tails, adjective chains, or liquefied collage.
@@ -306,6 +337,62 @@ banded_frontier_score =
   - ontology/readability/repair/unfinished band violations
   - repetition/sprawl penalties
 ```
+
+### Traceable Transport Controller
+
+The lineage controller distinguishes a readable transition from either a
+semantic loop or disconnected noun accumulation. It remains deterministic and
+lexical:
+
+```text
+lineage_bridge
+  fraction of new graph objects connected to a recent-lineage object
+
+trajectory_revisit_pressure
+  recurrence of object/relation states from recent trajectory windows
+
+unbridged_novelty
+  new-object mass outside a component carrying recent lineage
+
+object_budget_pressure
+  excess new objects, unbridged objects, and disconnected components
+
+traceable_transport_score
+  non-looping, bridged, relation-bearing novelty with revisit and budget costs
+```
+
+For the compact Mistral diagnostic, the combined controller adds both loop and
+bridge-budget pressure to the ordinary banded-frontier selector:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli frontier-sweep \
+  --backend mlx \
+  --model /path/to/mistral7b-instruct-v0.3 \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors_mistral7b_it_v03_l4_18.npz \
+  --steer-layers 4-18 \
+  --strict-steering \
+  --seed-bank data/traceable_transport_diagnostic_seeds_en_v1.json \
+  --steps 3 \
+  --alphas 0.77 \
+  --steer-schedule 0.55,0.72,0.72 \
+  --candidate-grid 4 \
+  --max-token-grid 96 \
+  --select-objective banded-frontier \
+  --choose best \
+  --semantic-loop-weight 0.9 \
+  --trajectory-revisit-weight 0.7 \
+  --lineage-bridge-weight 0.9 \
+  --lineage-bridge-min 0.25 \
+  --traceable-transport-weight 1.1 \
+  --unbridged-novelty-weight 0.8 \
+  --object-budget-weight 0.8 \
+  --out-dir experiments/mistral7b_traceable_combined
+```
+
+These terms are selection controls, not semantic ground truth. The published
+factorial includes the full picked-text reading view because a lexical graph
+can miss implicit or elided relations.
 
 ## Post-hoc Selector Lab
 
@@ -790,6 +877,39 @@ The first four-seed result, including the negative-schedule bug found by exact
 pool matching and the resulting observer caveat, is documented in the
 [semantic resilience pilot note](docs/research_notes/2026-07-11-semantic-resilience-pilot.md).
 
+### Fixed-Prefix Counter-Steering Probe
+
+`prefix-probe` factors the text already emitted during induction from the
+steering applied to future decode states. It freezes matched alpha-zero and
+persistent-steering trajectories after step 3, then continues each exact prefix
+under negative, zero, and positive alpha with matched RNG resets:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli prefix-probe \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors.npz \
+  --steer-layers 6-16 \
+  --reference-runs 'experiments/resilience_llama3p2_3b_pilot/runs/baseline_*.json' \
+  --induced-runs 'experiments/resilience_llama3p2_3b_pilot/runs/persistent_*.json' \
+  --prefix-steps 3 \
+  --alphas=-0.6,0,0.6 \
+  --candidates 4 \
+  --max-new-tokens 96 \
+  --select-objective banded-frontier \
+  --choose best \
+  --out-dir experiments/prefix_counter_probe_llama3p2_3b_seed4
+```
+
+The artifact retains full-vocabulary first-token logit hashes, top-token
+diagnostics, every generated candidate, picked continuations, and
+Jensen-Shannon divergences. With `apply_on=decode_only`, fixed-prefix first-token
+logits must be invariant across alpha because prompt prefill is not patched.
+The observed maximum was exactly zero. This localizes part of failed semantic
+recovery to autoregressive text history; it does not establish globally
+irreversible hidden-state dynamics.
+
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 
 ```bash
@@ -939,6 +1059,46 @@ python3 -m depaysement_lab.cli export-eval-set experiments/example_run.json \
 python3 -m depaysement_lab.cli eval-correlate experiments/eval.jsonl
 ```
 
+### Blind LLM Judge Challenge
+
+The judge challenge compares the frozen observer and one documented human taste
+pass against current API judges without revealing human scores, notes,
+conditions, steering values, or heuristic metrics. Each provider rates the same
+12 texts in forward and reverse order and judges 18 non-tied pairs in both A/B
+orientations.
+
+Generate the challenge prompts without making API calls:
+
+```bash
+PYTHONPATH=src python3 scripts/run_judge_challenge.py --dry-run
+```
+
+Run one provider at a time. Environment variables are supported, while
+`--api-key-stdin` avoids putting a key in shell history:
+
+```bash
+PYTHONPATH=src python3 scripts/run_judge_challenge.py \
+  --provider openai \
+  --resume
+
+pbpaste | PYTHONPATH=src python3 scripts/run_judge_challenge.py \
+  --provider anthropic \
+  --api-key-stdin \
+  --resume
+
+pbpaste | PYTHONPATH=src python3 scripts/run_judge_challenge.py \
+  --provider google \
+  --api-key-stdin \
+  --resume
+```
+
+The runner stores sanitized, replayable envelopes containing parsed responses,
+response text, compact usage metadata, model IDs, task IDs, and prompt hashes.
+API keys and provider-private transport fields are never written. The result is
+methodological rather than adversarial: LLM judges are useful for convergent
+evidence and disagreement discovery, but this small challenge does not support
+replacing targeted human calibration or confirmatory multi-rater studies.
+
 ## Repository Map
 
 ```text
@@ -951,6 +1111,8 @@ src/depaysement_lab/
   reselect.py         post-hoc selector laboratory for saved candidate pools
   mlx_intervention.py MLX steering-vector collection/injection
   observation.py      coherence-preserving displacement observer
+  prefix_probe.py     fixed-prefix counter-steering decomposition
+  judge_challenge.py  blinded judge prompts, API adapters, and analysis
   backends.py         MLX, HF, Ollama, OpenAI-compatible adapters
 
 docs/
@@ -979,6 +1141,18 @@ experiments/model_compare_large_probe/
 
 experiments/mistral7b_live_semantic_loop_guard_compare/
   live loop-guard failure-transfer comparison
+
+experiments/mistral7b_traceable_factorial_seed4_compact/
+  loop x bridge-budget controller summaries and picked prose
+
+experiments/gemma2_transition_layer_probe_seed4/
+  transition-vector layer/dose summaries and text audit
+
+experiments/prefix_counter_probe_llama3p2_3b_seed4/
+  fixed-prefix logits, candidate pools, and behavioral report
+
+experiments/judge_challenge_v1/
+  blind prompts, sanitized provider responses, and agreement analysis
 
 scripts/build_arxiv_bundle.py
   deterministic self-contained arXiv source bundler
@@ -1010,15 +1184,18 @@ setup. Those messages are not part of the project API.
   trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
+- The LLM judge challenge contains one rater and 12 texts. It diagnoses proxy
+  mismatch and presentation sensitivity; it is not a provider ranking or a
+  replacement for blinded multi-rater evaluation.
 
 ## Acknowledgments
 
-OpenAI Codex (GPT-5) was used as an implementation and manuscript-development
-assistant for software construction, tests, artifact inspection, LaTeX editing,
-and reproducibility tooling. Google Gemini was used for critical feedback on
-framing, interpretation, and exposition. Ryo Higa designed and operated the
-experiments, verified the resulting code and artifacts, and is responsible for
-the project and its claims.
+OpenAI Codex (GPT-5.6) supported implementation and manuscript development,
+including software construction, tests, artifact inspection, LaTeX editing,
+and reproducibility tooling. Google Gemini 3.5 provided critical feedback on
+framing, interpretation, and exposition. Ryo Higa conceived, designed, and
+operated the experiments, verified the resulting code and artifacts, and is
+responsible for the project and its claims.
 
 ## License
 

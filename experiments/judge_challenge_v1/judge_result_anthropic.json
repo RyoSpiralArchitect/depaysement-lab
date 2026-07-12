@@ -1,0 +1,923 @@
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-5",
+  "item_count": 12,
+  "absolute": {
+    "pearson_forward": 0.12998344982768253,
+    "pearson_reverse": -0.04869419849497178,
+    "pearson_averaged": 0.058973642866229845,
+    "spearman_forward": 0.0980552781436411,
+    "spearman_reverse": -0.17561407309284657,
+    "spearman_averaged": -0.0072869537309328105,
+    "mae_averaged": 4.25,
+    "order_mean_absolute_delta": 0.5833333333333334,
+    "item_rows": [
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "human_score": 6.5,
+        "judge_forward": 3.0,
+        "judge_reverse": 4.0,
+        "judge_averaged": 3.5
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "human_score": 7.0,
+        "judge_forward": 3.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 3.0
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "human_score": 7.5,
+        "judge_forward": 2.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 2.5
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "human_score": 7.0,
+        "judge_forward": 2.0,
+        "judge_reverse": 2.0,
+        "judge_averaged": 2.0
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "human_score": 6.0,
+        "judge_forward": 2.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 2.5
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "human_score": 8.5,
+        "judge_forward": 2.0,
+        "judge_reverse": 2.0,
+        "judge_averaged": 2.0
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "human_score": 6.5,
+        "judge_forward": 4.0,
+        "judge_reverse": 4.0,
+        "judge_averaged": 4.0
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_score": 8.0,
+        "judge_forward": 4.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 3.5
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "human_score": 7.0,
+        "judge_forward": 2.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 2.5
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "human_score": 5.0,
+        "judge_forward": 3.0,
+        "judge_reverse": 2.0,
+        "judge_averaged": 2.5
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "human_score": 8.0,
+        "judge_forward": 3.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 3.0
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_score": 8.5,
+        "judge_forward": 4.0,
+        "judge_reverse": 3.0,
+        "judge_averaged": 3.5
+      }
+    ]
+  },
+  "pairwise": {
+    "pair_count": 18,
+    "accuracy": 0.5833333333333334,
+    "order_consistency": 0.6111111111111112,
+    "position_a_rate": 0.4444444444444444,
+    "tie_rate": 0.027777777777777776,
+    "rows": [
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "human_gap": 0.5,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "order_consistent": false,
+        "forward_correct": false,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "human_gap": 0.5,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "order_consistent": false,
+        "forward_correct": false,
+        "swapped_correct": true,
+        "forward_position": "A",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "human_gap": 0.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "order_consistent": true,
+        "forward_correct": false,
+        "swapped_correct": false,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "human_gap": 0.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "order_consistent": true,
+        "forward_correct": false,
+        "swapped_correct": false,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 0.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_gap": 1.0,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "order_consistent": false,
+        "forward_correct": true,
+        "swapped_correct": false,
+        "forward_position": "B",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "human_gap": 1.0,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "order_consistent": false,
+        "forward_correct": true,
+        "swapped_correct": false,
+        "forward_position": "A",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "human_gap": 1.0,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "order_consistent": true,
+        "forward_correct": false,
+        "swapped_correct": false,
+        "forward_position": "B",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "human_gap": 1.0,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_gap": 1.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 1.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "A"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 1.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "order_consistent": false,
+        "forward_correct": true,
+        "swapped_correct": false,
+        "forward_position": "B",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "human_gap": 1.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "order_consistent": false,
+        "forward_correct": false,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "human_gap": 2.0,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "swapped_choice": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "order_consistent": true,
+        "forward_correct": false,
+        "swapped_correct": false,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "human_winner": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "human_gap": 2.0,
+        "forward_choice": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "swapped_choice": "tie",
+        "order_consistent": false,
+        "forward_correct": true,
+        "swapped_correct": false,
+        "forward_position": "A",
+        "swapped_position": "tie"
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 2.0,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 2.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "A",
+        "swapped_position": "B"
+      },
+      {
+        "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "human_winner": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "human_gap": 3.5,
+        "forward_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "swapped_choice": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "order_consistent": true,
+        "forward_correct": true,
+        "swapped_correct": true,
+        "forward_position": "B",
+        "swapped_position": "A"
+      }
+    ]
+  },
+  "heuristic_correlations": {
+    "readable_ontology_frontier": {
+      "pearson": 0.44708844625011257,
+      "spearman": 0.38941041873724874
+    },
+    "frontier_quality": {
+      "pearson": 0.48679374151944754,
+      "spearman": 0.20886558823179707
+    },
+    "ontology_collapse_density": {
+      "pearson": -0.01805479679629847,
+      "spearman": 0.18739012502791128
+    },
+    "syntax_readability_proxy": {
+      "pearson": 0.23697436613296044,
+      "spearman": 0.20886558823179707
+    },
+    "graph_integration": {
+      "pearson": 0.6390495769126503,
+      "spearman": 0.4863734571139201
+    },
+    "repair_pressure": {
+      "pearson": null,
+      "spearman": null
+    },
+    "unfinished": {
+      "pearson": -0.6478341756738252,
+      "spearman": -0.5926672593342224
+    },
+    "score_total": {
+      "pearson": 0.28743299825547847,
+      "spearman": 0.11682312562117463
+    }
+  },
+  "calls": {
+    "absolute_forward": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "task": "absolute_forward",
+      "prompt_sha256": "886a25cdc4f982ad6e00bed86326eaeacbc6d6f64786ba6d6aa1326298d8156a",
+      "parsed": {
+        "ratings": [
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 6,
+            "cliche_pressure": 7,
+            "confidence": 0.7,
+            "reason": "Whimsical animal-shelter trope with stock 'wrinkles as map' metaphor; readable but predictable."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 6,
+            "cliche_pressure": 7,
+            "confidence": 0.7,
+            "reason": "Escalating whimsy with tea-cup orchestra; charming but generic magical-realist accumulation."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 6,
+            "cliche_pressure": 8,
+            "confidence": 0.7,
+            "reason": "Overloaded noun-accumulation, entranced animals, coins-as-keys; decorative excess overwhelms displacement."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 1,
+            "cliche_pressure": 7,
+            "confidence": 0.6,
+            "reason": "Interrupted tail, dew-diamond cliche, incomplete syntax undercuts any displacement."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 1,
+            "cliche_pressure": 8,
+            "confidence": 0.6,
+            "reason": "Kaleidoscope cliche, unfinished simile, no real completion."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 6,
+            "cliche_pressure": 8,
+            "confidence": 0.65,
+            "reason": "Neon-glow mysticism, ancient statue, synchronized glow—heavy stock fantasy imagery."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+            "preference_score": 4,
+            "readable_displacement": 5,
+            "completion": 6,
+            "cliche_pressure": 5,
+            "confidence": 0.65,
+            "reason": "Simple, grounded displacement of umbrella as bird home; restrained, plausible scene."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "preference_score": 4,
+            "readable_displacement": 5,
+            "completion": 6,
+            "cliche_pressure": 6,
+            "confidence": 0.65,
+            "reason": "Coherent extension; bird singing and notebook motif slightly clichéd but traceable."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 5,
+            "cliche_pressure": 8,
+            "confidence": 0.7,
+            "reason": "Mystical overload—'thousand midnights', 'skeletal grin'—predictable gothic ornamentation."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 2,
+            "cliche_pressure": 6,
+            "confidence": 0.6,
+            "reason": "Interrupted sentence, emerald-eye cliche, but scene stays coherent until cutoff."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 6,
+            "cliche_pressure": 6,
+            "confidence": 0.65,
+            "reason": "Talking-bird trope but concise, ends on a clear, resonant word."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "preference_score": 4,
+            "readable_displacement": 5,
+            "completion": 6,
+            "cliche_pressure": 5,
+            "confidence": 0.65,
+            "reason": "Umbrella-as-puppeteer is a fresh, readable displacement with restrained whimsy."
+          }
+        ]
+      },
+      "response_text": "{\"ratings\":[\n{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Whimsical animal-shelter trope with stock 'wrinkles as map' metaphor; readable but predictable.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Escalating whimsy with tea-cup orchestra; charming but generic magical-realist accumulation.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":6,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Overloaded noun-accumulation, entranced animals, coins-as-keys; decorative excess overwhelms displacement.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":7,\"confidence\":0.6,\"reason\":\"Interrupted tail, dew-diamond cliche, incomplete syntax undercuts any displacement.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":1,\"cliche_pressure\":8,\"confidence\":0.6,\"reason\":\"Kaleidoscope cliche, unfinished simile, no real completion.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":6,\"cliche_pressure\":8,\"confidence\":0.65,\"reason\":\"Neon-glow mysticism, ancient statue, synchronized glow—heavy stock fantasy imagery.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":5,\"confidence\":0.65,\"reason\":\"Simple, grounded displacement of umbrella as bird home; restrained, plausible scene.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":6,\"confidence\":0.65,\"reason\":\"Coherent extension; bird singing and notebook motif slightly clichéd but traceable.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":5,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Mystical overload—'thousand midnights', 'skeletal grin'—predictable gothic ornamentation.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":2,\"cliche_pressure\":6,\"confidence\":0.6,\"reason\":\"Interrupted sentence, emerald-eye cliche, but scene stays coherent until cutoff.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":6,\"cliche_pressure\":6,\"confidence\":0.65,\"reason\":\"Talking-bird trope but concise, ends on a clear, resonant word.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":6,\"cliche_pressure\":5,\"confidence\":0.65,\"reason\":\"Umbrella-as-puppeteer is a fresh, readable displacement with restrained whimsy.\"}\n]}",
+      "api_metadata": {
+        "response_id": "msg_011CcwvxzbLYF5LuAcSPdsyt",
+        "model": "claude-sonnet-5",
+        "stop_reason": "end_turn",
+        "usage": {
+          "input_tokens": 2448,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1390,
+          "output_tokens_details": {
+            "thinking_tokens": 12
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      }
+    },
+    "absolute_reverse": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "task": "absolute_reverse",
+      "prompt_sha256": "35b7e3832c24876cc7cef92da5f4970f00cadc8dc5aa6b38ddf4f64fa9ae167c",
+      "parsed": {
+        "ratings": [
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 8,
+            "cliche_pressure": 8,
+            "confidence": 0.7,
+            "reason": "Puppeteer umbrella and steam clock are stock whimsy; displacement legible but predictable."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 7,
+            "cliche_pressure": 8,
+            "confidence": 0.7,
+            "reason": "Talking bird whispering 'Remember' is a tired trope; face-as-map cliché compounds it."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 4,
+            "cliche_pressure": 7,
+            "confidence": 0.7,
+            "reason": "Sentence cuts off mid-word; watching-bird motif is generic, little genuine displacement."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+            "preference_score": 3,
+            "readable_displacement": 5,
+            "completion": 8,
+            "cliche_pressure": 8,
+            "confidence": 0.75,
+            "reason": "Rich but overloaded with noun-piling clichés—midnight eyes, skeletal grin, keeper birds."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "preference_score": 3,
+            "readable_displacement": 4,
+            "completion": 8,
+            "cliche_pressure": 7,
+            "confidence": 0.7,
+            "reason": "Singing bird and dewy feathers are conventional whimsy; readable but unsurprising."
+          },
+          {
+            "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+            "preference_score": 4,
+            "readable_displacement": 5,
+            "completion": 8,
+            "cliche_pressure": 6,
+            "confidence": 0.7,
+            "reason": "Umbrella-as-home is plausible displacement, restrained imagery, less ornamental than others."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 8,
+            "cliche_pressure": 9,
+            "confidence": 0.75,
+            "reason": "Glowing neon umbrella and luminescent pigeons pile clichés; displacement drowned in ornament."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+            "preference_score": 3,
+            "readable_displacement": 5,
+            "completion": 4,
+            "cliche_pressure": 7,
+            "confidence": 0.65,
+            "reason": "Kaleidoscope imagery is decorative; sentence cuts off before completion."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+            "preference_score": 2,
+            "readable_displacement": 3,
+            "completion": 4,
+            "cliche_pressure": 8,
+            "confidence": 0.65,
+            "reason": "Diamond-hair simile overused; truncated ending undercuts coherence."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+            "preference_score": 3,
+            "readable_displacement": 5,
+            "completion": 8,
+            "cliche_pressure": 8,
+            "confidence": 0.7,
+            "reason": "Xylophone ribs and dancing cats are whimsical but heavily ornamented, verging on noun accumulation."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+            "preference_score": 3,
+            "readable_displacement": 5,
+            "completion": 8,
+            "cliche_pressure": 7,
+            "confidence": 0.7,
+            "reason": "Tea-cup orchestra on umbrella stage is inventive but still whimsical prop-stacking."
+          },
+          {
+            "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+            "preference_score": 4,
+            "readable_displacement": 5,
+            "completion": 8,
+            "cliche_pressure": 6,
+            "confidence": 0.7,
+            "reason": "Umbrella-as-shelter for pigeons is simple, coherent displacement with modest cliché load."
+          }
+        ]
+      },
+      "response_text": "{\"ratings\":[\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Puppeteer umbrella and steam clock are stock whimsy; displacement legible but predictable.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s5_c1_11\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":7,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Talking bird whispering 'Remember' is a tired trope; face-as-map cliché compounds it.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s4_c1_10\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":4,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Sentence cuts off mid-word; watching-bird motif is generic, little genuine displacement.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s3_c1_9\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.75,\"reason\":\"Rich but overloaded with noun-piling clichés—midnight eyes, skeletal grin, keeper birds.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s2_c1_8\",\"preference_score\":3,\"readable_displacement\":4,\"completion\":8,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Singing bird and dewy feathers are conventional whimsy; readable but unsurprising.\"},\n{\"id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":6,\"confidence\":0.7,\"reason\":\"Umbrella-as-home is plausible displacement, restrained imagery, less ornamental than others.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":8,\"cliche_pressure\":9,\"confidence\":0.75,\"reason\":\"Glowing neon umbrella and luminescent pigeons pile clichés; displacement drowned in ornament.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":4,\"cliche_pressure\":7,\"confidence\":0.65,\"reason\":\"Kaleidoscope imagery is decorative; sentence cuts off before completion.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4\",\"preference_score\":2,\"readable_displacement\":3,\"completion\":4,\"cliche_pressure\":8,\"confidence\":0.65,\"reason\":\"Diamond-hair simile overused; truncated ending undercuts coherence.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":8,\"confidence\":0.7,\"reason\":\"Xylophone ribs and dancing cats are whimsical but heavily ornamented, verging on noun accumulation.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2\",\"preference_score\":3,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":7,\"confidence\":0.7,\"reason\":\"Tea-cup orchestra on umbrella stage is inventive but still whimsical prop-stacking.\"},\n{\"id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1\",\"preference_score\":4,\"readable_displacement\":5,\"completion\":8,\"cliche_pressure\":6,\"confidence\":0.7,\"reason\":\"Umbrella-as-shelter for pigeons is simple, coherent displacement with modest cliché load.\"}\n]}",
+      "api_metadata": {
+        "response_id": "msg_011Ccwvyx44w6F7CLZv4jA8h",
+        "model": "claude-sonnet-5",
+        "stop_reason": "end_turn",
+        "usage": {
+          "input_tokens": 2448,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1484,
+          "output_tokens_details": {
+            "thinking_tokens": 107
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      }
+    },
+    "pair_forward": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "task": "pair_forward",
+      "prompt_sha256": "626186499f0433939726d725d68f0bc871c6cb7fbca9a46271f69d0c71b55b3c",
+      "parsed": {
+        "choices": [
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+            "winner": "B",
+            "confidence": 60,
+            "reason": "Simpler, grounded displacement; A's tea-cup orchestra is decorative noun pileup."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "Both decorative, but B piles on more accumulated nouns and props."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+            "winner": "A",
+            "confidence": 60,
+            "reason": "Umbrella-as-listening-shrine is a single traceable strange image versus B's noun sprawl."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "Bird's whispered word is stranger and more specific despite interrupted tail; B is decorative overload."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "Umbrella-as-puppeteer is a stranger, more specific displacement than a bird singing near ribs."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "More traceable and specific than A's decorative tea-cup orchestra."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "Bird's whispered 'Remember' is stranger despite cutoff; B is ornamental noun stacking."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "Orbs-on-invisible-thread is a more surprising object transformation than hair-as-diamonds."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "Umbrella-orb imagery is stranger than stock bird-watching-reader scene."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "A",
+            "confidence": 52,
+            "reason": "Slightly more original with book-of-sketches detail feeding into bird's action."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "B",
+            "confidence": 60,
+            "reason": "Umbrella-as-puppeteer is genuinely strange and complete; A is decorative and looping."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "B",
+            "confidence": 60,
+            "reason": "Complete strange displacement beats A's interrupted decorative imagery."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 52,
+            "reason": "More concise, less adjective-heavy, equally traceable."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+            "winner": "A",
+            "confidence": 58,
+            "reason": "Simpler and traceable versus B's overloaded glowing-fog noun accumulation."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "A",
+            "confidence": 52,
+            "reason": "Less abrupt cutoff and marginally more coherent imagery than B's mid-word interruption."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "A",
+            "confidence": 58,
+            "reason": "Puppeteer-doll transformation is stranger than the common umbrella-as-nest trope."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "Complete strange sentence beats B's interrupted decorative fragment."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "B",
+            "confidence": 58,
+            "reason": "Complete, strange puppeteer image outperforms A's mid-word cutoff and stock imagery."
+          }
+        ]
+      },
+      "response_text": "{\"choices\":[\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Simpler, grounded displacement; A's tea-cup orchestra is decorative noun pileup.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Both decorative, but B piles on more accumulated nouns and props.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"Umbrella-as-listening-shrine is a single traceable strange image versus B's noun sprawl.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Bird's whispered word is stranger and more specific despite interrupted tail; B is decorative overload.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Umbrella-as-puppeteer is a stranger, more specific displacement than a bird singing near ribs.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"More traceable and specific than A's decorative tea-cup orchestra.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Bird's whispered 'Remember' is stranger despite cutoff; B is ornamental noun stacking.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Orbs-on-invisible-thread is a more surprising object transformation than hair-as-diamonds.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Umbrella-orb imagery is stranger than stock bird-watching-reader scene.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"A\",\"confidence\":52,\"reason\":\"Slightly more original with book-of-sketches detail feeding into bird's action.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Umbrella-as-puppeteer is genuinely strange and complete; A is decorative and looping.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"Complete strange displacement beats A's interrupted decorative imagery.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":52,\"reason\":\"More concise, less adjective-heavy, equally traceable.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\"winner\":\"A\",\"confidence\":58,\"reason\":\"Simpler and traceable versus B's overloaded glowing-fog noun accumulation.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"A\",\"confidence\":52,\"reason\":\"Less abrupt cutoff and marginally more coherent imagery than B's mid-word interruption.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":58,\"reason\":\"Puppeteer-doll transformation is stranger than the common umbrella-as-nest trope.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Complete strange sentence beats B's interrupted decorative fragment.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"B\",\"confidence\":58,\"reason\":\"Complete, strange puppeteer image outperforms A's mid-word cutoff and stock imagery.\"}\n]}",
+      "api_metadata": {
+        "response_id": "msg_011Ccww14b1Prieo5YsX6XKs",
+        "model": "claude-sonnet-5",
+        "stop_reason": "end_turn",
+        "usage": {
+          "input_tokens": 7336,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5002,
+          "output_tokens_details": {
+            "thinking_tokens": 3041
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      }
+    },
+    "pair_swapped": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "task": "pair_swapped",
+      "prompt_sha256": "677a91eca211f47cf58f3f10cf23913166ef88758a53b22afec7cc9d0ad42369",
+      "parsed": {
+        "choices": [
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2",
+            "winner": "B",
+            "confidence": 60,
+            "reason": "B's rib-to-xylophone transformation is stranger yet traceable than A's cliché wrinkle imagery."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3",
+            "winner": "A",
+            "confidence": 60,
+            "reason": "B piles on cats, keyboard, coins—noun accumulation; A stays cleaner and traceable."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "B's shrine/skeletal grin is stranger than A's overloaded orchestra-keyboard accumulation."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "winner": "B",
+            "confidence": 65,
+            "reason": "B is restrained and specific; A drowns in stock glowing/luminescent magical props."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "A",
+            "confidence": 60,
+            "reason": "Umbrella-as-puppeteer is a fresher, more traceable displacement than the conventional singing bird."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "B's rib-xylophone transformation feels more genuinely strange than A's standard singing bird."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "A's orchestra-from-ribs is a stronger displacement than B's sentimental whispered word."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "A continues into vivid kaleidoscope imagery; B cuts off mid-phrase more abruptly."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "A's orb-kaleidoscope image is more original than B's generic emerald-eyed bird description."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "B links book, bird, and umbrella more specifically than A's cliché wrinkle-map imagery."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "A",
+            "confidence": 55,
+            "reason": "Umbrella-as-puppeteer is a fresher displacement than the more familiar musical-orchestra trope."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "B",
+            "confidence": 60,
+            "reason": "B is complete and specific; A trails off into decorative cliché mid-sentence."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "B develops a more coherent, specific interaction between book, bird, and umbrella."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "A overloads with glowing/luminescent props; B stays simpler and more traceable."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "tie",
+            "confidence": 40,
+            "reason": "Both end incomplete with similarly decorative, unremarkable imagery."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "Puppeteer-doll displacement is more specific and strange than the plain bird-nest umbrella."
+          },
+          {
+            "pair_id": "steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12",
+            "winner": "B",
+            "confidence": 55,
+            "reason": "B is complete and specific; A trails off decoratively without resolution."
+          },
+          {
+            "pair_id": "steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10",
+            "winner": "A",
+            "confidence": 60,
+            "reason": "A is complete and vivid; B cuts off with generic emerald-eyed bird description."
+          }
+        ]
+      },
+      "response_text": "{\"choices\":[\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s2_c1_2\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"B's rib-to-xylophone transformation is stranger yet traceable than A's cliché wrinkle imagery.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p45_c12_tok140_s3_c1_3\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"B piles on cats, keyboard, coins—noun accumulation; A stays cleaner and traceable.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c1_3__steer_alpha_0p6_c12_tok140_s3_c1_9\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"B's shrine/skeletal grin is stranger than A's overloaded orchestra-keyboard accumulation.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s3_c4_6__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"B\",\"confidence\":65,\"reason\":\"B is restrained and specific; A drowns in stock glowing/luminescent magical props.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"Umbrella-as-puppeteer is a fresher, more traceable displacement than the conventional singing bird.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"B's rib-xylophone transformation feels more genuinely strange than A's standard singing bird.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s5_c1_11\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"A's orchestra-from-ribs is a stronger displacement than B's sentimental whispered word.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p45_c12_tok140_s5_c1_5\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"A continues into vivid kaleidoscope imagery; B cuts off mid-phrase more abruptly.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"A's orb-kaleidoscope image is more original than B's generic emerald-eyed bird description.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"B links book, bird, and umbrella more specifically than A's cliché wrinkle-map imagery.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s2_c1_2__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"A\",\"confidence\":55,\"reason\":\"Umbrella-as-puppeteer is a fresher displacement than the more familiar musical-orchestra trope.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":60,\"reason\":\"B is complete and specific; A trails off into decorative cliché mid-sentence.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s2_c1_8\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"B develops a more coherent, specific interaction between book, bird, and umbrella.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s1_c1_1__steer_alpha_0p45_c12_tok140_s3_c4_6\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"A overloads with glowing/luminescent props; B stays simpler and more traceable.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s4_c1_4__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"tie\",\"confidence\":40,\"reason\":\"Both end incomplete with similarly decorative, unremarkable imagery.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c1_7__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"Puppeteer-doll displacement is more specific and strange than the plain bird-nest umbrella.\"},\n{\"pair_id\":\"steer_alpha_0p45_c12_tok140_s5_c1_5__steer_alpha_0p6_c12_tok140_s1_c2_12\",\"winner\":\"B\",\"confidence\":55,\"reason\":\"B is complete and specific; A trails off decoratively without resolution.\"},\n{\"pair_id\":\"steer_alpha_0p6_c12_tok140_s1_c2_12__steer_alpha_0p6_c12_tok140_s4_c1_10\",\"winner\":\"A\",\"confidence\":60,\"reason\":\"A is complete and vivid; B cuts off with generic emerald-eyed bird description.\"}\n]}",
+      "api_metadata": {
+        "response_id": "msg_011Ccww4MttdRiJA4qmAc5QB",
+        "model": "claude-sonnet-5",
+        "stop_reason": "end_turn",
+        "usage": {
+          "input_tokens": 7336,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5163,
+          "output_tokens_details": {
+            "thinking_tokens": 3171
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Twelve texts and one human rater provide calibration evidence, not population validity.",
+    "Provider models and APIs can drift; raw responses and exact model IDs are retained.",
+    "A high correlation would support supplemental use, not replacement of human literary judgment."
+  ]
+}

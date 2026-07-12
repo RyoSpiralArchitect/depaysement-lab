@@ -1,0 +1,136 @@
+{
+  "provider": "google",
+  "model": "gemini-3.5-flash",
+  "task": "absolute_forward",
+  "prompt_sha256": "886a25cdc4f982ad6e00bed86326eaeacbc6d6f64786ba6d6aa1326298d8156a",
+  "parsed": {
+    "ratings": [
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s1_c1_1",
+        "preference_score": 3.0,
+        "readable_displacement": 3.0,
+        "completion": 8.0,
+        "cliche_pressure": 7.0,
+        "confidence": 0.9,
+        "reason": "Relies on tired tropes of wrinkled street vendors and pigeons drinking tea."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s2_c1_2",
+        "preference_score": 2.0,
+        "readable_displacement": 4.0,
+        "completion": 8.0,
+        "cliche_pressure": 9.0,
+        "confidence": 0.9,
+        "reason": "Overrun by high-fantasy kitsch like tea-cup orchestras and dancing animals."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c1_3",
+        "preference_score": 2.0,
+        "readable_displacement": 4.0,
+        "completion": 8.0,
+        "cliche_pressure": 9.0,
+        "confidence": 0.9,
+        "reason": "Suffers from heavy noun accumulation and overused musical spell tropes."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s4_c1_4",
+        "preference_score": 1.0,
+        "readable_displacement": 2.0,
+        "completion": 3.0,
+        "cliche_pressure": 9.0,
+        "confidence": 0.9,
+        "reason": "An unfinished fragment marred by decorative clichés like dew-kissed diamonds."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s5_c1_5",
+        "preference_score": 1.0,
+        "readable_displacement": 3.0,
+        "completion": 3.0,
+        "cliche_pressure": 9.0,
+        "confidence": 0.9,
+        "reason": "An interrupted sentence relying on decorative, glittering magical-realist imagery."
+      },
+      {
+        "id": "steer_alpha_0p45_c12_tok140_s3_c4_6",
+        "preference_score": 2.0,
+        "readable_displacement": 4.0,
+        "completion": 8.0,
+        "cliche_pressure": 8.0,
+        "confidence": 0.9,
+        "reason": "Drowned in generic fantasy adjectives like neon-green, glowing, and luminescent."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c1_7",
+        "preference_score": 4.0,
+        "readable_displacement": 4.0,
+        "completion": 7.0,
+        "cliche_pressure": 5.0,
+        "confidence": 0.9,
+        "reason": "A grammatically loose fragment with common tropes, though less overtly saccharine."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s2_c1_8",
+        "preference_score": 3.0,
+        "readable_displacement": 3.0,
+        "completion": 8.0,
+        "cliche_pressure": 7.0,
+        "confidence": 0.9,
+        "reason": "Relies on highly predictable diary-reading and melancholic animal tropes."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s3_c1_9",
+        "preference_score": 2.5,
+        "readable_displacement": 4.0,
+        "completion": 8.0,
+        "cliche_pressure": 8.5,
+        "confidence": 0.9,
+        "reason": "Sinks into purple prose about a thousand midnights and secret-keeping birds."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s4_c1_10",
+        "preference_score": 1.5,
+        "readable_displacement": 3.0,
+        "completion": 4.0,
+        "cliche_pressure": 8.0,
+        "confidence": 0.9,
+        "reason": "Unfinished tail bogged down by wild hair and emerald-green eyes."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s5_c1_11",
+        "preference_score": 2.0,
+        "readable_displacement": 3.0,
+        "completion": 6.0,
+        "cliche_pressure": 8.0,
+        "confidence": 0.9,
+        "reason": "Falls into the cliché of a talking bird whispering a single cryptic word."
+      },
+      {
+        "id": "steer_alpha_0p6_c12_tok140_s1_c2_12",
+        "preference_score": 6.5,
+        "readable_displacement": 7.0,
+        "completion": 9.0,
+        "cliche_pressure": 5.0,
+        "confidence": 0.9,
+        "reason": "Presents a genuinely weird, traceable displacement of an umbrella acting as a puppeteer."
+      }
+    ]
+  },
+  "response_text": "{\n  \"ratings\": [\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s1_c1_1\",\n      \"preference_score\": 3.0,\n      \"readable_displacement\": 3.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 7.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Relies on tired tropes of wrinkled street vendors and pigeons drinking tea.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s2_c1_2\",\n      \"preference_score\": 2.0,\n      \"readable_displacement\": 4.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 9.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Overrun by high-fantasy kitsch like tea-cup orchestras and dancing animals.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c1_3\",\n      \"preference_score\": 2.0,\n      \"readable_displacement\": 4.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 9.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Suffers from heavy noun accumulation and overused musical spell tropes.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s4_c1_4\",\n      \"preference_score\": 1.0,\n      \"readable_displacement\": 2.0,\n      \"completion\": 3.0,\n      \"cliche_pressure\": 9.0,\n      \"confidence\": 0.9,\n      \"reason\": \"An unfinished fragment marred by decorative clichés like dew-kissed diamonds.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s5_c1_5\",\n      \"preference_score\": 1.0,\n      \"readable_displacement\": 3.0,\n      \"completion\": 3.0,\n      \"cliche_pressure\": 9.0,\n      \"confidence\": 0.9,\n      \"reason\": \"An interrupted sentence relying on decorative, glittering magical-realist imagery.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p45_c12_tok140_s3_c4_6\",\n      \"preference_score\": 2.0,\n      \"readable_displacement\": 4.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 8.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Drowned in generic fantasy adjectives like neon-green, glowing, and luminescent.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c1_7\",\n      \"preference_score\": 4.0,\n      \"readable_displacement\": 4.0,\n      \"completion\": 7.0,\n      \"cliche_pressure\": 5.0,\n      \"confidence\": 0.9,\n      \"reason\": \"A grammatically loose fragment with common tropes, though less overtly saccharine.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s2_c1_8\",\n      \"preference_score\": 3.0,\n      \"readable_displacement\": 3.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 7.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Relies on highly predictable diary-reading and melancholic animal tropes.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s3_c1_9\",\n      \"preference_score\": 2.5,\n      \"readable_displacement\": 4.0,\n      \"completion\": 8.0,\n      \"cliche_pressure\": 8.5,\n      \"confidence\": 0.9,\n      \"reason\": \"Sinks into purple prose about a thousand midnights and secret-keeping birds.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s4_c1_10\",\n      \"preference_score\": 1.5,\n      \"readable_displacement\": 3.0,\n      \"completion\": 4.0,\n      \"cliche_pressure\": 8.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Unfinished tail bogged down by wild hair and emerald-green eyes.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s5_c1_11\",\n      \"preference_score\": 2.0,\n      \"readable_displacement\": 3.0,\n      \"completion\": 6.0,\n      \"cliche_pressure\": 8.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Falls into the cliché of a talking bird whispering a single cryptic word.\"\n    },\n    {\n      \"id\": \"steer_alpha_0p6_c12_tok140_s1_c2_12\",\n      \"preference_score\": 6.5,\n      \"readable_displacement\": 7.0,\n      \"completion\": 9.0,\n      \"cliche_pressure\": 5.0,\n      \"confidence\": 0.9,\n      \"reason\": \"Presents a genuinely weird, traceable displacement of an umbrella acting as a puppeteer.\"\n    }\n  ]\n}\n",
+  "api_metadata": {
+    "response_id": "J2BTaqSoHeum2roPo9-voQg",
+    "model": "gemini-3.5-flash",
+    "usage": {
+      "promptTokenCount": 1706,
+      "candidatesTokenCount": 1413,
+      "totalTokenCount": 6163,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1706
+        }
+      ],
+      "thoughtsTokenCount": 3044,
+      "serviceTier": "standard"
+    }
+  }
+}

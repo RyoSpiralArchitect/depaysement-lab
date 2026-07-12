@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 from depaysement_lab.cli import load_seed_bank, make_selector_config, safe_seed_label
+from depaysement_lab.proto_v2 import PromptBank
 
 
 def test_load_seed_bank_reads_json_object_and_limits(tmp_path):
@@ -38,6 +39,37 @@ def test_hard_ban_affordance_classes_expand_selector_terms():
     assert "harmonica" in cfg.hard_ban_terms
     assert "clock" in cfg.hard_ban_terms
     assert "metronome" in cfg.hard_ban_terms
+
+
+def test_traceable_transport_selector_args_are_preserved():
+    cfg = make_selector_config(
+        argparse.Namespace(
+            select_objective="banded-frontier",
+            lineage_bridge_weight=1.1,
+            lineage_bridge_min=0.35,
+            traceable_transport_weight=1.4,
+            trajectory_revisit_weight=0.8,
+            unbridged_novelty_weight=1.2,
+            object_budget_weight=0.9,
+            hard_lineage_bridge_min=0.2,
+        )
+    )
+
+    assert cfg.lineage_bridge_weight == 1.1
+    assert cfg.lineage_bridge_min == 0.35
+    assert cfg.traceable_transport_weight == 1.4
+    assert cfg.trajectory_revisit_weight == 0.8
+    assert cfg.unbridged_novelty_weight == 1.2
+    assert cfg.object_budget_weight == 0.9
+    assert cfg.hard_lineage_bridge_min == 0.2
+
+
+def test_transition_prompt_bank_is_balanced_and_noise_free():
+    bank = PromptBank.from_file("data/depaysement_transition_bank_en_v1.json")
+
+    assert len(bank.positive_depaysement) == 24
+    assert len(bank.negative_realist_repair) == 24
+    assert bank.negative_weird_noise == []
 
 
 def test_frontier_sweep_resume_skips_existing_runs(tmp_path):

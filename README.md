@@ -36,6 +36,7 @@ reverse readable changes in object identity and affordance.
 
 The current release surface includes:
 
+- [prompt x steering contrast](experiments/prompt_steering_contrast_llama3p2_seed12/)
 - [semantic resilience pilot](experiments/resilience_llama3p2_3b_pilot/)
 - [three-model comparison](experiments/model_compare_large_probe/)
 - [live semantic-loop guard comparison](experiments/mistral7b_live_semantic_loop_guard_compare/)
@@ -59,10 +60,11 @@ Suggested software citation:
 
 ## Latest Diagnostics
 
-The July 2026 probes separate four effects that were previously entangled:
+The July 2026 probes separate five effects that were previously entangled:
 
 | probe | main observation | interpretation boundary |
 |---|---|---|
+| Prompt x steering contrast | with exact anchors retained, a naive prompt moved from `0.154` to `0.323` readable transport at `alpha=0.6`, but failure also rose from `0.138` to `0.290`; an operational prompt reduced that failure increase while attenuating the ontology shift | 12-seed, no-selector construct pilot; machine labels require the blinded human pass |
 | Mistral traceable-transport factorial | loop pressure alone reduced recurrence but increased disconnected noun growth; the combined loop + bridge-budget controller produced the best traceable selection (`0.189`) while retaining readability (`0.793`) | four diagnostic seeds; descriptive controller-conditioned trajectories |
 | Gemma transition-vector layer probe | a matched transition vector produced a narrow late-layer response at `alpha=1.1`; the same effect vanished at `1.4` | direction- and layer-specific pilot, not a monotonic dose law |
 | Fixed-prefix counter-steering | within-prefix first-token JSD across alpha was exactly `0`, while reference-vs-induced prefix JSD averaged `0.095930` bits | under `decode_only`, negative steering edits future decode states but cannot erase emitted context |
@@ -72,6 +74,7 @@ The associated notes retain generated prose and failure cases alongside the
 summary metrics:
 
 - [traceable-transport controller note](docs/research_notes/2026-07-12-traceable-transport-controller.md)
+- [prompt x steering contrast note](docs/research_notes/2026-07-12-prompt-steering-contrast.md)
 - [Gemma transition-layer note](docs/research_notes/2026-07-12-gemma-transition-layer-probe.md)
 - [fixed-prefix counter-steering note](docs/research_notes/2026-07-12-fixed-prefix-counter-steering.md)
 - [LLM judge challenge note](docs/research_notes/2026-07-12-llm-judge-challenge.md)
@@ -808,6 +811,48 @@ python3 -m depaysement_lab.cli frontier-sweep \
 Each run JSON stores `config.trajectory_steering.trace`, so the audit can show
 which alpha was applied at each step and why the adaptive controller moved next.
 
+### Prompt x Steering Contrast
+
+`prompt-steering-contrast` asks a deliberately prior question: does a strong
+instruction already cause traceable changes in what familiar objects are and do,
+or does it mainly decorate an otherwise stable scene? It crosses two prompts
+with zero, medium, and high steering while holding four exact anchor phrases,
+the seed bank, candidate budget, and per-seed MLX RNG reset fixed. No selector
+chooses the reported outputs; condition statistics describe all raw candidates.
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli prompt-steering-contrast \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors.npz \
+  --steer-layers 6-16 \
+  --strict-steering \
+  --anchor-bank data/prompt_steering_anchor_bank_en_v1.json \
+  --prompt-modes naive,operational \
+  --alphas 0,0.6,1.2 \
+  --candidates 8 \
+  --max-new-tokens 120 \
+  --random-seed 20260713 \
+  --rating-seed-limit 6 \
+  --out-dir experiments/prompt_steering_contrast_llama3p2_seed12
+```
+
+Among candidates that retain all four anchors, medium steering raises readable
+transport most clearly under the naive prompt, but also raises failure. The
+operational prompt acts as a regulator: it reduces both the ontology gain and
+the failure increase. At `alpha=1.2`, ontology and failure rise sharply under
+both prompts. This supports a complementary-control interpretation: prompting
+specifies what should survive, while steering supplies transition pressure.
+
+The artifact includes all 576 generated texts, seed-paired bootstrap contrasts,
+a deterministic same-seed triptych, and a blinded 36-item construct sheet. The
+human sheet separates anchor traceability, role or affordance change, mere
+decoration, readability, and stock/loop/sprawl failure instead of asking for one
+undifferentiated taste score.
+
+![Prompt x steering contrast](experiments/prompt_steering_contrast_llama3p2_seed12/prompt_steering_contrast.png)
+
 ### Semantic Resilience Sweep
 
 `resilience-sweep` turns scheduled steering into a paired recovery experiment.
@@ -1111,6 +1156,7 @@ src/depaysement_lab/
   reselect.py         post-hoc selector laboratory for saved candidate pools
   mlx_intervention.py MLX steering-vector collection/injection
   observation.py      coherence-preserving displacement observer
+  prompt_contrast.py  prompt x steering raw-pool contrast and construct audit
   prefix_probe.py     fixed-prefix counter-steering decomposition
   judge_challenge.py  blinded judge prompts, API adapters, and analysis
   backends.py         MLX, HF, Ollama, OpenAI-compatible adapters
@@ -1135,6 +1181,9 @@ experiments/frontier_sweep_banded_frontier_focus/
 
 experiments/resilience_llama3p2_3b_pilot/
   paired induction, release, reversal, and cycle pilot
+
+experiments/prompt_steering_contrast_llama3p2_seed12/
+  no-selector prompt x steering pools, prose, plot, and human construct sheet
 
 experiments/model_compare_large_probe/
   combined Gemma, Llama, and Mistral comparison figure and summary
@@ -1184,6 +1233,10 @@ setup. Those messages are not part of the project API.
   trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
+- The prompt x steering construct labels are deterministic observer outputs. Its
+  blinded 36-item human sheet is published but not yet rated, so the pilot does
+  not establish that the machine `readable_transport` category equals literary
+  depaysement.
 - The LLM judge challenge contains one rater and 12 texts. It diagnoses proxy
   mismatch and presentation sensitivity; it is not a provider ranking or a
   replacement for blinded multi-rater evaluation.

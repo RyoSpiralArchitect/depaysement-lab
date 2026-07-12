@@ -25,6 +25,7 @@ system `latexmk` or Tectonic binary is not directly available.
 | Paper role | Repository evidence |
 |---|---|
 | Frontier definition and initial sweep | `docs/readable_ontology_collapse_frontier_v10.md`, `docs/research_notes/2026-05-16-banded-frontier-generation.md` |
+| Exact observer formulas and vector-bank provenance | `docs/measurement_instrument_v11.md` |
 | Human taste calibration | `docs/research_notes/2026-05-17-human-taste-pass.md` |
 | Mundane-seed controls and lexical attractors | `docs/research_notes/2026-05-20-mundane-attractor-causal-probe.md`, `docs/research_notes/2026-05-20-mundane-attractor-probe-results.md` |
 | Semantic hubs and noun graph | `docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md` |

@@ -179,6 +179,11 @@ predictable writing. This points toward a two-stage selector: use
 
 ## What Is Being Measured?
 
+The exact current formulas, deterministic detection rules, prompt-bank examples,
+and steering-vector construction are documented in
+[Measurement Instrument v1.1](docs/measurement_instrument_v11.md). No
+LLM-as-a-judge or embedding model is used in the frontier observer.
+
 The central audit decomposes candidate pools rather than only final outputs.
 This matters because a good-looking final sample can come from two different
 mechanisms:

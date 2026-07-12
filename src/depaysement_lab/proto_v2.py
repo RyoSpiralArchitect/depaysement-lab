@@ -276,6 +276,30 @@ class PromptBank:
             "negative_weird_noise": unique_preserve_order(self.negative_weird_noise),
         }
 
+    def provenance(self) -> Dict[str, Any]:
+        """Return a self-contained, deterministic description of this bank."""
+
+        # Preserve order and duplicates because both affect the collected class
+        # centroid. PromptBank.write() may deduplicate a curated bank, but vector
+        # provenance must describe the exact in-memory inputs used here.
+        prompts = {
+            "positive_depaysement": list(self.positive_depaysement),
+            "negative_realist_repair": list(self.negative_realist_repair),
+            "negative_weird_noise": list(self.negative_weird_noise),
+        }
+        canonical = json.dumps(
+            prompts,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        return {
+            "format": "depaysement_lab.prompt_bank.v1",
+            "canonical_sha256": hashlib.sha256(canonical).hexdigest(),
+            "counts": {name: len(values) for name, values in prompts.items()},
+            "prompts": prompts,
+        }
+
     def write(self, path: str) -> None:
         Path(path).write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -2767,6 +2791,7 @@ def collect_steering_vectors(
             "token_strategy": token_strategy,
             "num_positive": len(pos_prompts),
             "num_negative": len(neg_prompts),
+            "prompt_bank": bank.provenance(),
             "module_layer_indexing": "0-based transformer block index; vector computed from hidden_states[layer+1]",
             "norms_before_unit_normalization": norms,
         },

@@ -1,5 +1,7 @@
 # depaysement-lab
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21318353.svg)](https://doi.org/10.5281/zenodo.21318353)
+
 `depaysement-lab` is an experimental toolkit for studying **depaysement** as a
 steerable language-model behavior: not simply "make it weird", but move a
 coherent image into a different ontological regime while keeping it readable.
@@ -40,9 +42,16 @@ The current release surface includes:
 - [measurement and vector provenance](docs/measurement_instrument_v11.md)
 - [release and arXiv checklist](docs/release_and_arxiv.md)
 
-Citation metadata is machine-readable in [`CITATION.cff`](CITATION.cff). The
-version DOI will be added there and in this section after the `v1.1.0` release
-is archived by Zenodo.
+Release `v1.1.0` is permanently archived at
+[doi:10.5281/zenodo.21318353](https://doi.org/10.5281/zenodo.21318353).
+Machine-readable citation metadata is available in
+[`CITATION.cff`](CITATION.cff).
+
+Suggested software citation:
+
+> Higa, R. (2026). *depaysement-lab: Readable semantic displacement and
+> resilience experiments for language models* (v1.1.0) [Software]. Zenodo.
+> https://doi.org/10.5281/zenodo.21318353
 
 ## Current Result
 

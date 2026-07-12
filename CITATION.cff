@@ -7,7 +7,8 @@ authors:
     given-names: Ryo
     affiliation: "SpiralReality / Enginee, inc."
 version: 1.1.0
-date-released: 2026-07-11
+date-released: 2026-07-12
+doi: 10.5281/zenodo.21318353
 repository-code: "https://github.com/RyoSpiralArchitect/depaysement-lab"
 url: "https://github.com/RyoSpiralArchitect/depaysement-lab"
 license: Apache-2.0

@@ -4,6 +4,9 @@ This repository keeps the working manuscript local while publishing the code,
 curated evidence, and reproducibility tooling. The arXiv upload is assembled as
 a self-contained source bundle from that local manuscript.
 
+The archived software release for this manuscript is `v1.1.0`, available at
+[doi:10.5281/zenodo.21318353](https://doi.org/10.5281/zenodo.21318353).
+
 ## 1. Validate The Repository
 
 ```bash
@@ -43,6 +46,9 @@ bundle compile matches the reviewed manuscript.
 4. Connect the public repository to Zenodo and wait for the release archive.
 5. Record the version DOI in `CITATION.cff`, the README citation section, the
    GitHub release notes, and the manuscript's code-and-artifacts line.
+
+Steps 1--5 are complete for `v1.1.0`; its version DOI is
+`10.5281/zenodo.21318353`.
 
 Do not move or retarget a published release tag. Corrections after DOI issuance
 belong in a patch release.

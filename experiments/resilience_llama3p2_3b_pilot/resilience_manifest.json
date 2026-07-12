@@ -1,0 +1,179 @@
+{
+  "created_at": "2026-07-12T00:39:26.769699+00:00",
+  "backend": "mlx",
+  "model": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+  "seed": null,
+  "seed_bank": "data/mundane_seed_bank_en_v1.json",
+  "seeds": [
+    "The receipt on the counter",
+    "A plastic folder in the drawer",
+    "The bus was ten minutes late",
+    "A blue mug near the sink"
+  ],
+  "schedules": {
+    "baseline": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "persistent": [
+      0.6,
+      0.6,
+      0.6,
+      0.6,
+      0.6
+    ],
+    "release": [
+      0.6,
+      0.6,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "reverse": [
+      0.6,
+      0.6,
+      0.6,
+      -0.3,
+      -0.6
+    ],
+    "cycle": [
+      0.0,
+      0.3,
+      0.6,
+      0.3,
+      0.0
+    ]
+  },
+  "induction_steps": 3,
+  "minimum_induction_gap": 0.02,
+  "candidates": 12,
+  "max_new_tokens": 140,
+  "temperature": 1.05,
+  "top_p": 0.92,
+  "choose": "best",
+  "selector": {
+    "objective": "banded-frontier",
+    "frontier_weight": 1.0,
+    "ontology_weight": 0.35,
+    "unfinished_weight": 1.25,
+    "repair_weight": 0.6,
+    "repetition_weight": 0.45,
+    "sprawl_weight": 0.3,
+    "semantic_loop_weight": 0.0,
+    "lineage_diversity_weight": 0.0,
+    "lineage_diversity_min": 0.25,
+    "cliche_weight": 0.15,
+    "soft_style_cliche_weight": 0.0,
+    "fantasy_prop_weight": 0.0,
+    "ordinary_anchor_weight": 0.0,
+    "ordinary_anchor_min": 0.0,
+    "ontology_min": 0.2,
+    "ontology_max": 0.6,
+    "readability_min": 0.55,
+    "frontier_quality_min": 0.2,
+    "repair_max": 0.45,
+    "unfinished_max": 0.5,
+    "hard_unfinished_max": -1.0,
+    "hard_ban_terms": []
+  },
+  "ban_terms": [],
+  "paired_generation_rng_reset": true,
+  "paired_design_validation": {
+    "rows": [
+      {
+        "seed": "The receipt on the counter",
+        "complete": true,
+        "conditions": [
+          "persistent",
+          "release",
+          "reverse"
+        ],
+        "schedule_prefix_match": true,
+        "picked_prefix_match": true,
+        "candidate_pool_prefix_match": true,
+        "baseline_cycle_step1_match": true
+      },
+      {
+        "seed": "A plastic folder in the drawer",
+        "complete": true,
+        "conditions": [
+          "persistent",
+          "release",
+          "reverse"
+        ],
+        "schedule_prefix_match": true,
+        "picked_prefix_match": true,
+        "candidate_pool_prefix_match": true,
+        "baseline_cycle_step1_match": true
+      },
+      {
+        "seed": "The bus was ten minutes late",
+        "complete": true,
+        "conditions": [
+          "persistent",
+          "release",
+          "reverse"
+        ],
+        "schedule_prefix_match": true,
+        "picked_prefix_match": true,
+        "candidate_pool_prefix_match": true,
+        "baseline_cycle_step1_match": true
+      },
+      {
+        "seed": "A blue mug near the sink",
+        "complete": true,
+        "conditions": [
+          "persistent",
+          "release",
+          "reverse"
+        ],
+        "schedule_prefix_match": true,
+        "picked_prefix_match": true,
+        "candidate_pool_prefix_match": true,
+        "baseline_cycle_step1_match": true
+      }
+    ],
+    "seed_count": 4,
+    "complete_seed_count": 4,
+    "all_core_prefixes_match": true,
+    "all_zero_starts_match": true
+  },
+  "resume": true,
+  "run_limit": 0,
+  "run_count": 20,
+  "new_runs": 0,
+  "resumed_runs": 20,
+  "runs": [
+    "experiments/resilience_llama3p2_3b_pilot/runs/baseline_seed01_the_receipt_on_the_counter.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/persistent_seed01_the_receipt_on_the_counter.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/release_seed01_the_receipt_on_the_counter.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/reverse_seed01_the_receipt_on_the_counter.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/cycle_seed01_the_receipt_on_the_counter.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/baseline_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/persistent_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/release_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/reverse_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/cycle_seed02_a_plastic_folder_in_the_drawer.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/baseline_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/persistent_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/release_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/reverse_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/cycle_seed03_the_bus_was_ten_minutes_late.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/baseline_seed04_a_blue_mug_near_the_sink.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/persistent_seed04_a_blue_mug_near_the_sink.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/release_seed04_a_blue_mug_near_the_sink.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/reverse_seed04_a_blue_mug_near_the_sink.json",
+    "experiments/resilience_llama3p2_3b_pilot/runs/cycle_seed04_a_blue_mug_near_the_sink.json"
+  ],
+  "report_md": "experiments/resilience_llama3p2_3b_pilot/resilience_report.md",
+  "report_json": "experiments/resilience_llama3p2_3b_pilot/resilience_report.json",
+  "steps_csv": "experiments/resilience_llama3p2_3b_pilot/resilience_steps.csv",
+  "texts_md": "experiments/resilience_llama3p2_3b_pilot/resilience_texts.md",
+  "plot": "experiments/resilience_llama3p2_3b_pilot/resilience_plot.png",
+  "notes": [
+    null
+  ]
+}

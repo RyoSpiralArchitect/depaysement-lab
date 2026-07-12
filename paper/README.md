@@ -1,9 +1,9 @@
 # Local Paper Draft
 
-This directory is the local drafting surface for the depaysement paper. The
-experimental evidence and research notes remain tracked in the repository, but
-exploratory `*.tex` manuscript files and LaTeX build products are intentionally
-ignored until the manuscript is ready for an explicit publication pass.
+This directory is the local drafting and publication surface for the
+depaysement paper. The experimental evidence and research notes remain tracked
+in the repository, while the working `*.tex`, rendered PDF, and generated arXiv
+bundle remain local. Release metadata and the bundle builder are tracked.
 
 The current local entry point is expected at:
 
@@ -20,11 +20,26 @@ latexmk -pdf -output-directory=paper/build paper/depaysement_frontier_draft.tex
 Codex can also compile the manuscript through its bundled LaTeX helper when a
 system `latexmk` or Tectonic binary is not directly available.
 
+Build the self-contained arXiv upload after the manuscript compiles:
+
+```bash
+python3 scripts/build_arxiv_bundle.py \
+  paper/depaysement_frontier_draft.tex \
+  --out-dir paper/arxiv_submission \
+  --archive paper/arxiv_submission.zip \
+  --repo-root .
+```
+
+Then compile `paper/arxiv_submission/main.tex` from inside that directory. See
+[`docs/release_and_arxiv.md`](../docs/release_and_arxiv.md) for the release,
+Zenodo, and submission checklist.
+
 ## Evidence Map
 
 | Paper role | Repository evidence |
 |---|---|
 | Frontier definition and initial sweep | `docs/readable_ontology_collapse_frontier_v10.md`, `docs/research_notes/2026-05-16-banded-frontier-generation.md` |
+| Exact observer formulas and vector-bank provenance | `docs/measurement_instrument_v11.md` |
 | Human taste calibration | `docs/research_notes/2026-05-17-human-taste-pass.md` |
 | Mundane-seed controls and lexical attractors | `docs/research_notes/2026-05-20-mundane-attractor-causal-probe.md`, `docs/research_notes/2026-05-20-mundane-attractor-probe-results.md` |
 | Semantic hubs and noun graph | `docs/research_notes/2026-06-14-noun-graph-semantic-hubs.md` |

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v1.1.0 - 2026-07-11
+
+- Added semantic-resilience schedules for induction, release, reversal, and
+  cyclic steering, with paired recovery and baseline-crossing diagnostics.
+- Added trajectory lineage, semantic-loop, sprawl, affordance-reroute, hard
+  hub-gate, and class-knockout audits over curated mundane-seed experiments.
+- Added three-model comparison artifacts for Gemma, Llama, and Mistral, plus a
+  live Mistral loop guard that exposes failure transfer into graph sprawl.
+- Documented exact observer formulas and prompt-bank/vector provenance, and
+  embedded complete prompt-bank metadata in new MLX vector sidecars.
+- Added `CITATION.cff`, release guidance, and a deterministic builder for a
+  self-contained arXiv TeX-and-figures submission archive.
 - Documented the focused frontier sweep as a one-seed result and added a 3-5
   seed replication path.
 - MLX vector collection now writes a `.sha256` sidecar and records the archive

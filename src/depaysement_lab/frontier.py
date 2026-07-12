@@ -444,6 +444,22 @@ def audit_trajectory_run(
         frontier, quality = readable_frontier_score(metrics)
         metrics_dict = metrics.to_dict()
         metrics_dict.update(anchor_guard_metrics(context, text, scorer=scorer))
+        selector_metrics = picked.get("selector_metrics") if isinstance(picked.get("selector_metrics"), Mapping) else {}
+        metrics_dict.update(
+            {
+                key: value
+                for key, value in selector_metrics.items()
+                if key
+                in {
+                    "semantic_loop_pressure",
+                    "sprawl_pressure",
+                    "lineage_diversity",
+                    "net_transport_score",
+                    "hard_gate_failed",
+                    "hard_ban_failed",
+                }
+            }
+        )
         lineage_guard = anchor_guard_metrics(
             previous_picked,
             text,

@@ -164,3 +164,5 @@ paper/*.log
 paper/*.out
 paper/*.synctex.gz
 paper/build/
+paper/arxiv_submission/
+paper/arxiv_submission.zip

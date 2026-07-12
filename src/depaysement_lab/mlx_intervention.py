@@ -754,8 +754,11 @@ def collect_mlx_steering_vectors(
     metadata = {
         "model_name": model_name,
         "token_strategy": token_strategy,
+        "chat_template": bool(chat_template),
+        "max_length": max_length,
         "num_positive": len(pos_prompts),
         "num_negative": len(neg_prompts),
+        "prompt_bank": bank.provenance(),
         "layer_path": layer_ref.path,
         "n_layers": n_layers,
         "selected_layers": sorted(vectors),

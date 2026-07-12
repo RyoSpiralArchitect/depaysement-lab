@@ -83,6 +83,14 @@ from .ratings import (
     merge_markdown_ratings,
     write_rating_rows,
 )
+from .resilience import (
+    build_default_schedules,
+    build_resilience_report,
+    format_resilience_report,
+    parse_schedule_specs,
+    validate_paired_induction_prefixes,
+    write_resilience_artifacts,
+)
 from .scorer_v07 import image_relation_graph, make_scorer_v07 as make_scorer
 
 
@@ -840,6 +848,41 @@ def build_parser() -> argparse.ArgumentParser:
     fs.add_argument("--include-baseline-control", action="store_true", help="also save ordinary baseline runs for each max-token setting")
     fs.add_argument("--include-prompt", action="store_true")
     fs.add_argument("--trace", action="store_true")
+
+    resilience = sub.add_parser(
+        "resilience-sweep",
+        help="compare induce, release, reverse, and cycle steering schedules against a paired alpha-zero baseline",
+    )
+    add_common_generation_args(resilience)
+    add_selector_args(resilience)
+    resilience.add_argument("--seed", default="A forgotten umbrella at the station")
+    resilience.add_argument("--seed-bank", default=None, help="optional JSON/TXT seed bank")
+    resilience.add_argument("--seed-limit", type=int, default=0, help="limit seed-bank entries; 0 means all")
+    resilience.add_argument("--steps", type=int, default=5)
+    resilience.add_argument("--induction-steps", type=int, default=3)
+    resilience.add_argument("--induce-alpha", type=float, default=0.60)
+    resilience.add_argument(
+        "--schedule",
+        action="append",
+        default=None,
+        metavar="NAME=A,B,C",
+        help="repeatable custom named schedule; supplying any replaces the five canonical schedules",
+    )
+    resilience.add_argument("--minimum-induction-gap", type=float, default=0.02)
+    resilience.add_argument("--candidates", type=int, default=12)
+    resilience.add_argument("--temperature", type=float, default=1.05)
+    resilience.add_argument("--top-p", type=float, default=0.92)
+    resilience.add_argument("--max-new-tokens", type=int, default=140)
+    resilience.add_argument("--choose", choices=["best", "softmax", "random_top3"], default="best")
+    resilience.add_argument("--motif-jitter", type=float, default=0.38)
+    resilience.add_argument("--prompt-style", choices=["scene", "legacy"], default="scene")
+    resilience.add_argument("--out-dir", required=True)
+    resilience.add_argument("--save-candidates", type=int, default=0, help="0 saves each full candidate pool")
+    resilience.add_argument("--resume", action="store_true", help="reuse existing condition/seed run JSONs")
+    resilience.add_argument("--run-limit", type=int, default=0, help="maximum new runs; 0 means no limit")
+    resilience.add_argument("--include-prompt", action="store_true")
+    resilience.add_argument("--trace", action="store_true")
+    resilience.set_defaults(select_objective="banded-frontier")
 
     b = sub.add_parser("show-bank", help="print or write the default/current prompt bank")
     b.add_argument("--bank", default=None)
@@ -1886,6 +1929,185 @@ def cmd_frontier_sweep(args: argparse.Namespace) -> None:
     print(f"\n[frontier-sweep] wrote {out_dir}", file=sys.stderr)
 
 
+def cmd_resilience_sweep(args: argparse.Namespace) -> None:
+    emit_model_policy(args)
+    if not 1 <= int(args.induction_steps) < int(args.steps):
+        raise SystemExit("[resilience-sweep] --induction-steps must be between 1 and --steps - 1")
+    schedules = (
+        parse_schedule_specs(args.schedule, steps=args.steps)
+        if args.schedule
+        else build_default_schedules(
+            steps=args.steps,
+            induce_alpha=args.induce_alpha,
+            induction_steps=args.induction_steps,
+        )
+    )
+    if "baseline" not in schedules:
+        raise SystemExit("[resilience-sweep] schedules must include an all-zero 'baseline' condition")
+    if any(abs(float(value)) > 1e-12 for value in schedules["baseline"]):
+        raise SystemExit("[resilience-sweep] the 'baseline' schedule must contain only zeros")
+    seeds = load_seed_bank(args.seed_bank, args.seed, limit=int(args.seed_limit or 0))
+    out_dir = Path(args.out_dir)
+    runs_dir = out_dir / "runs"
+    runs_dir.mkdir(parents=True, exist_ok=True)
+    ban_terms = parse_ban_terms(args.ban_terms)
+
+    gen_args = copy.copy(args)
+    max_alpha = max(abs(float(value)) for schedule in schedules.values() for value in schedule)
+    gen_args.steer_alpha = max_alpha
+    if max_alpha <= 1e-12:
+        gen_args.disable_steering = True
+    for name in ("_steering_preflight_done", "_steering_preflight_note", "_steering_preflight_usable"):
+        if hasattr(gen_args, name):
+            delattr(gen_args, name)
+    generator = make_generator(gen_args, random.Random(args.random_seed))
+    steering_available = bool(getattr(gen_args, "_steering_preflight_usable", False))
+    if max_alpha > 1e-12 and (not steering_available or bool(args.disable_steering)):
+        note = getattr(gen_args, "_steering_preflight_note", None) or "activation steering is unavailable"
+        raise SystemExit(f"[resilience-sweep] nonzero schedules require usable steering vectors: {note}")
+
+    scorer = make_scorer(args)
+    selector = make_selector_config(args)
+    produced_paths: List[str] = []
+    run_limit = max(0, int(args.run_limit or 0))
+    new_runs = 0
+    total_runs = len(seeds) * len(schedules)
+    stop = False
+    rng_reset_supported: Optional[bool] = None
+
+    for seed_idx, seed in enumerate(seeds, 1):
+        if stop:
+            break
+        seed_label = safe_seed_label(seed, seed_idx)
+        run_seed = int(args.random_seed) + seed_idx * 1009
+        for condition, schedule in schedules.items():
+            path = runs_dir / f"{condition}_{seed_label}.json"
+            if args.resume and path.exists():
+                existing = json.loads(path.read_text(encoding="utf-8"))
+                existing_config = existing.get("config") if isinstance(existing.get("config"), dict) else {}
+                existing_reset = bool(existing_config.get("generation_rng_reset", False))
+                rng_reset_supported = (
+                    existing_reset
+                    if rng_reset_supported is None
+                    else (rng_reset_supported and existing_reset)
+                )
+                produced_paths.append(str(path))
+                print(f"[resilience] resume skip existing {path}", file=sys.stderr)
+                continue
+            if run_limit and new_runs >= run_limit:
+                stop = True
+                break
+            print(
+                f"[resilience] running {len(produced_paths) + 1}/{total_runs}: "
+                f"{condition}/{seed_label} schedule={','.join(f'{value:g}' for value in schedule)}",
+                file=sys.stderr,
+            )
+            reset_done = bool(generator.reset_seed(run_seed))
+            rng_reset_supported = reset_done if rng_reset_supported is None else (rng_reset_supported and reset_done)
+            engine = DepaysementEngine(
+                generator=generator,
+                scorer=scorer,
+                rng=random.Random(run_seed),
+                motif_jitter=args.motif_jitter,
+                selector=selector,
+            )
+            save_candidates = args.candidates if int(args.save_candidates) <= 0 else min(int(args.save_candidates), args.candidates)
+            steering_requested = any(abs(float(value)) > 1e-12 for value in schedule)
+            with steering_enabled(generator, steering_requested):
+                run = engine.write_run(
+                    seed=seed,
+                    steps=args.steps,
+                    mode="depaysement",
+                    candidates_per_step=args.candidates,
+                    temperature=args.temperature,
+                    top_p=args.top_p,
+                    max_new_tokens=args.max_new_tokens,
+                    choose=args.choose,
+                    trace=args.trace,
+                    prompt_style=args.prompt_style,
+                    ban_terms=ban_terms,
+                    keep_candidates=save_candidates,
+                    include_prompt=args.include_prompt,
+                    trajectory_stop=False,
+                    steer_schedule=schedule,
+                    adaptive_steering=False,
+                )
+            run.config.update(
+                {
+                    "condition": condition,
+                    "resilience_schedule": list(schedule),
+                    "resilience_induction_steps": int(args.induction_steps),
+                    "candidate_count": int(args.candidates),
+                    "max_new_tokens": int(args.max_new_tokens),
+                    "seed_index": int(seed_idx),
+                    "seed_label": seed_label,
+                    "run_seed": int(run_seed),
+                    "generation_rng_reset": bool(reset_done),
+                }
+            )
+            write_run_artifact(
+                run,
+                str(path),
+                "json",
+                include_candidates=True,
+                include_prompt=args.include_prompt,
+            )
+            produced_paths.append(str(path))
+            new_runs += 1
+            print(f"[resilience] wrote {path}", file=sys.stderr)
+
+    if not produced_paths:
+        raise SystemExit("[resilience-sweep] no run artifacts were produced or found")
+    if stop:
+        print(f"[resilience] run limit reached after {new_runs} new run(s)", file=sys.stderr)
+
+    trajectory_report = audit_trajectory_runs(produced_paths, scorer=scorer, top_k=12)
+    report = build_resilience_report(
+        trajectory_report,
+        schedules=schedules,
+        induction_steps=args.induction_steps,
+        minimum_induction_gap=args.minimum_induction_gap,
+    )
+    paired_validation = validate_paired_induction_prefixes(
+        produced_paths,
+        induction_steps=args.induction_steps,
+    )
+    report["paired_design_validation"] = paired_validation
+    artifact_paths = write_resilience_artifacts(report, str(out_dir))
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "backend": args.backend,
+        "model": resolve_model(args),
+        "seed": args.seed if not args.seed_bank else None,
+        "seed_bank": args.seed_bank,
+        "seeds": seeds,
+        "schedules": schedules,
+        "induction_steps": int(args.induction_steps),
+        "minimum_induction_gap": float(args.minimum_induction_gap),
+        "candidates": int(args.candidates),
+        "max_new_tokens": int(args.max_new_tokens),
+        "temperature": float(args.temperature),
+        "top_p": float(args.top_p),
+        "choose": args.choose,
+        "selector": selector.to_dict(),
+        "ban_terms": ban_terms,
+        "paired_generation_rng_reset": bool(rng_reset_supported),
+        "paired_design_validation": paired_validation,
+        "resume": bool(args.resume),
+        "run_limit": int(run_limit),
+        "run_count": len(produced_paths),
+        "new_runs": int(new_runs),
+        "resumed_runs": len(produced_paths) - int(new_runs),
+        "runs": produced_paths,
+        **artifact_paths,
+        "notes": [getattr(gen_args, "_steering_preflight_note", None)],
+    }
+    manifest_path = out_dir / "resilience_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(format_resilience_report(report))
+    print(f"[resilience-sweep] wrote {out_dir}", file=sys.stderr)
+
+
 def cmd_show_bank(args: argparse.Namespace) -> None:
     bank = PromptBank.from_file(args.bank)
     data = bank.to_dict()
@@ -1944,6 +2166,8 @@ def main() -> None:
         cmd_reselect(args)
     elif args.command == "frontier-sweep":
         cmd_frontier_sweep(args)
+    elif args.command == "resilience-sweep":
+        cmd_resilience_sweep(args)
     elif args.command == "show-bank":
         cmd_show_bank(args)
     elif args.command == "model-check":

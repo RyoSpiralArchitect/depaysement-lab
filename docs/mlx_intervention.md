@@ -60,11 +60,20 @@ layer_path
 n_layers
 selected_layers
 token_strategy
+chat_template
+max_length
 num_positive
 num_negative
+prompt_bank canonical hash, class counts, and full prompt lists
 norms_before_unit_normalization
 archive_sha256
 ```
+
+The prompt-bank hash is computed from canonical JSON content rather than the
+source file bytes, so formatting-only changes do not alter the identity. Prompt
+order and duplicates are preserved because both affect centroid weighting. The
+embedded prompt lists make a vector sidecar auditable even when its original
+bank path is unavailable.
 
 The `.sha256` sidecar is the expected hash of the vector archive. To verify:
 

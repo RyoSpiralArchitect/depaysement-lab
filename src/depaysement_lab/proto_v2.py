@@ -276,6 +276,30 @@ class PromptBank:
             "negative_weird_noise": unique_preserve_order(self.negative_weird_noise),
         }
 
+    def provenance(self) -> Dict[str, Any]:
+        """Return a self-contained, deterministic description of this bank."""
+
+        # Preserve order and duplicates because both affect the collected class
+        # centroid. PromptBank.write() may deduplicate a curated bank, but vector
+        # provenance must describe the exact in-memory inputs used here.
+        prompts = {
+            "positive_depaysement": list(self.positive_depaysement),
+            "negative_realist_repair": list(self.negative_realist_repair),
+            "negative_weird_noise": list(self.negative_weird_noise),
+        }
+        canonical = json.dumps(
+            prompts,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        return {
+            "format": "depaysement_lab.prompt_bank.v1",
+            "canonical_sha256": hashlib.sha256(canonical).hexdigest(),
+            "counts": {name: len(values) for name, values in prompts.items()},
+            "prompts": prompts,
+        }
+
     def write(self, path: str) -> None:
         Path(path).write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -1248,6 +1272,11 @@ class BaseGenerator:
     def generate(self, prompt: str, n: int, temperature: float, top_p: float, max_new_tokens: int) -> List[str]:
         raise NotImplementedError
 
+    def reset_seed(self, seed: int) -> bool:
+        """Reset local sampling state when the backend exposes deterministic control."""
+
+        return False
+
 
 class DummyGenerator(BaseGenerator):
     """Dependency-free English-first surreal fragment generator for exercising the steering loop."""
@@ -1321,6 +1350,10 @@ class DummyGenerator(BaseGenerator):
             out.append(s)
         return out
 
+    def reset_seed(self, seed: int) -> bool:
+        self.rng.seed(int(seed))
+        return True
+
 
 @dataclass
 class SteeringRuntimeConfig:
@@ -1386,6 +1419,12 @@ class HFGenerator(BaseGenerator):
             cont = cleanup_continuation(cont)
             results.append(cont)
         return results
+
+    def reset_seed(self, seed: int) -> bool:
+        self.torch.manual_seed(int(seed))
+        if self.torch.cuda.is_available():
+            self.torch.cuda.manual_seed_all(int(seed))
+        return True
 
 
 GENERATED_CONTROL_TOKENS: Tuple[str, ...] = (
@@ -1618,13 +1657,13 @@ def trajectory_step_alpha(
     max_alpha: float,
 ) -> float:
     if adaptive_alpha is not None:
-        raw = float(adaptive_alpha)
-    elif schedule:
+        return clamp(float(adaptive_alpha), float(min_alpha), float(max_alpha))
+    if schedule:
         idx = min(max(0, int(step) - 1), len(schedule) - 1)
-        raw = float(schedule[idx])
-    else:
-        raw = float(base_alpha)
-    return clamp(raw, float(min_alpha), float(max_alpha))
+        # An explicit schedule is an intervention specification, not an adaptive
+        # proposal. Preserve negative counter-steering values exactly.
+        return float(schedule[idx])
+    return clamp(float(base_alpha), float(min_alpha), float(max_alpha))
 
 
 def adaptive_trajectory_steer_alpha(
@@ -2752,6 +2791,7 @@ def collect_steering_vectors(
             "token_strategy": token_strategy,
             "num_positive": len(pos_prompts),
             "num_negative": len(neg_prompts),
+            "prompt_bank": bank.provenance(),
             "module_layer_indexing": "0-based transformer block index; vector computed from hidden_states[layer+1]",
             "norms_before_unit_normalization": norms,
         },

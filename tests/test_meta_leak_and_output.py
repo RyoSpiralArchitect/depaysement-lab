@@ -361,6 +361,31 @@ def test_steer_schedule_applies_per_step_and_restores_alpha():
     assert trace[2]["source"] == "schedule"
 
 
+def test_explicit_steer_schedule_preserves_negative_counter_steering():
+    rng = random.Random(0)
+    generator = SteeringTraceGenerator(
+        [
+            ["The umbrella becomes a garden that grips the station sign."],
+            ["The garden folds back into a paper ticket beside the turnstile."],
+            ["The ticket settles beside the ordinary platform bench."],
+        ],
+        alpha=0.6,
+    )
+    engine = DepaysementEngine(generator, rng=rng)
+    run = engine.write_run(
+        "A forgotten umbrella at the station",
+        steps=3,
+        candidates_per_step=1,
+        choose="best",
+        steer_schedule=[0.6, -0.3, -0.6],
+    )
+
+    assert generator.alphas == [0.6, -0.3, -0.6]
+    assert generator.steering.alpha == 0.6
+    trace = run.config["trajectory_steering"]["trace"]
+    assert [row["alpha"] for row in trace] == [0.6, -0.3, -0.6]
+
+
 def test_adaptive_steering_boosts_next_step_from_picked_metrics():
     rng = random.Random(0)
     generator = SteeringTraceGenerator(

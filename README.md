@@ -25,6 +25,25 @@ In practical terms, the project asks:
 The repository includes the generation CLI, structural scorers, ontology/frontier
 auditors, MLX steering hooks, saved experiment artifacts, and research notes.
 
+## Paper And Citation
+
+The accompanying manuscript is titled **Steering the Familiar: Depaysement as
+a Probe of Semantic Resilience in Language Models**. It treats depaysement as a
+controlled expressive operation: inducing, sustaining, and attempting to
+reverse readable changes in object identity and affordance.
+
+The current release surface includes:
+
+- [semantic resilience pilot](experiments/resilience_llama3p2_3b_pilot/)
+- [three-model comparison](experiments/model_compare_large_probe/)
+- [live semantic-loop guard comparison](experiments/mistral7b_live_semantic_loop_guard_compare/)
+- [measurement and vector provenance](docs/measurement_instrument_v11.md)
+- [release and arXiv checklist](docs/release_and_arxiv.md)
+
+Citation metadata is machine-readable in [`CITATION.cff`](CITATION.cff). The
+version DOI will be added there and in this section after the `v1.1.0` release
+is archived by Zenodo.
+
 ## Current Result
 
 The latest focused sweep is saved in:
@@ -178,6 +197,11 @@ predictable writing. This points toward a two-stage selector: use
 `banded-frontier` to stay readable, then rerank inside that band for human taste.
 
 ## What Is Being Measured?
+
+The exact current formulas, deterministic detection rules, prompt-bank examples,
+and steering-vector construction are documented in
+[Measurement Instrument v1.1](docs/measurement_instrument_v11.md). No
+LLM-as-a-judge or embedding model is used in the frontier observer.
 
 The central audit decomposes candidate pools rather than only final outputs.
 This matters because a good-looking final sample can come from two different
@@ -688,6 +712,75 @@ python3 -m depaysement_lab.cli frontier-sweep \
 Each run JSON stores `config.trajectory_steering.trace`, so the audit can show
 which alpha was applied at each step and why the adaptive controller moved next.
 
+### Semantic Resilience Sweep
+
+`resilience-sweep` turns scheduled steering into a paired recovery experiment.
+It resets supported local backend samplers to the same per-seed random state,
+uses the same depaysement prompt, selector, and candidate budget in every
+condition, and compares five trajectories:
+
+```text
+baseline    0.00, 0.00, 0.00,  0.00,  0.00
+persistent  0.60, 0.60, 0.60,  0.60,  0.60
+release     0.60, 0.60, 0.60,  0.00,  0.00
+reverse     0.60, 0.60, 0.60, -0.30, -0.60
+cycle       0.00, 0.30, 0.60,  0.30,  0.00
+```
+
+Run the first Llama pilot with the original layer-6--16 vector:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli resilience-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors.npz \
+  --strict-steering \
+  --steer-layers 6-16 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --induction-steps 3 \
+  --induce-alpha 0.60 \
+  --candidates 12 \
+  --max-new-tokens 140 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --cliche-weight 0.15 \
+  --resume \
+  --out-dir experiments/resilience_llama3p2_3b_pilot
+```
+
+The command writes raw condition/seed runs plus:
+
+```text
+resilience_report.md/json   paired recovery and terminal summaries
+resilience_steps.csv        one row per picked trajectory step
+resilience_texts.md         every picked continuation in reading order
+resilience_plot.png         ontology, readability, return distance, landing
+resilience_manifest.json    schedules, seeds, model, selector, and RNG control
+```
+
+`behavioral_recovery` measures how much the output-metric distance from the
+paired alpha-zero trajectory shrinks after induction. `soft_landing_score` also
+requires terminal readability, seed-anchor survival, object lineage,
+completion, and graph quality. These are output-side diagnostics, not claims
+about hidden-state distance. The cycle return gap is likewise behavioral and
+remains confounded by autoregressive history. `controlled_recovery_gain` is the
+difference between each condition's clipped recovery and the matched persistent
+trajectory's clipped recovery, so spontaneous drift toward the alpha-zero
+baseline is not credited to release or reversal. JSON also retains the raw
+normalized and absolute terminal-gap reductions. Signed terminal ontology
+delta and `ontology_baseline_crossed` expose counter-steering that overshoots
+the paired alpha-zero regime instead of landing on it.
+
+The first four-seed result, including the negative-schedule bug found by exact
+pool matching and the resulting observer caveat, is documented in the
+[semantic resilience pilot note](docs/research_notes/2026-07-11-semantic-resilience-pilot.md).
+
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 
 ```bash
@@ -868,6 +961,18 @@ experiments/posthoc_reselect_banded_frontier_lab/
 
 experiments/frontier_sweep_banded_frontier_focus/
   published actual banded-frontier generation sweep
+
+experiments/resilience_llama3p2_3b_pilot/
+  paired induction, release, reversal, and cycle pilot
+
+experiments/model_compare_large_probe/
+  combined Gemma, Llama, and Mistral comparison figure and summary
+
+experiments/mistral7b_live_semantic_loop_guard_compare/
+  live loop-guard failure-transfer comparison
+
+scripts/build_arxiv_bundle.py
+  deterministic self-contained arXiv source bundler
 ```
 
 ## Development
@@ -885,7 +990,9 @@ setup. Those messages are not part of the project API.
 ## Limitations
 
 - The frontier metrics are transparent heuristics, not a theory of surrealism.
-- The current experiments use one small quantized instruction model on MLX.
+- The current experiments use small quantized instruction models on MLX;
+  vector construction, layers, and schedules are not standardized across model
+  families.
 - `unfinished` is still a coarse detector; future work should split it into
   hard truncation, control-token leakage, comma chains, repetition loops, and
   malformed tails.
@@ -894,6 +1001,15 @@ setup. Those messages are not part of the project API.
   trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
+
+## Acknowledgments
+
+OpenAI Codex (GPT-5) was used as an implementation and manuscript-development
+assistant for software construction, tests, artifact inspection, LaTeX editing,
+and reproducibility tooling. Google Gemini was used for critical feedback on
+framing, interpretation, and exposition. Ryo Higa designed and operated the
+experiments, verified the resulting code and artifacts, and is responsible for
+the project and its claims.
 
 ## License
 

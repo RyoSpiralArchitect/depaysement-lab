@@ -73,11 +73,19 @@ from .proto_v2 import (
     collect_steering_vectors,
     parse_layer_list,
     print_intervention_sketch,
+    steering_alpha_supported,
 )
 from .prefix_probe import (
     format_prefix_probe_report,
     run_prefix_counter_probe,
     write_prefix_probe_artifacts,
+)
+from .prompt_contrast import (
+    PROMPT_MODES,
+    format_prompt_contrast_report,
+    load_anchor_bank,
+    run_prompt_steering_contrast,
+    write_prompt_contrast_artifacts,
 )
 from .reselect import posthoc_reselect_files, write_posthoc_reselect_batch
 from .ratings import (
@@ -939,6 +947,42 @@ def build_parser() -> argparse.ArgumentParser:
         backend="mlx",
         select_objective="banded-frontier",
         steer_alpha=0.6,
+        strict_steering=True,
+    )
+
+    prompt_contrast = sub.add_parser(
+        "prompt-steering-contrast",
+        help="cross naive/operational prompts with zero, corridor, and high steering on matched anchors",
+    )
+    add_common_generation_args(prompt_contrast)
+    prompt_contrast.add_argument(
+        "--anchor-bank",
+        default="data/prompt_steering_anchor_bank_en_v1.json",
+        help="JSON bank containing items with id, seed, and anchor phrases",
+    )
+    prompt_contrast.add_argument("--seed-limit", type=int, default=0, help="limit anchor-bank items; 0 means all")
+    prompt_contrast.add_argument(
+        "--prompt-modes",
+        default=",".join(PROMPT_MODES),
+        help="comma-separated prompt modes: naive,operational",
+    )
+    prompt_contrast.add_argument(
+        "--alphas",
+        default="0,0.6,1.2",
+        help="exactly three values: zero, corridor, and high alpha",
+    )
+    prompt_contrast.add_argument("--candidates", type=int, default=8)
+    prompt_contrast.add_argument("--temperature", type=float, default=1.05)
+    prompt_contrast.add_argument("--top-p", type=float, default=0.92)
+    prompt_contrast.add_argument("--max-new-tokens", type=int, default=120)
+    prompt_contrast.add_argument("--rating-seed-limit", type=int, default=6)
+    prompt_contrast.add_argument("--rating-random-seed", type=int, default=20260712)
+    prompt_contrast.add_argument("--out-dir", required=True)
+    prompt_contrast.add_argument("--resume", action="store_true")
+    prompt_contrast.add_argument("--run-limit", type=int, default=0, help="maximum new cells; 0 means all")
+    prompt_contrast.set_defaults(
+        backend="mlx",
+        steer_alpha=1.2,
         strict_steering=True,
     )
 
@@ -2227,6 +2271,70 @@ def cmd_prefix_probe(args: argparse.Namespace) -> None:
     print(f"[prefix-probe] wrote {args.out_dir}", file=sys.stderr)
 
 
+def cmd_prompt_steering_contrast(args: argparse.Namespace) -> None:
+    emit_model_policy(args)
+    modes = [part.strip() for part in str(args.prompt_modes).split(",") if part.strip()]
+    alphas = _parse_float_sequence(args.alphas)
+    items = load_anchor_bank(args.anchor_bank, limit=args.seed_limit)
+    gen_args = copy.copy(args)
+    gen_args.steer_alpha = max((abs(float(alpha)) for alpha in alphas), default=0.0)
+    for name in ("_steering_preflight_done", "_steering_preflight_note", "_steering_preflight_usable"):
+        if hasattr(gen_args, name):
+            delattr(gen_args, name)
+    generator = make_generator(gen_args, random.Random(args.random_seed))
+    if not steering_alpha_supported(generator):
+        note = getattr(gen_args, "_steering_preflight_note", None) or "activation steering was not loaded"
+        raise SystemExit(f"[prompt-steering-contrast] {note}")
+
+    scorer = make_scorer(args)
+    selector = SelectorConfig(objective="banded-frontier")
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report = run_prompt_steering_contrast(
+        generator,
+        scorer,
+        selector,
+        items=items,
+        prompt_modes=modes,
+        alphas=alphas,
+        candidates=args.candidates,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        max_new_tokens=args.max_new_tokens,
+        random_seed=args.random_seed,
+        cell_dir=str(out_dir / "cells"),
+        resume=args.resume,
+        run_limit=args.run_limit,
+        progress=lambda message: print(f"[prompt-contrast] {message}", file=sys.stderr),
+    )
+    artifact_paths = write_prompt_contrast_artifacts(
+        report,
+        str(out_dir),
+        rating_seed_limit=args.rating_seed_limit,
+        rating_random_seed=args.rating_random_seed,
+    )
+    manifest = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "backend": args.backend,
+        "model": resolve_model(args),
+        "vectors": args.vectors,
+        "steer_layers": args.steer_layers,
+        "steering_apply_on": args.mlx_steer_apply_on,
+        "system_prompt": getattr(generator, "system_prompt", None),
+        "anchor_bank": args.anchor_bank,
+        "items": items,
+        "design": report["design"],
+        "selector_observer_config": selector.to_dict(),
+        "artifacts": artifact_paths,
+    }
+    (out_dir / "prompt_steering_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(format_prompt_contrast_report(report))
+    print(f"[prompt-steering-contrast] wrote {out_dir}", file=sys.stderr)
+
+
 def cmd_show_bank(args: argparse.Namespace) -> None:
     bank = PromptBank.from_file(args.bank)
     data = bank.to_dict()
@@ -2289,6 +2397,8 @@ def main() -> None:
         cmd_resilience_sweep(args)
     elif args.command == "prefix-probe":
         cmd_prefix_probe(args)
+    elif args.command == "prompt-steering-contrast":
+        cmd_prompt_steering_contrast(args)
     elif args.command == "show-bank":
         cmd_show_bank(args)
     elif args.command == "model-check":

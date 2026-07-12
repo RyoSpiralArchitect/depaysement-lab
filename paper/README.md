@@ -38,6 +38,7 @@ Zenodo, and submission checklist.
 
 | Paper role | Repository evidence |
 |---|---|
+| Prompt-only, medium-steering, and oversteering contrast | `docs/research_notes/2026-07-12-prompt-steering-contrast.md`, `experiments/prompt_steering_contrast_llama3p2_seed12/` |
 | Frontier definition and initial sweep | `docs/readable_ontology_collapse_frontier_v10.md`, `docs/research_notes/2026-05-16-banded-frontier-generation.md` |
 | Exact observer formulas and vector-bank provenance | `docs/measurement_instrument_v11.md` |
 | Human taste calibration | `docs/research_notes/2026-05-17-human-taste-pass.md` |
@@ -54,6 +55,7 @@ Zenodo, and submission checklist.
 
 Primary tracked figures for the draft:
 
+- `experiments/prompt_steering_contrast_llama3p2_seed12/prompt_steering_contrast.png`
 - `experiments/frontier_sweep_steered_hybrid_focus_best/frontier_sweep.png`
 - `experiments/model_compare_large_probe/model_compare_frontier.png`
 - `experiments/mistral7b_live_semantic_loop_guard_compare/live_guard_comparison.png`

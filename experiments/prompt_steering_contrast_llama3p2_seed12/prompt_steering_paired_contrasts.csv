@@ -1,0 +1,85 @@
+scope,contrast,left,right,metric,seed_pairs,mean_delta,median_delta,ci95_low,ci95_high,positive_seed_fraction
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,anchor_phrase_coverage,12,-0.020833333333333332,-0.03125,-0.0546875,0.015625,0.3333333333333333
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,ontology_collapse_density,12,-0.0319098957355713,-0.0331792939659319,-0.07923811840456096,0.015299904066734722,0.4166666666666667
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,syntax_readability_proxy,12,0.006877539267349307,0.003034020210124888,-0.006871263054820273,0.024107178826228173,0.5
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,decoration_without_transport,12,-0.1237631511066416,-0.12991215310932228,-0.1664923220926274,-0.08333717654557674,0.0
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,decorative_near_miss_rate,12,-0.2708333333333333,-0.25,-0.40625,-0.14583333333333334,0.08333333333333333
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,readable_transport_rate,12,-0.07291666666666667,-0.125,-0.15625,0.010416666666666666,0.16666666666666666
+all,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,failure_rate,12,-0.010416666666666666,0.0,-0.08333333333333333,0.0625,0.25
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,anchor_phrase_coverage,12,-0.0390625,-0.03125,-0.08072916666666667,0.0026041666666666665,0.25
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,ontology_collapse_density,12,0.11421804689220576,0.11942086420745271,0.03315275119026328,0.19100206056731342,0.8333333333333334
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,syntax_readability_proxy,12,0.0123949602564207,0.018410855315292463,-0.005248926221891089,0.03225842797637791,0.6666666666666666
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,decoration_without_transport,12,0.015995030657484838,0.005133650270462253,-0.03376884410882693,0.06809571195507368,0.5
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,decorative_near_miss_rate,12,-0.09375,-0.0625,-0.20833333333333334,0.020833333333333332,0.25
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,readable_transport_rate,12,0.09375,0.125,-0.0002604166666665778,0.1875,0.5833333333333334
+all,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,failure_rate,12,0.23958333333333334,0.25,0.13541666666666666,0.3333333333333333,0.75
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,anchor_phrase_coverage,12,0.020833333333333332,0.0,-0.028645833333333332,0.06770833333333333,0.4166666666666667
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,ontology_collapse_density,12,0.026349424285307954,0.013807262430192813,-0.006506155478867123,0.05932485761374715,0.6666666666666666
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,syntax_readability_proxy,12,0.023487597119316278,0.025945183195954846,0.013232435892690948,0.03439784835806398,0.8333333333333334
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,decoration_without_transport,12,0.04503785627756656,0.028864447151979195,0.019232923138030763,0.0730732688148013,0.9166666666666666
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,decorative_near_miss_rate,12,0.13541666666666666,0.125,0.052083333333333336,0.22916666666666666,0.6666666666666666
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,readable_transport_rate,12,0.07291666666666667,0.0,0.0,0.15625,0.3333333333333333
+all,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,failure_rate,12,-0.07291666666666667,-0.125,-0.16666666666666666,0.020833333333333332,0.25
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,anchor_phrase_coverage,12,-0.049479166666666664,-0.03125,-0.09635416666666667,-0.005208333333333333,0.16666666666666666
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,ontology_collapse_density,12,0.186728396147124,0.19490263456761103,0.11928295296347766,0.25197235444585775,0.9166666666666666
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,syntax_readability_proxy,12,-0.023645576952519592,-0.024487075192772545,-0.043987784348249494,-0.003358558388044684,0.25
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,decoration_without_transport,12,-0.058689631404765,-0.036895908402582514,-0.10791034966550882,-0.01302605840892651,0.25
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,decorative_near_miss_rate,12,-0.19791666666666666,-0.25,-0.3125,-0.08333333333333333,0.16666666666666666
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,readable_transport_rate,12,-0.020833333333333332,0.0,-0.08333333333333333,0.041666666666666664,0.16666666666666666
+all,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,failure_rate,12,0.28125,0.25,0.17708333333333334,0.3958333333333333,0.8333333333333334
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,anchor_phrase_coverage,12,-0.11197916666666667,-0.09375,-0.18229166666666666,-0.052083333333333336,0.16666666666666666
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,ontology_collapse_density,12,0.2127932080995429,0.19638783978093938,0.13646902575545378,0.293497110640124,0.9166666666666666
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,syntax_readability_proxy,12,0.019803885046678283,0.026751244736410107,-0.0029684739480738587,0.043183342088718386,0.6666666666666666
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,decoration_without_transport,12,-0.025719213496189264,-0.010000753381658052,-0.06296264839560807,0.010347069377900496,0.3333333333333333
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,decorative_near_miss_rate,12,-0.17708333333333334,-0.1875,-0.2916666666666667,-0.0625,0.16666666666666666
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,readable_transport_rate,12,0.041666666666666664,-0.0625,-0.09375,0.1875,0.4166666666666667
+all,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,failure_rate,12,0.5208333333333334,0.5625,0.3645833333333333,0.6666666666666666,0.8333333333333334
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,anchor_phrase_coverage,12,0.059895833333333336,0.046875,-0.010416666666666666,0.1328125,0.6666666666666666
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,ontology_collapse_density,12,-0.0878686226068978,-0.09938337866176558,-0.15210806951110417,-0.016717564816333373,0.25
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,syntax_readability_proxy,12,0.011092636862895577,0.017336549404033952,-0.01565714415072801,0.03371644524075218,0.6666666666666666
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,decoration_without_transport,12,0.02904282562008172,0.06658646791610193,-0.036834189854382735,0.09195611437158431,0.6666666666666666
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,decorative_near_miss_rate,12,0.22916666666666666,0.3125,0.041666666666666664,0.4270833333333333,0.6666666666666666
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,readable_transport_rate,12,-0.020833333333333332,0.0,-0.14583333333333334,0.10416666666666667,0.3333333333333333
+all,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,failure_rate,12,-0.3125,-0.25,-0.46875,-0.17708333333333334,0.0
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,ontology_collapse_density,12,-0.03631764686108102,-0.016860151385864663,-0.07288795890685354,-0.001368287261485029,0.3333333333333333
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,syntax_readability_proxy,12,0.020718014860888753,0.007051636412608475,0.00017662267932036112,0.055401198362697225,0.6666666666666666
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,decoration_without_transport,12,-0.10413934271233181,-0.1080597845735875,-0.1539991032256738,-0.051975110627552036,0.08333333333333333
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,decorative_near_miss_rate,12,-0.2349206349206349,-0.22023809523809523,-0.36032242063492065,-0.09126984126984128,0.08333333333333333
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,readable_transport_rate,12,-0.06964285714285713,0.0,-0.14583333333333334,0.001984126984126984,0.16666666666666666
+exact_anchor,operational_prompt_gain_at_zero,operational alpha=0.00,naive alpha=0.00,failure_rate,12,-0.056249999999999994,0.0,-0.16170634920634921,0.04563740079365076,0.25
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,ontology_collapse_density,12,0.15923441132250862,0.14601801242972584,0.06018334840952761,0.2494387640586116,0.8333333333333334
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,syntax_readability_proxy,12,0.025403610213995523,0.017371714786442116,-0.003918687043676582,0.06647028284816606,0.5833333333333334
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,decoration_without_transport,12,0.052313601282495424,0.04746396348678444,-0.02209466257930918,0.1281684169570362,0.6666666666666666
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,decorative_near_miss_rate,12,-0.06746031746031746,0.0,-0.18015873015873018,0.04266369047619042,0.3333333333333333
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,readable_transport_rate,12,0.19999999999999998,0.17857142857142855,0.048204365079365076,0.33591765873015866,0.75
+exact_anchor,naive_corridor_steering_gain,naive alpha=0.60,naive alpha=0.00,failure_rate,12,0.1800595238095238,0.18333333333333335,0.07519345238095239,0.2844370039682538,0.75
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,ontology_collapse_density,12,0.014635295029145906,-0.0010403090271768139,-0.045978889131327465,0.07860834161824608,0.5
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,syntax_readability_proxy,12,0.019022935195821034,0.020639640099179235,0.007122009139395604,0.030372950272241083,0.75
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,decoration_without_transport,12,0.0483030226403253,0.035774675252921634,0.017108761840241033,0.0828528872783215,0.75
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,decorative_near_miss_rate,12,0.14285714285714288,0.10714285714285715,0.03571180555555556,0.2618080357142857,0.5833333333333334
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,readable_transport_rate,12,0.06726190476190476,0.0,-0.046845238095238086,0.1880952380952381,0.3333333333333333
+exact_anchor,operational_corridor_steering_gain,operational alpha=0.60,operational alpha=0.00,failure_rate,12,-0.0439484126984127,0.0,-0.10714285714285714,0.011904761904761904,0.08333333333333333
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,ontology_collapse_density,12,0.20493414095867035,0.21754242773592625,0.09419449513643988,0.31415451776405173,0.75
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,syntax_readability_proxy,12,0.01826002930265978,0.019525090033481296,0.0029356749974784537,0.03571356660729456,0.5833333333333334
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,decoration_without_transport,12,-0.07318240463219197,-0.07538637568561893,-0.1413152476095699,-0.008278756981877453,0.4166666666666667
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,decorative_near_miss_rate,12,-0.18511904761904763,-0.25,-0.3424603174603174,-0.013888888888888888,0.16666666666666666
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,readable_transport_rate,12,-0.08015873015873017,-0.04166666666666666,-0.2410813492063492,0.08373015873015871,0.3333333333333333
+exact_anchor,naive_high_alpha_change,naive alpha=1.20,naive alpha=0.60,failure_rate,12,0.3043650793650794,0.24523809523809523,0.1686458333333333,0.4513888888888889,0.8333333333333334
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,ontology_collapse_density,12,0.28537480144546246,0.2797646280734516,0.1996189608193166,0.3710546422852815,1.0
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,syntax_readability_proxy,12,-0.01270479197676789,-0.01590292000264021,-0.04239016098968866,0.015302265996489803,0.4166666666666667
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,decoration_without_transport,12,-0.015376199953192336,-0.006871061756238837,-0.07407683377661042,0.043597259352067395,0.3333333333333333
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,decorative_near_miss_rate,12,-0.2130952380952381,-0.17142857142857143,-0.336922123015873,-0.09314732142857154,0.08333333333333333
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,readable_transport_rate,12,0.07718253968253967,0.0,-0.1150843253968254,0.28969742063492043,0.3333333333333333
+exact_anchor,operational_high_alpha_change,operational alpha=1.20,operational alpha=0.60,failure_rate,12,0.5446428571428571,0.5357142857142857,0.306547619047619,0.7678571428571428,0.75
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,anchor_phrase_coverage,12,0.0,0.0,0.0,0.0,0.0
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,ontology_collapse_density,12,-0.1445991162933627,-0.16789770403580492,-0.235815980164634,-0.05381806868967088,0.16666666666666666
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,syntax_readability_proxy,12,-0.006380675018174488,-0.006218586431337325,-0.048099988334733064,0.02634597943074989,0.4166666666666667
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,decoration_without_transport,12,-0.004010578642170112,0.020422524846662155,-0.09108675686975341,0.07887468745006558,0.6666666666666666
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,decorative_near_miss_rate,12,0.21031746031746032,0.12857142857142856,0.017656249999999974,0.41518105158730156,0.5833333333333334
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,readable_transport_rate,12,-0.13273809523809524,-0.14999999999999997,-0.2936656746031746,0.03154761904761905,0.25
+exact_anchor,prompt_x_corridor_interaction,operational corridor gain,naive corridor gain,failure_rate,12,-0.2240079365079365,-0.18333333333333335,-0.36448660714285713,-0.09364335317460329,0.16666666666666666

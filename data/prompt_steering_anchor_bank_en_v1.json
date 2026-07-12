@@ -1,0 +1,66 @@
+{
+  "version": "prompt-steering-anchor-bank-en-v1",
+  "description": "Twelve mundane scenes with four explicit anchor phrases for prompt x steering contrasts.",
+  "items": [
+    {
+      "id": "anchor01_mug_sink",
+      "seed": "A blue mug rests beside the sink; a comb catches the morning light.",
+      "anchors": ["blue mug", "sink", "comb", "morning light"]
+    },
+    {
+      "id": "anchor02_receipt_counter",
+      "seed": "A receipt lies on the counter beside a stapler under the fluorescent light.",
+      "anchors": ["receipt", "counter", "stapler", "fluorescent light"]
+    },
+    {
+      "id": "anchor03_spreadsheet_cursor",
+      "seed": "The spreadsheet remains open while the cursor blinks beside a coffee ring and the office fan turns.",
+      "anchors": ["spreadsheet", "cursor", "coffee ring", "office fan"]
+    },
+    {
+      "id": "anchor04_bus_card",
+      "seed": "A bus card sits in a coat pocket while the handrail shines with rain.",
+      "anchors": ["bus card", "coat pocket", "handrail", "rain"]
+    },
+    {
+      "id": "anchor05_delivery_label",
+      "seed": "A delivery label crosses a cardboard box beside a tape dispenser in the loading bay light.",
+      "anchors": ["delivery label", "cardboard box", "tape dispenser", "loading bay light"]
+    },
+    {
+      "id": "anchor06_fridge_lunchbox",
+      "seed": "The fridge stands open beside a lunchbox, a grocery list, and a quiet kettle.",
+      "anchors": ["fridge", "lunchbox", "grocery list", "kettle"]
+    },
+    {
+      "id": "anchor07_elevator_button",
+      "seed": "The elevator button is cracked near an office key, a security camera, and the hallway carpet.",
+      "anchors": ["elevator button", "office key", "security camera", "hallway carpet"]
+    },
+    {
+      "id": "anchor08_phone_charger",
+      "seed": "A phone charger coils beneath the desk lamp beside the keyboard and a line of dust.",
+      "anchors": ["phone charger", "desk lamp", "keyboard", "dust"]
+    },
+    {
+      "id": "anchor09_laundry_basket",
+      "seed": "The laundry basket waits by the door with a single sock near the washing machine.",
+      "anchors": ["laundry basket", "door", "single sock", "washing machine"]
+    },
+    {
+      "id": "anchor10_parking_ticket",
+      "seed": "A parking ticket rests on the windshield between the side mirror and a streetlight.",
+      "anchors": ["parking ticket", "windshield", "side mirror", "streetlight"]
+    },
+    {
+      "id": "anchor11_paper_cup",
+      "seed": "A paper cup stands beside the vending machine with a coin and a folded timetable.",
+      "anchors": ["paper cup", "vending machine", "coin", "timetable"]
+    },
+    {
+      "id": "anchor12_apartment_key",
+      "seed": "An apartment key lies on the windowsill between a plant pot and the half-closed blinds.",
+      "anchors": ["apartment key", "windowsill", "plant pot", "blinds"]
+    }
+  ]
+}

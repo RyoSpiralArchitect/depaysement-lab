@@ -688,6 +688,75 @@ python3 -m depaysement_lab.cli frontier-sweep \
 Each run JSON stores `config.trajectory_steering.trace`, so the audit can show
 which alpha was applied at each step and why the adaptive controller moved next.
 
+### Semantic Resilience Sweep
+
+`resilience-sweep` turns scheduled steering into a paired recovery experiment.
+It resets supported local backend samplers to the same per-seed random state,
+uses the same depaysement prompt, selector, and candidate budget in every
+condition, and compares five trajectories:
+
+```text
+baseline    0.00, 0.00, 0.00,  0.00,  0.00
+persistent  0.60, 0.60, 0.60,  0.60,  0.60
+release     0.60, 0.60, 0.60,  0.00,  0.00
+reverse     0.60, 0.60, 0.60, -0.30, -0.60
+cycle       0.00, 0.30, 0.60,  0.30,  0.00
+```
+
+Run the first Llama pilot with the original layer-6--16 vector:
+
+```bash
+PYTHONPATH=src python3 -m depaysement_lab.cli resilience-sweep \
+  --backend mlx \
+  --model mlx-community/Llama-3.2-3B-Instruct-4bit \
+  --chat-template \
+  --vectors experiments/depaysement_mlx_vectors.npz \
+  --strict-steering \
+  --steer-layers 6-16 \
+  --seed-bank data/mundane_seed_bank_en_v1.json \
+  --seed-limit 4 \
+  --steps 5 \
+  --induction-steps 3 \
+  --induce-alpha 0.60 \
+  --candidates 12 \
+  --max-new-tokens 140 \
+  --select-objective banded-frontier \
+  --choose best \
+  --unfinished-weight 1.25 \
+  --repetition-weight 0.45 \
+  --sprawl-weight 0.30 \
+  --cliche-weight 0.15 \
+  --resume \
+  --out-dir experiments/resilience_llama3p2_3b_pilot
+```
+
+The command writes raw condition/seed runs plus:
+
+```text
+resilience_report.md/json   paired recovery and terminal summaries
+resilience_steps.csv        one row per picked trajectory step
+resilience_texts.md         every picked continuation in reading order
+resilience_plot.png         ontology, readability, return distance, landing
+resilience_manifest.json    schedules, seeds, model, selector, and RNG control
+```
+
+`behavioral_recovery` measures how much the output-metric distance from the
+paired alpha-zero trajectory shrinks after induction. `soft_landing_score` also
+requires terminal readability, seed-anchor survival, object lineage,
+completion, and graph quality. These are output-side diagnostics, not claims
+about hidden-state distance. The cycle return gap is likewise behavioral and
+remains confounded by autoregressive history. `controlled_recovery_gain` is the
+difference between each condition's clipped recovery and the matched persistent
+trajectory's clipped recovery, so spontaneous drift toward the alpha-zero
+baseline is not credited to release or reversal. JSON also retains the raw
+normalized and absolute terminal-gap reductions. Signed terminal ontology
+delta and `ontology_baseline_crossed` expose counter-steering that overshoots
+the paired alpha-zero regime instead of landing on it.
+
+The first four-seed result, including the negative-schedule bug found by exact
+pool matching and the resulting observer caveat, is documented in the
+[semantic resilience pilot note](docs/research_notes/2026-07-11-semantic-resilience-pilot.md).
+
 After a mundane-seed sweep, reselect saved candidate pools without regenerating:
 
 ```bash

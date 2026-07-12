@@ -248,6 +248,11 @@ class MLXLMGenerator(BaseGenerator):
             out.append(cleanup_continuation(text))
         return out
 
+    def reset_seed(self, seed: int) -> bool:
+        self.seed = int(seed)
+        self._mx.random.seed(int(seed))
+        return True
+
 
 def parse_jsonish(s: Optional[str]) -> Dict[str, Any]:
     if not s:

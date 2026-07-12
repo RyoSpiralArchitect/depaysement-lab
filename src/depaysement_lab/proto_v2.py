@@ -1248,6 +1248,11 @@ class BaseGenerator:
     def generate(self, prompt: str, n: int, temperature: float, top_p: float, max_new_tokens: int) -> List[str]:
         raise NotImplementedError
 
+    def reset_seed(self, seed: int) -> bool:
+        """Reset local sampling state when the backend exposes deterministic control."""
+
+        return False
+
 
 class DummyGenerator(BaseGenerator):
     """Dependency-free English-first surreal fragment generator for exercising the steering loop."""
@@ -1321,6 +1326,10 @@ class DummyGenerator(BaseGenerator):
             out.append(s)
         return out
 
+    def reset_seed(self, seed: int) -> bool:
+        self.rng.seed(int(seed))
+        return True
+
 
 @dataclass
 class SteeringRuntimeConfig:
@@ -1386,6 +1395,12 @@ class HFGenerator(BaseGenerator):
             cont = cleanup_continuation(cont)
             results.append(cont)
         return results
+
+    def reset_seed(self, seed: int) -> bool:
+        self.torch.manual_seed(int(seed))
+        if self.torch.cuda.is_available():
+            self.torch.cuda.manual_seed_all(int(seed))
+        return True
 
 
 GENERATED_CONTROL_TOKENS: Tuple[str, ...] = (
@@ -1618,13 +1633,13 @@ def trajectory_step_alpha(
     max_alpha: float,
 ) -> float:
     if adaptive_alpha is not None:
-        raw = float(adaptive_alpha)
-    elif schedule:
+        return clamp(float(adaptive_alpha), float(min_alpha), float(max_alpha))
+    if schedule:
         idx = min(max(0, int(step) - 1), len(schedule) - 1)
-        raw = float(schedule[idx])
-    else:
-        raw = float(base_alpha)
-    return clamp(raw, float(min_alpha), float(max_alpha))
+        # An explicit schedule is an intervention specification, not an adaptive
+        # proposal. Preserve negative counter-steering values exactly.
+        return float(schedule[idx])
+    return clamp(float(base_alpha), float(min_alpha), float(max_alpha))
 
 
 def adaptive_trajectory_steer_alpha(

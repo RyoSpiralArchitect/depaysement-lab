@@ -25,6 +25,25 @@ In practical terms, the project asks:
 The repository includes the generation CLI, structural scorers, ontology/frontier
 auditors, MLX steering hooks, saved experiment artifacts, and research notes.
 
+## Paper And Citation
+
+The accompanying manuscript is titled **Steering the Familiar: Depaysement as
+a Probe of Semantic Resilience in Language Models**. It treats depaysement as a
+controlled expressive operation: inducing, sustaining, and attempting to
+reverse readable changes in object identity and affordance.
+
+The current release surface includes:
+
+- [semantic resilience pilot](experiments/resilience_llama3p2_3b_pilot/)
+- [three-model comparison](experiments/model_compare_large_probe/)
+- [live semantic-loop guard comparison](experiments/mistral7b_live_semantic_loop_guard_compare/)
+- [measurement and vector provenance](docs/measurement_instrument_v11.md)
+- [release and arXiv checklist](docs/release_and_arxiv.md)
+
+Citation metadata is machine-readable in [`CITATION.cff`](CITATION.cff). The
+version DOI will be added there and in this section after the `v1.1.0` release
+is archived by Zenodo.
+
 ## Current Result
 
 The latest focused sweep is saved in:
@@ -942,6 +961,18 @@ experiments/posthoc_reselect_banded_frontier_lab/
 
 experiments/frontier_sweep_banded_frontier_focus/
   published actual banded-frontier generation sweep
+
+experiments/resilience_llama3p2_3b_pilot/
+  paired induction, release, reversal, and cycle pilot
+
+experiments/model_compare_large_probe/
+  combined Gemma, Llama, and Mistral comparison figure and summary
+
+experiments/mistral7b_live_semantic_loop_guard_compare/
+  live loop-guard failure-transfer comparison
+
+scripts/build_arxiv_bundle.py
+  deterministic self-contained arXiv source bundler
 ```
 
 ## Development
@@ -959,7 +990,9 @@ setup. Those messages are not part of the project API.
 ## Limitations
 
 - The frontier metrics are transparent heuristics, not a theory of surrealism.
-- The current experiments use one small quantized instruction model on MLX.
+- The current experiments use small quantized instruction models on MLX;
+  vector construction, layers, and schedules are not standardized across model
+  families.
 - `unfinished` is still a coarse detector; future work should split it into
   hard truncation, control-token leakage, comma chains, repetition loops, and
   malformed tails.
@@ -968,6 +1001,15 @@ setup. Those messages are not part of the project API.
   trajectories.
 - Human taste remains part of the loop. The reading report exists because the
   metric alone cannot decide whether a candidate is aesthetically alive.
+
+## Acknowledgments
+
+OpenAI Codex (GPT-5) was used as an implementation and manuscript-development
+assistant for software construction, tests, artifact inspection, LaTeX editing,
+and reproducibility tooling. Google Gemini was used for critical feedback on
+framing, interpretation, and exposition. Ryo Higa designed and operated the
+experiments, verified the resulting code and artifacts, and is responsible for
+the project and its claims.
 
 ## License
 
